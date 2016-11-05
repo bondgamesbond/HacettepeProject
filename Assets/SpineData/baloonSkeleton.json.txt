@@ -1,0 +1,65 @@
+{
+"skeleton": { "hash": "6A5VmGI6OZwKQ5N0Z9ZsdQ8FcYI", "spine": "2.1.26", "width": 121, "height": 221 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "x": -0.99, "y": 64 }
+],
+"slots": [
+	{ "name": "balloonAnimation_f1", "bone": "bone", "attachment": "balloonAnimation_f1" }
+],
+"skins": {
+	"default": {
+		"balloonAnimation_f1": {
+			"balloonAnimation_f1": { "width": 121, "height": 221 },
+			"balloonAnimation_f2": { "width": 121, "height": 221 },
+			"balloonAnimation_f3": { "width": 121, "height": 221 },
+			"balloonAnimation_f4": { "width": 121, "height": 221 },
+			"balloonAnimation_f5": { "width": 121, "height": 221 },
+			"balloonAnimation_f6": { "width": 121, "height": 221 },
+			"balloonAnimation_f7": { "width": 121, "height": 221 }
+		}
+	}
+},
+"animations": {
+	"boom": {
+		"slots": {
+			"balloonAnimation_f1": {
+				"attachment": [
+					{ "time": 0, "name": "balloonAnimation_f1" },
+					{ "time": 0.0666, "name": "balloonAnimation_f2" },
+					{ "time": 0.1333, "name": "balloonAnimation_f3" },
+					{ "time": 0.2, "name": "balloonAnimation_f4" },
+					{ "time": 0.2666, "name": "balloonAnimation_f5" },
+					{ "time": 0.3333, "name": "balloonAnimation_f6" },
+					{ "time": 0.4, "name": "balloonAnimation_f7" },
+					{ "time": 0.4666, "name": null }
+				],
+				"color": [
+					{ "time": 0, "color": "ffffffff" }
+				]
+			}
+		}
+	},
+	"pop": {
+		"slots": {
+			"balloonAnimation_f1": {
+				"attachment": [
+					{ "time": 0, "name": "balloonAnimation_f1" }
+				],
+				"color": [
+					{ "time": 0, "color": "ffffff00" },
+					{ "time": 0.1666, "color": "ffffffff" }
+				]
+			}
+		},
+		"bones": {
+			"bone": {
+				"scale": [
+					{ "time": 0, "x": 0.493, "y": 0.493 },
+					{ "time": 0.1, "x": 1, "y": 1 }
+				]
+			}
+		}
+	}
+}
+}
