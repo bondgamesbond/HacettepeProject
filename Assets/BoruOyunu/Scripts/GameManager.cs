@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public Pipe leakingPipe;
     public bool valveCanTurn;
 
-    public AudioSource leakingSound, explosionSound, fillingSound;
+    public AudioSource leakingSound, explosionSound, fillingSound, countdown;
 
     public Canvas menu;
     public Canvas game;
@@ -34,341 +34,155 @@ public class GameManager : MonoBehaviour
     SkeletonAnimation tutorialAnimation;
     Transform tutorial;
 
-    private List<int[,]> level1List, level1PlaceList,
-                         level2List, level2PlaceList,
-                         level3List, level3PlaceList,
-                         level4List, level4PlaceList,
-                         level5List, level5PlaceList,
-                         level6List, level6PlaceList,
-                         level7List, level7PlaceList,
-                         level8List, level8PlaceList;
+    private List<int[,]> levelList, levelPlaceList;
 
     
 
     // Level 1
-    private int[,] level1_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
+    private int[,] level1 =        {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
                                     {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
                                     {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
                                     {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
                                     {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
 
-    private int[,] level1_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
+    private int[,] level1Place =   {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
                                     {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
                                     {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
                                     {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
                                     {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
 
-    private int[,] level1_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
+    private int[,] level2 =        {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
                                     {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
                                     {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
                                     {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
                                     {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
 
-    private int[,] level1_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
+    private int[,] level2Place =   {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
                                     {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
                                     {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
                                     {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
                                     {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
 
-    private int[,] level1_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    private int[,] level3 =        {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    { 1,  1,  5,  2,  5,  2,  5, -1, -1, -1},
+                                    {-1, -1,  3,  4,  3,  4,  6, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1, -1,  3,  1,  1,  1},
                                     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
 
-    private int[,] level1_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+    private int[,] level3Place =   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    { 0,  1,  2,  5,  6,  9, 10, -1, -1, -1},
+                                    {-1, -1,  3,  4,  7,  8, 11, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1, -1, 12, 13, 14, 15},
                                     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level4 =        {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    { 5, -1, -1, -1, -1,  2,  5, -1, -1, -1},
+                                    { 3,  1,  1,  5, -1,  0,  6, -1, -1, -1},
+                                    {-1, -1, -1,  3,  1,  4,  3,  1,  1,  1},
+                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level4Place =   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    { 0, -1, -1, -1, -1,  9, 10, -1, -1, -1},
+                                    { 1,  2,  3,  4, -1,  8, 11, -1, -1, -1},
+                                    {-1, -1, -1,  5,  6,  7, 12, 13, 14, 15},
+                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level5 =        {{-1, -1, -1, -1, -1, -1, -1,  2,  1,  1},
+                                    {-1,  2,  1,  5, -1, -1, -1,  0, -1, -1},
+                                    { 1,  4, -1,  6, -1, -1,  1,  4, -1, -1},
+                                    {-1, -1, -1,  3,  1,  4,  3, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level5Place =   {{-1, -1, -1, -1, -1, -1, -1, 13, 14, 15},
+                                    {-1,  2,  3,  4, -1, -1, -1, 12, -1, -1},
+                                    { 0,  1, -1,  5, -1,  9, 10, 11, -1, -1},
+                                    {-1, -1, -1,  6,  7,  8, -1, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level6 =        {{-1, -1, -1, -1, -1, -1, -1, -1, -1,  2},
+                                    {-1, -1, -1, -1, -1, -1, -1,  2,  1,  4},
+                                    { 5, -1, -1,  2,  1,  1,  1,  4, -1, -1},
+                                    { 6, -1, -1,  0, -1, -1, -1, -1, -1, -1},
+                                    { 3,  1,  1,  4, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level6Place =   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, 15},
+                                    {-1, -1, -1, -1, -1, -1, -1, 12, 13, 14},
+                                    { 0, -1, -1,  7,  8,  9, 10, 11, -1, -1},
+                                    { 1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
+                                    { 2,  3,  4,  5, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level7 =        {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1,  2,  5,  2,  1,  1},
+                                    {-1, -1, -1,  2,  1,  4,  3,  4, -1, -1},
+                                    { 1,  5, -1,  0, -1, -1, -1, -1, -1, -1},
+                                    {-1,  3,  1,  4, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level7Place =   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1,  9, 10, 13, 14, 15},
+                                    {-1, -1, -1,  6,  7,  8, 11, 12, -1, -1},
+                                    { 0,  1, -1,  5, -1, -1, -1, -1, -1, -1},
+                                    {-1,  2,  3,  4, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level8 =        {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    {-1,  2,  1,  5, -1, -1, -1, -1, -1,  2},
+                                    {-1,  0, -1,  3,  5, -1,  2,  1,  1,  4},
+                                    { 1,  4, -1, -1,  3,  1,  4, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level8Place =   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    {-1,  3,  4,  5, -1, -1, -1, -1, -1, 15},
+                                    {-1,  2, -1,  6,  7, -1, 11, 12, 13, 14},
+                                    { 0,  1, -1, -1,  8,  9, 10, -1, -1, -1},
+                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
+
+    private int[,] level9 =        {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    {-1, -1, -1,  2,  1,  1,  5, -1, -1, -1},
+                                    {-1, -1,  2,  4, -1, -1,  3,  5, -1, -1},
+                                    {-1,  2,  4, -1, -1, -1, -1,  3,  5, -1},
+                                    { 1,  4, -1, -1, -1, -1, -1, -1,  3,  1}};
+
+    private int[,] level9Place =   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                                    {-1, -1, -1,  6,  7,  8,  9, -1, -1, -1},
+                                    {-1, -1,  4,  5, -1, -1, 10, 11, -1, -1},
+                                    {-1,  2,  3, -1, -1, -1, -1, 12, 13, -1},
+                                    { 0,  1, -1, -1, -1, -1, -1, -1, 14, 15}};
 
     private int level1PipeNumber = 16;
 
     private int level1LeakPipe = 0;
 
     // Level 2
-    private int[,] level2_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level2_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level2_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level2_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level2_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level2_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
     private int level2PipeNumber = 16;
 
     private int level2LeakPipe = 0;
 
     // Level 3
-    private int[,] level3_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level3_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level3_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level3_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level3_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level3_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
 
     private int level3PipeNumber = 16;
 
     private int level3LeakPipe = 0;
 
     // Level 4
-    private int[,] level4_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level4_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level4_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level4_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level4_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level4_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
     private int level4PipeNumber = 16;
 
     private int level4LeakPipe = 0;
 
     // Level 5
-    private int[,] level5_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level5_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level5_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level5_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level5_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level5_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
     private int level5PipeNumber = 16;
 
     private int level5LeakPipe = 1;
 
     // Level 6
-    private int[,] level6_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level6_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level6_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level6_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level6_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level6_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
     private int level6PipeNumber = 16;
 
     private int level6LeakPipe = 1;
 
     // Level 7
-    private int[,] level7_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level7_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level7_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level7_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level7_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level7_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
     private int level7PipeNumber = 16;
 
     private int level7LeakPipe = 2;
 
     // Level 8
-    private int[,] level8_1 =      {{ 1,  1,  1,  5, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  6, -1, -1,  2,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1, -1,  0, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  1,  4, -1, -1, -1}};
-
-    private int[,] level8_1Place = {{ 0,  1,  2,  3, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  4, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, 10, -1, -1, -1}};
-
-    private int[,] level8_2 =      {{ 1,  5, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  6, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  1,  5, -1,  2,  1,  1,  1,  1},
-                                    {-1, -1, -1,  6, -1,  0, -1, -1, -1, -1},
-                                    {-1, -1, -1,  3,  1,  4, -1, -1, -1, -1}};
-
-    private int[,] level8_2Place = {{ 0,  1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  2, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1,  3,  4,  5, -1, 11, 12, 13, 14, 15},
-                                    {-1, -1, -1,  6, -1, 10, -1, -1, -1, -1},
-                                    {-1, -1, -1,  7,  8,  9, -1, -1, -1, -1}};
-
-    private int[,] level8_3 =      {{ 5, -1, -1,  2,  1,  1,  5, -1, -1, -1},
-                                    { 6, -1, -1,  0, -1, -1,  6, -1, -1, -1},
-                                    { 3,  1,  1,  4, -1, -1,  3,  1,  1,  1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
-    private int[,] level8_3Place = {{ 0, -1, -1,  7,  8,  9, 10, -1, -1, -1},
-                                    { 1, -1, -1,  6, -1, -1, 11, -1, -1, -1},
-                                    { 2,  3,  4,  5, -1, -1, 12, 13, 14, 15},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                                    {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
-
     private int level8PipeNumber = 16;
 
     private int level8LeakPipe = 2;
@@ -408,46 +222,29 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Level 1
-        level1List = new List<int[,]>(); level1PlaceList = new List<int[,]>();
-        level1List.Add(level1_1); level1List.Add(level1_2); level1List.Add(level1_3);
-        level1PlaceList.Add(level1_1Place); level1PlaceList.Add(level1_2Place); level1PlaceList.Add(level1_3Place);
+        // Levels
+        levelList = new List<int[,]>();
+        levelList.Add(level1);
+        levelList.Add(level2);
+        levelList.Add(level3);
+        levelList.Add(level4);
+        levelList.Add(level5);
+        levelList.Add(level6);
+        levelList.Add(level7);
+        levelList.Add(level8);
+        levelList.Add(level9);
 
-        // Level 2
-        level2List = new List<int[,]>(); level2PlaceList = new List<int[,]>();
-        level2List.Add(level2_1); level2List.Add(level2_2); level2List.Add(level2_3);
-        level2PlaceList.Add(level2_1Place); level2PlaceList.Add(level2_2Place); level2PlaceList.Add(level2_3Place);
+        levelPlaceList = new List<int[,]>();
+        levelPlaceList.Add(level1Place);
+        levelPlaceList.Add(level2Place);
+        levelPlaceList.Add(level3Place);
+        levelPlaceList.Add(level4Place);
+        levelPlaceList.Add(level5Place);
+        levelPlaceList.Add(level6Place);
+        levelPlaceList.Add(level7Place);
+        levelPlaceList.Add(level8Place);
+        levelPlaceList.Add(level9Place);
 
-        // Level 3
-        level3List = new List<int[,]>(); level3PlaceList = new List<int[,]>();
-        level3List.Add(level3_1); level3List.Add(level3_2); level3List.Add(level3_3);
-        level3PlaceList.Add(level3_1Place); level3PlaceList.Add(level3_2Place); level3PlaceList.Add(level3_3Place);
-
-        // Level 4
-        level4List = new List<int[,]>(); level4PlaceList = new List<int[,]>();
-        level4List.Add(level4_1); level4List.Add(level4_2); level4List.Add(level4_3);
-        level4PlaceList.Add(level4_1Place); level4PlaceList.Add(level4_2Place); level4PlaceList.Add(level4_3Place);
-
-        // Level 5
-        level5List = new List<int[,]>(); level5PlaceList = new List<int[,]>();
-        level5List.Add(level5_1); level5List.Add(level5_2); level5List.Add(level5_3);
-        level5PlaceList.Add(level5_1Place); level5PlaceList.Add(level5_2Place); level5PlaceList.Add(level5_3Place);
-
-        // Level 6
-        level6List = new List<int[,]>(); level6PlaceList = new List<int[,]>();
-        level6List.Add(level6_1); level6List.Add(level6_2); level6List.Add(level6_3);
-        level6PlaceList.Add(level6_1Place); level6PlaceList.Add(level6_2Place); level6PlaceList.Add(level6_3Place);
-
-        // Level 7
-        level7List = new List<int[,]>(); level7PlaceList = new List<int[,]>();
-        level7List.Add(level7_1); level7List.Add(level7_2); level7List.Add(level7_3);
-        level7PlaceList.Add(level7_1Place); level7PlaceList.Add(level7_2Place); level7PlaceList.Add(level7_3Place);
-
-        // Level 8
-        level8List = new List<int[,]>(); level8PlaceList = new List<int[,]>();
-        level8List.Add(level8_1); level8List.Add(level8_2); level8List.Add(level8_3);
-        level8PlaceList.Add(level8_1Place); level8PlaceList.Add(level8_2Place); level8PlaceList.Add(level8_3Place);
-        
         levelsPassed = PlayerPrefs.GetInt("LevelsPassed");
 
         tutorial = transform.GetChild(0);
@@ -496,6 +293,11 @@ public class GameManager : MonoBehaviour
 
         if (currentLevel != null) // Playing a level.
         {
+            if (LevelTime < 10 && !countdown.isPlaying)
+            {
+                countdown.Play();
+            }
+
             if (PlayerPrefs.GetFloat("Level" + Level + "Percentage") < Place * 100 / NumberOfPipes)
             {
                 if (Place * 100 / NumberOfPipes > 100)
@@ -698,6 +500,11 @@ public class GameManager : MonoBehaviour
                     grid.GetComponent<Grid>().HintShadow(3);
                     break;
                 }
+                else if (CheckPlace((int)grid.transform.position[1] / -2, (int)grid.transform.position[0] / 2) == Place + 1)
+                {
+                    grid.GetComponent<Grid>().HintShadow(3);
+                    break;
+                }
             }
         }
     }
@@ -817,11 +624,11 @@ public class GameManager : MonoBehaviour
         switch(Level)
         {
             case 1:
-                rand = Random.Range(0, level1List.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, level1List.Count); }
+                rand = Random.Range(0, levelList.Count);
+                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
                 PlayerPrefs.SetInt("RandomLevelNumber", rand);
-                grid = level1List[rand].Clone() as int[,];
-                places = level1PlaceList[rand].Clone() as int[,];
+                grid = levelList[rand].Clone() as int[,];
+                places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level1PipeNumber;
                 ShadowValue = 0;
                 LeakPipeNumber = level1LeakPipe;
@@ -830,6 +637,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = 400.0f;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -838,8 +646,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 2:
-                grid = level2List[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = level2PlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("RandomLevelNumber");
+                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
                 NumberOfPipes = level2PipeNumber;
                 ShadowValue = 0;
                 LeakPipeNumber = level2LeakPipe;
@@ -848,6 +657,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = PlayerPrefs.GetFloat("Level1Time") * 9 / 10;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -856,11 +666,11 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 3:
-                rand = Random.Range(0, level1List.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, level1List.Count); }
+                rand = Random.Range(0, levelList.Count);
+                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
                 PlayerPrefs.SetInt("RandomLevelNumber", rand);
-                grid = level3List[rand].Clone() as int[,];
-                places = level3PlaceList[rand].Clone() as int[,];
+                grid = levelList[rand].Clone() as int[,];
+                places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level3PipeNumber;
                 ShadowValue = 1;
                 LeakPipeNumber = level3LeakPipe;
@@ -869,6 +679,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = 400.0f;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -877,8 +688,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 4:
-                grid = level4List[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = level4PlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("RandomLevelNumber");
+                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
                 NumberOfPipes = level4PipeNumber;
                 ShadowValue = 1;
                 LeakPipeNumber = level4LeakPipe;
@@ -887,6 +699,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = PlayerPrefs.GetFloat("Level3Time") * 9 / 10;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -895,11 +708,11 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 5:
-                rand = Random.Range(0, level1List.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, level1List.Count); }
+                rand = Random.Range(0, levelList.Count);
+                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
                 PlayerPrefs.SetInt("RandomLevelNumber", rand);
-                grid = level5List[rand].Clone() as int[,];
-                places = level5PlaceList[rand].Clone() as int[,];
+                grid = levelList[rand].Clone() as int[,];
+                places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level5PipeNumber;
                 ShadowValue = 2;
                 LeakPipeNumber = level5LeakPipe;
@@ -908,6 +721,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = 400.0f;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -916,8 +730,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 6:
-                grid = level6List[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = level6PlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("RandomLevelNumber");
+                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
                 NumberOfPipes = level6PipeNumber;
                 ShadowValue = 2;
                 LeakPipeNumber = level6LeakPipe;
@@ -926,6 +741,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = PlayerPrefs.GetFloat("Level5Time") * 9 / 10;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -934,11 +750,11 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 7:
-                rand = Random.Range(0, level1List.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, level1List.Count); }
+                rand = Random.Range(0, levelList.Count);
+                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
                 PlayerPrefs.SetInt("RandomLevelNumber", rand);
-                grid = level7List[rand].Clone() as int[,];
-                places = level7PlaceList[rand].Clone() as int[,];
+                grid = levelList[rand].Clone() as int[,];
+                places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level7PipeNumber;
                 ShadowValue = 2;
                 LeakPipeNumber = level7LeakPipe;
@@ -947,6 +763,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = 400.0f;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -955,8 +772,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 8:
-                grid = level8List[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = level8PlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("RandomLevelNumber");
+                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
                 NumberOfPipes = level8PipeNumber;
                 ShadowValue = 2;
                 LeakPipeNumber = level8LeakPipe;
@@ -965,6 +783,7 @@ public class GameManager : MonoBehaviour
                 levelCompleted = false;
                 LevelTime = PlayerPrefs.GetFloat("Level7Time") * 9 / 10;
                 currentLevel = Instantiate(levels.GetChild(Level - 1).gameObject, Vector3.zero, Quaternion.identity) as GameObject;
+                ChangeBoard(rand);
                 valve = currentLevel.transform.GetChild(0).gameObject;
                 board = currentLevel.transform.GetChild(7);
                 valve.SetActive(false);
@@ -993,6 +812,40 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("Babuş", 1);
         SceneManager.LoadSceneAsync("MainMenu");
+    }
+
+    private void ChangeBoard(int levelIndex)
+    {
+        if (levelIndex < 2)
+        {
+            currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, 0.15f);
+            currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -4f);
+            currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, 0f);
+        }
+        else if (levelIndex < 4)
+        {
+            currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -1.85f);
+            currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -6f);
+            currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -2f);
+        }
+        else if (levelIndex < 6)
+        {
+            currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -3.85f);
+            currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, 0f);
+            currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -4f);
+        }
+        else if (levelIndex < 8)
+        {
+            currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -5.85f);
+            currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -2f);
+            currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -6f);
+        }
+        else if (levelIndex < 10)
+        {
+            currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -7.85f);
+            currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -8f);
+            currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -8f);
+        }
     }
 }
 
