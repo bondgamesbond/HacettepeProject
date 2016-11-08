@@ -29,7 +29,7 @@ public class ButtonUtility : MonoBehaviour {
         if (username.text == "hasta" && password.text == "hasta")
         {
             print("Hasta Girişi");
-
+            CloseKeyboard();
             gameList.SetActive(true);
             signInMenu.SetActive(false);
             signInMenu_back.SetActive(false);
@@ -37,7 +37,9 @@ public class ButtonUtility : MonoBehaviour {
         else if (username.text == "doktor" && password.text == "doktor")
         {
             print("Doktor Girişi");
+            CloseKeyboard();
             SceneManager.LoadScene("Doktor");
+           
         }
         else
         {
