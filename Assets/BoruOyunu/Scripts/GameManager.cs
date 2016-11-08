@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public Pipe leakingPipe;
     public bool valveCanTurn;
+    public Transform valveOpenSlider;
 
     public AudioSource leakingSound, explosionSound, fillingSound, countdown;
 
@@ -818,30 +819,35 @@ public class GameManager : MonoBehaviour
     {
         if (levelIndex < 2)
         {
+            valveOpenSlider.position = new Vector2(-770.0f, 440.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, 0.15f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -4f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, 0f);
         }
         else if (levelIndex < 4)
         {
+            valveOpenSlider.position = new Vector2(-770.0f, 300.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -1.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -6f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -2f);
         }
         else if (levelIndex < 6)
         {
+            valveOpenSlider.position = new Vector2(-770.0f, 160.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -3.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, 0f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -4f);
         }
         else if (levelIndex < 8)
         {
+            valveOpenSlider.position = new Vector2(-770.0f, 20.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -5.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -2f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -6f);
         }
         else if (levelIndex < 10)
         {
+            valveOpenSlider.position = new Vector2(-770.0f, -120.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -7.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -8f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -8f);
