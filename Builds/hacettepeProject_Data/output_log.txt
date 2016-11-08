@@ -10,87 +10,19 @@ Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Bu
 Loading C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\UnityEngine.dll into Unity Child Domain
 Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\Assembly-CSharp.dll (this message is harmless)
 Loading C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\Assembly-UnityScript.dll (this message is harmless)
+Loading C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\Assembly-UnityScript.dll into Unity Child Domain
 Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\UnityEngine.UI.dll (this message is harmless)
 Loading C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.135 seconds
+- Completed reload, in  0.156 seconds
 Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Türker\Desktop\HacettepeProject\HacettepeProject\Builds\hacettepeProject_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 5520x1080 at -1920,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.784258 ms
-Hatalı şifre ya da kullanıcı adı
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Doktor Girişi
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 2.893985 ms
-
-Unloading 35 unused Assets to reduce memory usage. Loaded Objects now: 502.
-Total: 0.312619 ms (FindLiveObjects: 0.027406 ms CreateObjectMapping: 0.018371 ms MarkObjects: 0.246059 ms  DeleteObjects: 0.019576 ms)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.530970 ms
-
-Unloading 32 unused Assets to reduce memory usage. Loaded Objects now: 514.
-Total: 0.326473 ms (FindLiveObjects: 0.043971 ms CreateObjectMapping: 0.015661 ms MarkObjects: 0.252685 ms  DeleteObjects: 0.013552 ms)
-
-Hasta Girişi
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.813170 ms
-
-Unloading 37 unused Assets to reduce memory usage. Loaded Objects now: 1780.
-Total: 1.610680 ms (FindLiveObjects: 0.109627 ms CreateObjectMapping: 0.082220 ms MarkObjects: 1.373054 ms  DeleteObjects: 0.044874 ms)
-
-Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.110731 ms
-
-Unloading 1 unused Assets to reduce memory usage. Loaded Objects now: 1785.
-Total: 0.809255 ms (FindLiveObjects: 0.051199 ms CreateObjectMapping: 0.034333 ms MarkObjects: 0.717397 ms  DeleteObjects: 0.006023 ms)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.940266 ms
-
-Unloading 66 unused Assets to reduce memory usage. Loaded Objects now: 535.
-Total: 0.682160 ms (FindLiveObjects: 0.019877 ms CreateObjectMapping: 0.025901 ms MarkObjects: 0.409898 ms  DeleteObjects: 0.226181 ms)
-
-Unloading 4 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.471036 ms
-
-Unloading 37 unused Assets to reduce memory usage. Loaded Objects now: 546.
-Total: 0.374660 ms (FindLiveObjects: 0.014757 ms CreateObjectMapping: 0.014155 ms MarkObjects: 0.326774 ms  DeleteObjects: 0.018672 ms)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.464712 ms
-
-Unloading 57 unused Assets to reduce memory usage. Loaded Objects now: 563.
-Total: 0.476457 ms (FindLiveObjects: 0.020178 ms CreateObjectMapping: 0.021082 ms MarkObjects: 0.368938 ms  DeleteObjects: 0.065656 ms)
-
-Doktor Girişi
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.484288 ms
-
-Unloading 33 unused Assets to reduce memory usage. Loaded Objects now: 551.
-Total: 0.824314 ms (FindLiveObjects: 0.040959 ms CreateObjectMapping: 0.046983 ms MarkObjects: 0.696315 ms  DeleteObjects: 0.038851 ms)
-
-Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.624635 ms
-
-Unloading 56 unused Assets to reduce memory usage. Loaded Objects now: 563.
-Total: 0.563798 ms (FindLiveObjects: 0.032225 ms CreateObjectMapping: 0.033129 ms MarkObjects: 0.464410 ms  DeleteObjects: 0.033430 ms)
-
+UnloadTime: 0.704746 ms
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 13b8 -> priority: 1 
+  Thread -> id: 1934 -> priority: 1 
