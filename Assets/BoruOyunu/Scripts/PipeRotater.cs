@@ -94,6 +94,7 @@ public class PipeRotater : MonoBehaviour
                                 GameManager.Instance.PlaceToGrid(gridY, gridX);
                                 GameManager.Instance.Place++;
                                 onHolPiece.GetComponent<Pipe>().isOnTrueRotation = true;
+                                onHolPiece.GetComponent<Pipe>().canRotate = false;
                             }
                         }
                         else if (onHolPiece.localEulerAngles.z < 135)
@@ -112,7 +113,7 @@ public class PipeRotater : MonoBehaviour
                                 GameManager.Instance.AddPipe(place, obj.GetComponent<Pipe>());
 
                                 obj.GetComponent<Pipe>().isOnTrueRotation = true;
-                                obj.GetComponent<Pipe>().canRotate = true;
+                                obj.GetComponent<Pipe>().canRotate = false;
                                 obj.GetComponent<Pipe>().Placed = true;
                                 onHolPiece.gameObject.SetActive(false);
 
@@ -137,7 +138,7 @@ public class PipeRotater : MonoBehaviour
                                 GameManager.Instance.AddPipe(place, obj.GetComponent<Pipe>());
 
                                 obj.GetComponent<Pipe>().isOnTrueRotation = true;
-                                obj.GetComponent<Pipe>().canRotate = true;
+                                obj.GetComponent<Pipe>().canRotate = false;
                                 obj.GetComponent<Pipe>().Placed = true;
                                 onHolPiece.gameObject.SetActive(false);
 
@@ -159,6 +160,7 @@ public class PipeRotater : MonoBehaviour
                                 GameManager.Instance.PlaceToGrid(gridY, gridX);
                                 GameManager.Instance.Place++;
                                 onHolPiece.GetComponent<Pipe>().isOnTrueRotation = true;
+                                onHolPiece.GetComponent<Pipe>().canRotate = false;
                             }
                         }
 

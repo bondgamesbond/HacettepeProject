@@ -144,6 +144,7 @@ public class Pipe : MonoBehaviour
                         }
                         else if (GetComponentInParent<PipeRotater>() != null && GameManager.Instance.CurrentPlace(gridY, gridX))
                         {
+                            canRotate = false;
                             redGlow.SetActive(false);
                             greenGlow.SetActive(true);
                         }
@@ -258,6 +259,11 @@ public class Pipe : MonoBehaviour
                                     GameManager.Instance.PlaceToGrid(gridY, gridX);
                                     GameManager.Instance.Place++;
                                     isOnTrueRotation = true;
+                                    canRotate = false;
+                                }
+                                else
+                                {
+                                    canRotate = true;
                                 }
 
                                 // Get grid place and add the pipe to that place.
@@ -266,6 +272,7 @@ public class Pipe : MonoBehaviour
                                 grid.Placed = true;
                                 this.Placed = true;
                                 putPipeSound.Play();
+
 
                                 greenGlow.SetActive(false);
                             }
@@ -284,6 +291,12 @@ public class Pipe : MonoBehaviour
                             {
                                 GameManager.Instance.PlaceToGrid(gridY, gridX);
                                 GameManager.Instance.Place++;
+                                isOnTrueRotation = true;
+                                canRotate = false;
+                            }
+                            else
+                            {
+                                canRotate = true;
                             }
 
                             // Get grid place and add the pipe to that place.
@@ -292,7 +305,6 @@ public class Pipe : MonoBehaviour
                             grid.Placed = true;
                             this.Placed = true;
                             putPipeSound.Play();
-                            canRotate = true;
 
                             greenGlow.SetActive(false);
                         }
