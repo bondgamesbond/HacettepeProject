@@ -257,6 +257,7 @@ public class Pipe : MonoBehaviour
                                 {
                                     GameManager.Instance.PlaceToGrid(gridY, gridX);
                                     GameManager.Instance.Place++;
+                                    isOnTrueRotation = true;
                                 }
 
                                 // Get grid place and add the pipe to that place.
