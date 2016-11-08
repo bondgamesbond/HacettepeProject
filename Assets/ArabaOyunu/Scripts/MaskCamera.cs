@@ -16,7 +16,7 @@ public class MaskCamera : MonoBehaviour
 
     private void CutHole(Vector2 imageSize, Vector2 imageLocalPosition)
     {
-        float restrictRatio = 0.5f;
+        float restrictRatio = 1;
 
         Rect textureRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
         Rect positionRect = new Rect(
@@ -122,7 +122,7 @@ public class MaskCamera : MonoBehaviour
             }
         }
         
-        if (total < 100)
+        if (total < 10000)
         {
             GameManagerAraba.Instance.ChangeToNextMaskCamera();
         }
