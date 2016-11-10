@@ -13,6 +13,9 @@ public class GameManagerAraba : MonoBehaviour
     private GameObject currentMaskCamera;
     private int currentMaskCameraIndex;
 
+    /* Level information of the game */
+    public int level;
+
     void Awake()
     {
         /* Provide Singleton functionality */
@@ -48,6 +51,9 @@ public class GameManagerAraba : MonoBehaviour
 
         /* Increment the index of the mask camera */
         currentMaskCameraIndex++;
+
+        /* Increase the level */
+        level++;
 
         /* If there are mask cameras left get the next camera */
         if (currentMaskCameraIndex < maskCameras.Length)

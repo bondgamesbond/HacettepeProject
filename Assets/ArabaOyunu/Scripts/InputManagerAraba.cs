@@ -13,9 +13,25 @@ public class InputManagerAraba : MonoBehaviour
     private Touch touch;
     private Vector2 firstTouchPosition;
 
+    /* Singleton instance */
+    public static InputManagerAraba Instance;
+
+    void Awake()
+    {
+        /* Provide Singleton functionality */
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Update()
     {
-        /* Check the motion */
+        /* Check the motion of the user finger */
         CheckMotion();
     }
 
@@ -48,16 +64,16 @@ public class InputManagerAraba : MonoBehaviour
                 {
                     /* ...stationary and determine the motion */
                     DetermineMotion(touch.position);
-                    moved = false;
                     firstTouchPosition = touch.position;
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {
                     /* ...ended and determine the motion */
                     DetermineMotion(touch.position);
-                    moved = false;
                 }
-                return;
+            
+                /* Change moved to false */
+                moved = false;
             }
         }
     }
