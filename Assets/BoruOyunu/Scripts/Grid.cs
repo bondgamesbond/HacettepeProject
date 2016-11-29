@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class Grid : MonoBehaviour
 {
+	public static int count = 1;
+	public static bool countdowning = false;
     /*public static int minShadowNumber = 5;*/
 
     // For checking appropriate properties of the grid.
@@ -20,6 +22,7 @@ public class Grid : MonoBehaviour
     {
         // Get the correct pipe type of the grid for the current level and the minimum shadowy pipes.
         pipeType = GameManager.Instance.pipeTypeAtPosition(transform.position);
+		countdown = 5;
 
         // Grid in current level have a pipe.
         if (pipeType >= 0)
@@ -41,7 +44,9 @@ public class Grid : MonoBehaviour
             }
             else if (GameManager.Instance.ShadowValue == 1) // 50%
             {
-                if (Random.value < 0.5)
+				HintShadow(5);
+
+				if (Random.value < 0.65 && count < 9)
                 {
                     if (pipeType == 6)
                     {
@@ -54,6 +59,8 @@ public class Grid : MonoBehaviour
                     activePipe.SetActive(true);
                     ShowShadow = true;
 
+					count++;
+
                     /*// Decrement the shadow number.
                     minShadowNumber--;
                     Debug.Log(minShadowNumber);*/
@@ -65,6 +72,7 @@ public class Grid : MonoBehaviour
             }
             else
             {
+				ShowShadow = false;
                 HintShadow(5);
             }
         }
@@ -87,8 +95,9 @@ public class Grid : MonoBehaviour
         activePipe.SetActive(true);
         GameManager.Instance.game.transform.GetChild(3).gameObject.SetActive(true);
         countdown = timeToWait;
+		countdowning = true;
 
-        StartCoroutine(WaitForShadow(timeToWait));
+		StartCoroutine(WaitForShadow(timeToWait));
     }
 
     IEnumerator WaitForShadow(int timeToWait)
@@ -97,7 +106,11 @@ public class Grid : MonoBehaviour
         yield return new WaitForSeconds(timeToWait);
         GameManager.Instance.State = GameStateBoru.Idle;
         GameManager.Instance.game.transform.GetChild(3).gameObject.SetActive(false);
-        activePipe.SetActive(false);
+		if (!ShowShadow)
+		{
+			activePipe.SetActive(false);
+		}
+		countdowning = false;
     }
 
     void OnDisable()

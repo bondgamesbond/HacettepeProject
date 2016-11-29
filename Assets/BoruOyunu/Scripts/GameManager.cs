@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public Pipe leakingPipe;
     public bool valveCanTurn;
-    public Transform valveOpenSlider;
+    public RectTransform valveOpenSlider;
 
     public AudioSource leakingSound, explosionSound, fillingSound, countdown;
 
@@ -294,7 +294,7 @@ public class GameManager : MonoBehaviour
 
         if (currentLevel != null) // Playing a level.
         {
-            if (LevelTime < 10 && !countdown.isPlaying)
+            if (LevelTime < 10 && !countdown.isPlaying && !allPlaced)
             {
                 countdown.Play();
             }
@@ -314,6 +314,11 @@ public class GameManager : MonoBehaviour
 
             if (allPlaced)
             {
+				if (countdown.isPlaying)
+				{
+					countdown.Stop();
+				}
+
                 if (Level == 1 && !tutorialBool)
                 {
                     tutorial.gameObject.SetActive(true);
@@ -361,8 +366,11 @@ public class GameManager : MonoBehaviour
                 {
                     timeText.text += " (Süre %10 azaltıldı.)";
                 }
-                LevelTime -= Time.deltaTime;
-                timer += Time.deltaTime;
+				if (!Grid.countdowning)
+				{
+					LevelTime -= Time.deltaTime;
+					timer += Time.deltaTime;
+				}
                 allPlaced = AllPipesPlaced();
             }
         }
@@ -564,6 +572,10 @@ public class GameManager : MonoBehaviour
     public void MainMenu()
     {
         State = GameStateBoru.MainMenu;
+		if (countdown.isPlaying)
+		{
+			countdown.Stop();
+		}
         currentLevel.SetActive(false);
         game.transform.GetChild(4).gameObject.SetActive(false);
         game.transform.GetChild(4).GetComponent<Slider>().value = 0;
@@ -622,12 +634,14 @@ public class GameManager : MonoBehaviour
 
         endMenu.gameObject.SetActive(false);
 
+		Grid.count = 1;
+
         switch(Level)
         {
             case 1:
                 rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
-                PlayerPrefs.SetInt("RandomLevelNumber", rand);
+                while (rand == PlayerPrefs.GetInt("Level1Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                PlayerPrefs.SetInt("Level1Pipes", rand);
                 grid = levelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level1PipeNumber;
@@ -647,9 +661,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 2:
-                rand = PlayerPrefs.GetInt("RandomLevelNumber");
-                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("Level1Pipes");
+                grid = levelList[PlayerPrefs.GetInt("Level1Pipes")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("Level1Pipes")].Clone() as int[,];
                 NumberOfPipes = level2PipeNumber;
                 ShadowValue = 0;
                 LeakPipeNumber = level2LeakPipe;
@@ -668,8 +682,8 @@ public class GameManager : MonoBehaviour
                 break;
             case 3:
                 rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
-                PlayerPrefs.SetInt("RandomLevelNumber", rand);
+                while (rand == PlayerPrefs.GetInt("Level3Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                PlayerPrefs.SetInt("Level3Pipes", rand);
                 grid = levelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level3PipeNumber;
@@ -689,9 +703,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 4:
-                rand = PlayerPrefs.GetInt("RandomLevelNumber");
-                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("Level3Pipes");
+                grid = levelList[PlayerPrefs.GetInt("Level3Pipes")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("Level3Pipes")].Clone() as int[,];
                 NumberOfPipes = level4PipeNumber;
                 ShadowValue = 1;
                 LeakPipeNumber = level4LeakPipe;
@@ -710,8 +724,8 @@ public class GameManager : MonoBehaviour
                 break;
             case 5:
                 rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
-                PlayerPrefs.SetInt("RandomLevelNumber", rand);
+                while (rand == PlayerPrefs.GetInt("Level5Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                PlayerPrefs.SetInt("Level5Pipes", rand);
                 grid = levelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level5PipeNumber;
@@ -731,9 +745,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 6:
-                rand = PlayerPrefs.GetInt("RandomLevelNumber");
-                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("Level5Pipes");
+                grid = levelList[PlayerPrefs.GetInt("Level5Pipes")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("Level5Pipes")].Clone() as int[,];
                 NumberOfPipes = level6PipeNumber;
                 ShadowValue = 2;
                 LeakPipeNumber = level6LeakPipe;
@@ -752,8 +766,8 @@ public class GameManager : MonoBehaviour
                 break;
             case 7:
                 rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("RandomLevelNumber", -1)) { rand = Random.Range(0, levelList.Count); }
-                PlayerPrefs.SetInt("RandomLevelNumber", rand);
+                while (rand == PlayerPrefs.GetInt("Level7Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                PlayerPrefs.SetInt("Level7Pipes", rand);
                 grid = levelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level7PipeNumber;
@@ -773,9 +787,9 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 8:
-                rand = PlayerPrefs.GetInt("RandomLevelNumber");
-                grid = levelList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
-                places = levelPlaceList[PlayerPrefs.GetInt("RandomLevelNumber")].Clone() as int[,];
+                rand = PlayerPrefs.GetInt("Level7Pipes");
+                grid = levelList[PlayerPrefs.GetInt("Level7Pipes")].Clone() as int[,];
+                places = levelPlaceList[PlayerPrefs.GetInt("Level7Pipes")].Clone() as int[,];
                 NumberOfPipes = level8PipeNumber;
                 ShadowValue = 2;
                 LeakPipeNumber = level8LeakPipe;
@@ -818,36 +832,36 @@ public class GameManager : MonoBehaviour
     private void ChangeBoard(int levelIndex)
     {
         if (levelIndex < 2)
-        {
-            valveOpenSlider.position = new Vector2(-770.0f, 440.0f);
+        {new Vector2(-770.0f, 440.0f);
+			valveOpenSlider.anchoredPosition = new Vector2(-770.0f, 440.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, 0.15f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -4f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, 0f);
         }
         else if (levelIndex < 4)
         {
-            valveOpenSlider.position = new Vector2(-770.0f, 300.0f);
+            valveOpenSlider.anchoredPosition = new Vector2(-770.0f, 300.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -1.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -6f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -2f);
         }
         else if (levelIndex < 6)
         {
-            valveOpenSlider.position = new Vector2(-770.0f, 160.0f);
+            valveOpenSlider.anchoredPosition = new Vector2(-770.0f, 160.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -3.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, 0f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -4f);
         }
         else if (levelIndex < 8)
         {
-            valveOpenSlider.position = new Vector2(-770.0f, 20.0f);
+            valveOpenSlider.anchoredPosition = new Vector2(-770.0f, 20.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -5.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -2f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -6f);
         }
         else if (levelIndex < 10)
         {
-            valveOpenSlider.position = new Vector2(-770.0f, -120.0f);
+            valveOpenSlider.anchoredPosition = new Vector2(-770.0f, -120.0f);
             currentLevel.transform.GetChild(0).position = new Vector2(-2.5f, -7.85f);
             currentLevel.transform.GetChild(7).GetChild(5).position = new Vector2(21f, -8f);
             currentLevel.transform.GetChild(7).GetChild(6).position = new Vector2(-2.5f, -8f);
