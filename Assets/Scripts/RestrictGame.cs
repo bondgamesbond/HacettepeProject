@@ -308,6 +308,10 @@ public class RestrictGame : MonoBehaviour
                     colorValues[i, j] = Color.Lerp(Color.magenta, Color.red, (difficultyValues[i, j] - 0.8f) / (0.2f));
                     difficultyAreaValues[j][i] = 4;
                 }
+				else if (difficultyValues[i, j] > 0.9f)
+				{
+					difficultyAreaValues[j][i] = 5;
+				}
                 //Debug.Log(difficultyAreaValues[0][0] + " , " + difficultyValues[0, 0] + " , " + colorValues[0, 0]);
             }
         }

@@ -201,8 +201,10 @@ public class GameManager : MonoBehaviour
     private bool tutorialBool;
     private int levelsPassed;
 
-    // Singleton
-    private static GameManager instance = null;
+	private int[] restrictionCounts;
+
+	// Singleton
+	private static GameManager instance = null;
     public static GameManager Instance
     {
         get
@@ -261,7 +263,14 @@ public class GameManager : MonoBehaviour
         }
 
         pipePosition = new Vector2(0.0f, -11.0f);
-    }
+
+		restrictionCounts = new int[levelList.Count];
+
+		for (int i = 0; i < restrictionCounts.Length; i++)
+		{
+			restrictionCounts[i] = getRestrictionStatusCount(levelList[i]);
+		}
+	}
 
 
 
@@ -814,6 +823,29 @@ public class GameManager : MonoBehaviour
             pipeList.Add(null);
         }
     }
+
+	private int getRestrictionStatusCount(int [,] level)
+	{
+		int count = 0;
+		
+		for (int i = 0; i < level.GetLength(1); i++)
+		{
+			for (int j = 0; j < level.GetLength(0); j++)
+			{
+				if (level[j, i] != -1)
+				{
+					Vector2 pipePosition = new Vector2(i * 2 - 9f, j * -2 + 4);
+
+					if (RestrictionMap.findDifficulty(pipePosition) == 4)
+					{
+						count++;
+					}
+				}
+			}
+		}
+
+		return count;
+	}
     
     public void ReturnMenu()
     {
