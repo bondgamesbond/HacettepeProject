@@ -397,8 +397,9 @@ public class RestrictGame : MonoBehaviour
 
     public void saveImage()
     {
-        string date = System.DateTime.Now.ToString("dd,MM,yyyy-HH,mm,ss");
-        pngSaver.SaveTexture2Folder(Application.streamingAssetsPath + "/Maps", "DifficultyMap" + date, savingTexture);
+		//string date = System.DateTime.Now.ToString("dd,MM,yyyy-HH,mm,ss");
+		string date = System.DateTime.Now.ToString("yyyy,MM,dd-HH,mm,ss");
+		pngSaver.SaveTexture2Folder(Application.streamingAssetsPath + "/Maps", "DifficultyMap" + date, savingTexture);
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
 #endif
