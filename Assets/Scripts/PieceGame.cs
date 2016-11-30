@@ -17,7 +17,7 @@ public class PieceGame : MonoBehaviour
 
     public Transform pieceList, board, levels, currentPiece, mathSymbols;
 
-    public GameObject inGameUi, pauseMenu, tutorial, tutorialButton, konfeti, menuArea;
+    public GameObject inGameUi, pauseMenu, tutorial, tutorialButton, konfeti, menuArea, notPlayableText;
 
     public Text timeText, pauseText;
 
@@ -29,9 +29,11 @@ public class PieceGame : MonoBehaviour
 
     bool multiTouchActive, isPieceOnHold, isInReverseMode, timeSaveLevel, canHoldAnyPiece, isMathMode, isTimeScore, isFinishing;
 
-    public bool hasReversePlay;
+    public bool hasReversePlay, isTooMuchRedArea, isMidRangeRedArea, isLittleRedArea;
 
     int touchCount, levelId, currentPieceIndex, timeToBeat;
+
+    public int playablePieceCount;
 
     Transform redGlow, greenGlow, whiteGlow;
 
@@ -39,7 +41,7 @@ public class PieceGame : MonoBehaviour
 
     Vector2 offset;
 
-    public float timer, levelCompleteScore;
+    public float timer, levelCompleteScore, redAreaRatio;
 
     float finishTimer;
 
@@ -87,6 +89,18 @@ public class PieceGame : MonoBehaviour
             menuArea.SetActive(false);
             PlayerPrefs.SetString("RestartLevelId", "");
         }
+        redAreaRatio = PlayerPrefs.GetFloat("RedAreaRatio");
+        //redAreaRatio = 55;
+        playablePieceCount = 20;
+        if (redAreaRatio >= 50)
+            isTooMuchRedArea = true;
+        else if (redAreaRatio > 20 && redAreaRatio < 50)
+        {
+            playablePieceCount = 16 - (int)(((redAreaRatio - 20) / 30) * 6.5f);
+            isMidRangeRedArea = true;
+        }
+        else if (redAreaRatio <= 20)
+            isLittleRedArea = true;
     }
 	
 	void Update ()
@@ -240,25 +254,25 @@ public class PieceGame : MonoBehaviour
         {
             tutorialIds.Add(0);
             tutorialIds.Add(1);
-            getLevelReady(20, false, false, false, false, false, true, true, false, false, false);
+            getLevelReady(playablePieceCount, false, false, false, false, false, true, true, false, false, false);
         }
         else if (levelName == "2")
         {
             tutorialIds.Add(0);
             tutorialIds.Add(1);
-            getLevelReady(20, false, false, false, false, false, true, false, true, false, false);
+            getLevelReady(playablePieceCount, false, false, false, false, false, true, false, true, false, false);
         }
         else if (levelName == "3")
         {
             tutorialIds.Add(2);
             tutorialIds.Add(3);
-            getLevelReady(20, true, false, false, false, false, true, true, false, false, false);
+            getLevelReady(playablePieceCount, true, false, false, false, false, true, true, false, false, false);
         }
         else if (levelName == "4")
         {
             tutorialIds.Add(2);
             tutorialIds.Add(3);
-            getLevelReady(20, true, false, false, false, false, true, false, true, false, false);
+            getLevelReady(playablePieceCount, true, false, false, false, false, true, false, true, false, false);
         }
         else if (levelName == "5")
         {
@@ -275,22 +289,22 @@ public class PieceGame : MonoBehaviour
         else if (levelName == "7")
         {
             tutorialIds.Add(4);
-            getLevelReady(20, false, false, true, false, true, false, true, false, false, false);
+            getLevelReady(playablePieceCount, false, false, true, false, true, false, true, false, false, false);
         }
         else if (levelName == "8")
         {
             tutorialIds.Add(4);
-            getLevelReady(20, false, false, true, false, true, false, false, true, false, false);
+            getLevelReady(playablePieceCount, false, false, true, false, true, false, false, true, false, false);
         }
         else if (levelName == "9")
         {
             tutorialIds.Add(5);
-            getLevelReady(20, false, false, false, true, true, false, true, false, false, false);
+            getLevelReady(playablePieceCount, false, false, false, true, true, false, true, false, false, false);
         }
         else if (levelName == "10")
         {
             tutorialIds.Add(5);
-            getLevelReady(20, false, false, false, true, true, false, false, true, false, false);
+            getLevelReady(playablePieceCount, false, false, false, true, true, false, false, true, false, false);
         }
         else if (levelName == "11")
         {
@@ -382,6 +396,8 @@ public class PieceGame : MonoBehaviour
         timeSaveLevel = timeSaver;
         inGameUi.SetActive(true);
         getTutorialScene(tutorialIds[0], showTime);
+        if (isTooMuchRedArea)
+            notPlayableText.SetActive(true); 
     }
 
     bool checkFinishStatue()

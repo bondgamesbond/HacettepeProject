@@ -133,17 +133,22 @@ public class Piece : MonoBehaviour
             shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
         else
         {
-            gameObject.SetActive(true);
-            firstPosition = transform.position;
-            shadowScript.position = targetPosition;
-            shadowScript.rotation = shadowRotation;
-            Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
-            pos.x = ((pos.x - 50) / 550) * 1600;
-            pos.y = ((pos.y - 150) / 190) * 900;
-            if (pos.x > 1600)
-                pos.x = 1599;
-            if (pos.y > 900)
-                pos.y = 899;
+            if (!isStraightLineup && !PieceGame.Instance.isTooMuchRedArea && RestrictionMap.findDifficulty(transform.position) >= 4)
+                shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+            else
+            {
+                gameObject.SetActive(true);
+                firstPosition = transform.position;
+                shadowScript.position = targetPosition;
+                shadowScript.rotation = shadowRotation;
+                Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+                pos.x = ((pos.x - 50) / 550) * 1600;
+                pos.y = ((pos.y - 150) / 190) * 900;
+                if (pos.x > 1600)
+                    pos.x = 1599;
+                if (pos.y > 900)
+                    pos.y = 899;
+            }
             //.Log(transform.name + ",x:" + pos.x  + ",y:" + ((int)(900 - pos.y)) + ",Value:" + PlayerPrefsX.GetIntArray("CurrentDifficultyArea" + ((int)(900 - pos.y) / 4))[(int)(pos.x / 4)]);
         }
     }

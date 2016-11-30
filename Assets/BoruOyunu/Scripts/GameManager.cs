@@ -836,7 +836,7 @@ public class GameManager : MonoBehaviour
 				{
 					Vector2 pipePosition = new Vector2(i * 2 - 9f, j * -2 + 4);
 
-					if (RestrictionMap.findDifficulty(pipePosition) == 4)
+					if (RestrictionMap.findDifficulty(pipePosition) >= 4)
 					{
 						count++;
 					}

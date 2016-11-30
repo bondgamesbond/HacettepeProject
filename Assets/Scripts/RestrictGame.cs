@@ -25,7 +25,7 @@ public class RestrictGame : MonoBehaviour
 
     public float time;
 
-    float loadingTimer, loadingWaitTime;
+    float loadingTimer, loadingWaitTime, redAreaCount = 0;
 
     int formulaPower = 2, mapIndex = 0;
 
@@ -49,6 +49,7 @@ public class RestrictGame : MonoBehaviour
         isFirstTouch = true;
         pngSaver = new PNGExporter();
         isTouchesActive = true;
+        Debug.Log(PlayerPrefs.GetFloat("RedAreaRatio"));
     }
 
     void Update()
@@ -307,8 +308,9 @@ public class RestrictGame : MonoBehaviour
                 {
                     colorValues[i, j] = Color.Lerp(Color.magenta, Color.red, (difficultyValues[i, j] - 0.8f) / (0.2f));
                     difficultyAreaValues[j][i] = 4;
+                    redAreaCount++;
                 }
-				else if (difficultyValues[i, j] > 0.9f)
+				if (difficultyValues[i, j] > 0.9f)
 				{
 					difficultyAreaValues[j][i] = 5;
 				}
@@ -319,6 +321,9 @@ public class RestrictGame : MonoBehaviour
         {
             PlayerPrefsX.SetIntArray("CurrentDifficultyArea" + i, difficultyAreaValues[i]);
         }
+        Debug.Log(redAreaCount);
+        Debug.Log((redAreaCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange))) * 100);
+        PlayerPrefs.SetFloat("RedAreaRatio", (redAreaCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange))) * 100);
 
         for (int i = 0; i < mapTexture.width; i++)
         {

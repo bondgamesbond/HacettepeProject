@@ -7,6 +7,7 @@ public class RestrictionMap : MonoBehaviour
     private static float mapTextureWidth = 900;
     private static float pixelRange = 4;
     private static int[][] difficultyValues = new int[(int)(mapTextureHeight / pixelRange)][];
+    static int redCount;
 
     private static string prefName = "CurrentDifficultyArea";
 
@@ -15,8 +16,20 @@ public class RestrictionMap : MonoBehaviour
         for (int i = 0; i < mapTextureHeight / pixelRange; i++)
         {
             difficultyValues[i] = PlayerPrefsX.GetIntArray(prefName + i);
+            if (PlayerPrefs.GetFloat("RedAreaRatio") == 0)
+            {
+                for (int j = 0; j < mapTextureWidth / pixelRange; j++)
+                {
+                    if (difficultyValues[i][j] >= 4)
+                        redCount++;
+                }
+            }
         }
-
+        if (PlayerPrefs.GetFloat("RedAreaRatio") == 0)
+        {
+            Debug.Log(redCount);
+            PlayerPrefs.SetFloat("RedAreaRatio", (redCount / ((mapTextureWidth / pixelRange) * (mapTextureHeight / pixelRange))) * 100);
+        }
         float pxX = 800 + 100 * position.x;
         float pxY = 450 + 100 * position.y;
 
