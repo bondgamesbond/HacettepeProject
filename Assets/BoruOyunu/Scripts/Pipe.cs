@@ -156,8 +156,11 @@ public class Pipe : MonoBehaviour
                             GameManager.Instance.CheckGrid(gridY, gridX) == 4 ||
                             GameManager.Instance.CheckGrid(gridY, gridX) == 5))
                         {
-                            redGlow.SetActive(false);
-                            greenGlow.SetActive(true);
+							if (!grid.Placed)
+							{
+								redGlow.SetActive(false);
+								greenGlow.SetActive(true);
+							}
                         }
                     }
                     else if (type == 0 && GameManager.Instance.CheckGrid(gridY, gridX) == 6 && (GameManager.Instance.CurrentPlace(gridY, gridX) || GameManager.Instance.State == GameStateBoru.FillWater))
@@ -252,29 +255,32 @@ public class Pipe : MonoBehaviour
                                 GameManager.Instance.CheckGrid(gridY, gridX) == 4 ||
                                 GameManager.Instance.CheckGrid(gridY, gridX) == 5))
                             {
-                                transform.position = collidingGrid.transform.position;
+								if (!grid.Placed)
+								{
+									transform.position = collidingGrid.transform.position;
 
-                                if (GameManager.Instance.CheckGrid(gridY, gridX) == 2)
-                                {
-                                    GameManager.Instance.PlaceToGrid(gridY, gridX);
-                                    GameManager.Instance.Place++;
-                                    isOnTrueRotation = true;
-                                    canRotate = false;
-                                }
-                                else
-                                {
-                                    canRotate = true;
-                                }
+									if (GameManager.Instance.CheckGrid(gridY, gridX) == 2)
+									{
+										GameManager.Instance.PlaceToGrid(gridY, gridX);
+										GameManager.Instance.Place++;
+										isOnTrueRotation = true;
+										canRotate = false;
+									}
+									else
+									{
+										canRotate = true;
+									}
 
-                                // Get grid place and add the pipe to that place.
-                                int place = GameManager.Instance.CheckPlace(gridY, gridX);
-                                GameManager.Instance.AddPipe(place, this);
-                                grid.Placed = true;
-                                this.Placed = true;
-                                putPipeSound.Play();
+									// Get grid place and add the pipe to that place.
+									int place = GameManager.Instance.CheckPlace(gridY, gridX);
+									GameManager.Instance.AddPipe(place, this);
+									grid.Placed = true;
+									this.Placed = true;
+									putPipeSound.Play();
 
 
-                                greenGlow.SetActive(false);
+									greenGlow.SetActive(false);
+								}
                             }
                         }
                     }
@@ -285,28 +291,31 @@ public class Pipe : MonoBehaviour
                             GameManager.Instance.CheckGrid(gridY, gridX) == 4 ||
                             GameManager.Instance.CheckGrid(gridY, gridX) == 5))
                         {
-                            transform.position = collidingGrid.transform.position;
-                            
-                            if (GameManager.Instance.CheckGrid(gridY, gridX) == 2)
-                            {
-                                GameManager.Instance.PlaceToGrid(gridY, gridX);
-                                GameManager.Instance.Place++;
-                                isOnTrueRotation = true;
-                                canRotate = false;
-                            }
-                            else
-                            {
-                                canRotate = true;
-                            }
+							if (!grid.Placed)
+							{
+								transform.position = collidingGrid.transform.position;
 
-                            // Get grid place and add the pipe to that place.
-                            int place = GameManager.Instance.CheckPlace(gridY, gridX);
-                            GameManager.Instance.AddPipe(place, this);
-                            grid.Placed = true;
-                            this.Placed = true;
-                            putPipeSound.Play();
+								if (GameManager.Instance.CheckGrid(gridY, gridX) == 2)
+								{
+									GameManager.Instance.PlaceToGrid(gridY, gridX);
+									GameManager.Instance.Place++;
+									isOnTrueRotation = true;
+									canRotate = false;
+								}
+								else
+								{
+									canRotate = true;
+								}
 
-                            greenGlow.SetActive(false);
+								// Get grid place and add the pipe to that place.
+								int place = GameManager.Instance.CheckPlace(gridY, gridX);
+								GameManager.Instance.AddPipe(place, this);
+								grid.Placed = true;
+								this.Placed = true;
+								putPipeSound.Play();
+
+								greenGlow.SetActive(false);
+							}
                         }
                         else
                         {

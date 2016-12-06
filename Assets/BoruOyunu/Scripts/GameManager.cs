@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     SkeletonAnimation tutorialAnimation;
     Transform tutorial;
 
-    private List<int[,]> levelList, levelPlaceList;
+    private List<int[,]> levelList, levelPlaceList, playerSpecificLevelList;
 
     
 
@@ -303,7 +303,7 @@ public class GameManager : MonoBehaviour
 
         if (currentLevel != null) // Playing a level.
         {
-            if (LevelTime < 10 && !countdown.isPlaying && !allPlaced)
+            if (LevelTime < 3.5f && !countdown.isPlaying && !allPlaced)
             {
                 countdown.Play();
             }
@@ -645,13 +645,40 @@ public class GameManager : MonoBehaviour
 
 		Grid.count = 1;
 
-        switch(Level)
+		restrictionCounts = new int[levelList.Count];
+
+		for (int i = 0; i < restrictionCounts.Length; i++)
+		{
+			restrictionCounts[i] = getRestrictionStatusCount(levelList[i]);
+		}
+
+		int min = restrictionCounts[0];
+
+		playerSpecificLevelList = new List<int[,]>();
+
+		for (int i = 1; i < restrictionCounts.Length; i++)
+		{
+			if (restrictionCounts[i] < min)
+			{
+				min = restrictionCounts[i];
+			}
+		}
+
+		for (int i = 0; i < restrictionCounts.Length; i++)
+		{
+			if (restrictionCounts[i] == min)
+			{
+				playerSpecificLevelList.Add(levelList[i]);
+			}
+		}
+
+		switch (Level)
         {
             case 1:
-                rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("Level1Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                rand = Random.Range(0, playerSpecificLevelList.Count);
+                while (rand == PlayerPrefs.GetInt("Level1Pipes", -1)) { rand = Random.Range(0, playerSpecificLevelList.Count); }
                 PlayerPrefs.SetInt("Level1Pipes", rand);
-                grid = levelList[rand].Clone() as int[,];
+                grid = playerSpecificLevelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level1PipeNumber;
                 ShadowValue = 0;
@@ -671,7 +698,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:
                 rand = PlayerPrefs.GetInt("Level1Pipes");
-                grid = levelList[PlayerPrefs.GetInt("Level1Pipes")].Clone() as int[,];
+                grid = playerSpecificLevelList[PlayerPrefs.GetInt("Level1Pipes")].Clone() as int[,];
                 places = levelPlaceList[PlayerPrefs.GetInt("Level1Pipes")].Clone() as int[,];
                 NumberOfPipes = level2PipeNumber;
                 ShadowValue = 0;
@@ -690,10 +717,10 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 3:
-                rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("Level3Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                rand = Random.Range(0, playerSpecificLevelList.Count);
+                while (rand == PlayerPrefs.GetInt("Level3Pipes", -1)) { rand = Random.Range(0, playerSpecificLevelList.Count); }
                 PlayerPrefs.SetInt("Level3Pipes", rand);
-                grid = levelList[rand].Clone() as int[,];
+                grid = playerSpecificLevelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level3PipeNumber;
                 ShadowValue = 1;
@@ -713,7 +740,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 4:
                 rand = PlayerPrefs.GetInt("Level3Pipes");
-                grid = levelList[PlayerPrefs.GetInt("Level3Pipes")].Clone() as int[,];
+                grid = playerSpecificLevelList[PlayerPrefs.GetInt("Level3Pipes")].Clone() as int[,];
                 places = levelPlaceList[PlayerPrefs.GetInt("Level3Pipes")].Clone() as int[,];
                 NumberOfPipes = level4PipeNumber;
                 ShadowValue = 1;
@@ -732,10 +759,10 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 5:
-                rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("Level5Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                rand = Random.Range(0, playerSpecificLevelList.Count);
+                while (rand == PlayerPrefs.GetInt("Level5Pipes", -1)) { rand = Random.Range(0, playerSpecificLevelList.Count); }
                 PlayerPrefs.SetInt("Level5Pipes", rand);
-                grid = levelList[rand].Clone() as int[,];
+                grid = playerSpecificLevelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level5PipeNumber;
                 ShadowValue = 2;
@@ -755,7 +782,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 6:
                 rand = PlayerPrefs.GetInt("Level5Pipes");
-                grid = levelList[PlayerPrefs.GetInt("Level5Pipes")].Clone() as int[,];
+                grid = playerSpecificLevelList[PlayerPrefs.GetInt("Level5Pipes")].Clone() as int[,];
                 places = levelPlaceList[PlayerPrefs.GetInt("Level5Pipes")].Clone() as int[,];
                 NumberOfPipes = level6PipeNumber;
                 ShadowValue = 2;
@@ -774,10 +801,10 @@ public class GameManager : MonoBehaviour
                 game.gameObject.SetActive(true);
                 break;
             case 7:
-                rand = Random.Range(0, levelList.Count);
-                while (rand == PlayerPrefs.GetInt("Level7Pipes", -1)) { rand = Random.Range(0, levelList.Count); }
+                rand = Random.Range(0, playerSpecificLevelList.Count);
+                while (rand == PlayerPrefs.GetInt("Level7Pipes", -1)) { rand = Random.Range(0, playerSpecificLevelList.Count); }
                 PlayerPrefs.SetInt("Level7Pipes", rand);
-                grid = levelList[rand].Clone() as int[,];
+                grid = playerSpecificLevelList[rand].Clone() as int[,];
                 places = levelPlaceList[rand].Clone() as int[,];
                 NumberOfPipes = level7PipeNumber;
                 ShadowValue = 2;
@@ -797,7 +824,7 @@ public class GameManager : MonoBehaviour
                 break;
             case 8:
                 rand = PlayerPrefs.GetInt("Level7Pipes");
-                grid = levelList[PlayerPrefs.GetInt("Level7Pipes")].Clone() as int[,];
+                grid = playerSpecificLevelList[PlayerPrefs.GetInt("Level7Pipes")].Clone() as int[,];
                 places = levelPlaceList[PlayerPrefs.GetInt("Level7Pipes")].Clone() as int[,];
                 NumberOfPipes = level8PipeNumber;
                 ShadowValue = 2;
