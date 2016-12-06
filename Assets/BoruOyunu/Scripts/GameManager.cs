@@ -303,7 +303,7 @@ public class GameManager : MonoBehaviour
 
         if (currentLevel != null) // Playing a level.
         {
-            if (LevelTime < 10 && !countdown.isPlaying && !allPlaced)
+            if (LevelTime < 3.5f && !countdown.isPlaying && !allPlaced)
             {
                 countdown.Play();
             }
