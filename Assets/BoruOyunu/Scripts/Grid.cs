@@ -6,7 +6,6 @@ public class Grid : MonoBehaviour
 {
 	public static int count = 1;
 	public static bool countdowning = false;
-	public bool canPut;
     /*public static int minShadowNumber = 5;*/
 
     // For checking appropriate properties of the grid.
@@ -24,7 +23,6 @@ public class Grid : MonoBehaviour
         // Get the correct pipe type of the grid for the current level and the minimum shadowy pipes.
         pipeType = GameManager.Instance.pipeTypeAtPosition(transform.position);
 		countdown = 5;
-		canPut = true;
 
         // Grid in current level have a pipe.
         if (pipeType >= 0)
