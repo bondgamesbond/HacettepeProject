@@ -58,7 +58,7 @@ public class AnimateGif : MonoBehaviour
             }
         }
 
-       
+		textures.Reverse();
     }
     
     private void OnEnable()

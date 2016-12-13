@@ -41,6 +41,8 @@ public class RestrictGame : MonoBehaviour
 
     public AudioSource pop1, pop2, pop3;
 
+	public Text perc5, perc4, perc3, perc2, perc1;
+
     void Start()
     {
         checkPointTimes = new float[checkPoints.childCount];
@@ -49,6 +51,12 @@ public class RestrictGame : MonoBehaviour
         isFirstTouch = true;
         pngSaver = new PNGExporter();
         isTouchesActive = true;
+
+		perc5.color = Color.red;
+		perc4.color = Color.blue;
+		perc3.color = Color.cyan;
+		perc2.color = Color.green;
+		perc1.color = Color.yellow;
     }
 
     void Update()
@@ -200,8 +208,13 @@ public class RestrictGame : MonoBehaviour
         }
     }
 
-    void createDifficultyMap()
+	string date;
+	float redCount, yellowCount, greenCount, blueCount, cyanCount;
+
+	void createDifficultyMap()
     {
+		redCount = 0; yellowCount = 0; greenCount = 0; blueCount = 0; cyanCount = 0;
+
         Texture2D mapTexture = new Texture2D(1600, 900);
         difficultyMap.GetComponent<Renderer>().material.mainTexture = mapTexture;
         float[,] difficultyValues = new float[mapTexture.width / pixelRange, mapTexture.height / pixelRange];
@@ -287,26 +300,31 @@ public class RestrictGame : MonoBehaviour
                 {
                     colorValues[i, j] = Color.Lerp(Color.yellow, Color.green, (difficultyValues[i, j]) / (0.2f));
                     difficultyAreaValues[j][i] = 0;
+					yellowCount++;
                 }
                 else if (difficultyValues[i, j] > 0.2f && difficultyValues[i, j] <= 0.4f)
                 {
                     colorValues[i, j] = Color.Lerp(Color.green, Color.cyan, (difficultyValues[i, j] - 0.2f) / (0.2f));
                     difficultyAreaValues[j][i] = 1;
+					greenCount++;
                 }
                 else if (difficultyValues[i, j] > 0.4f && difficultyValues[i, j] <= 0.6f)
                 {
                     colorValues[i, j] = Color.Lerp(Color.cyan, Color.blue, (difficultyValues[i, j] - 0.4f) / (0.2f));
                     difficultyAreaValues[j][i] = 2;
+					cyanCount++;
                 }
                 else if (difficultyValues[i, j] > 0.6f && difficultyValues[i, j] <= 0.8f)
                 {
                     colorValues[i, j] = Color.Lerp(Color.blue, Color.magenta, (difficultyValues[i, j] - 0.6f) / (0.2f));
                     difficultyAreaValues[j][i] = 3;
+					blueCount++;
                 }
                 else if (difficultyValues[i, j] > 0.8f)
                 {
                     colorValues[i, j] = Color.Lerp(Color.magenta, Color.red, (difficultyValues[i, j] - 0.8f) / (0.2f));
                     difficultyAreaValues[j][i] = 4;
+					redCount++;
                     redAreaCount++;
                 }
 				if (difficultyValues[i, j] > 0.9f)
@@ -329,10 +347,18 @@ public class RestrictGame : MonoBehaviour
                 mapTexture.SetPixel(i, j, colorValues[i / pixelRange, j / pixelRange]);
             }
         }
-        mapTexture.Apply();
+		mapTexture.Apply();
         difficultyMap.GetComponent<SpriteRenderer>().sprite = Sprite.Create(mapTexture, difficultyMap.GetComponent<SpriteRenderer>().sprite.rect, new Vector2(0.5f, 0.5f));
         savingTexture = mapTexture;
-    }
+
+		date = System.DateTime.Now.ToString("yyyy,MM,dd-HH,mm,ss");
+
+		PlayerPrefs.SetFloat("DifficultyMap" + date + "red", redCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+		PlayerPrefs.SetFloat("DifficultyMap" + date + "blue", blueCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+		PlayerPrefs.SetFloat("DifficultyMap" + date + "cyan", cyanCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+		PlayerPrefs.SetFloat("DifficultyMap" + date + "green", greenCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+		PlayerPrefs.SetFloat("DifficultyMap" + date + "yellow", yellowCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+	}
 
     void getLoadingMenu(float waitTime, string loadingText)
     {
@@ -404,7 +430,6 @@ public class RestrictGame : MonoBehaviour
     public void saveImage()
     {
 		//string date = System.DateTime.Now.ToString("dd,MM,yyyy-HH,mm,ss");
-		string date = System.DateTime.Now.ToString("yyyy,MM,dd-HH,mm,ss");
 		pngSaver.SaveTexture2Folder(Application.streamingAssetsPath + "/Maps", "DifficultyMap" + date, savingTexture);
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
@@ -438,6 +463,10 @@ public class RestrictGame : MonoBehaviour
                 }
             }
         }
+
+		textureNames.Reverse();
+		textures.Reverse();
+
         for (int i = 0; i < textures.Count; i++)
         {
             Texture2D texture = textures[i];
@@ -446,10 +475,13 @@ public class RestrictGame : MonoBehaviour
                 difficultyMap.GetComponent<Renderer>().material.mainTexture = texture;
                 difficultyMap.GetComponent<SpriteRenderer>().sprite = Sprite.Create(texture, difficultyMap.GetComponent<SpriteRenderer>().sprite.rect, new Vector2(0.5f, 0.5f));
                 difficultyMap.name = textureNames[i];
+				difficultyMap.transform.localScale = Vector3.one * 0.7f;
+				SetPercentages(difficultyMap.name);
             }
             else
             {
                 GameObject map = (GameObject)Instantiate(difficultyMap, difficultyMap.transform.position, difficultyMap.transform.rotation);
+				map.transform.localScale = Vector3.one * 0.7f;
                 map.transform.parent = difficultyMap.transform.parent;
                 map.GetComponent<Renderer>().material.mainTexture = texture;
                 map.GetComponent<SpriteRenderer>().sprite = Sprite.Create(texture, difficultyMap.GetComponent<SpriteRenderer>().sprite.rect, new Vector2(0.5f, 0.5f));
@@ -482,8 +514,8 @@ public class RestrictGame : MonoBehaviour
         if (!mapMenu.transform.FindChild("PreviousButton").gameObject.activeSelf)
             mapMenu.transform.FindChild("PreviousButton").gameObject.SetActive(true);
         mapTimeText.text = mapList.GetChild(mapIndex).name.Remove(0, 13);
-
-    }
+		SetPercentages(mapList.GetChild(mapIndex).name);
+	}
     public void getPreviousMap()
     {
         if (mapIndex - 1 == 0)
@@ -494,6 +526,7 @@ public class RestrictGame : MonoBehaviour
         if (!mapMenu.transform.FindChild("NextButton").gameObject.activeSelf)
             mapMenu.transform.FindChild("NextButton").gameObject.SetActive(true);
         mapTimeText.text = mapList.GetChild(mapIndex).name.Remove(0, 13);
+		SetPercentages(mapList.GetChild(mapIndex).name);
     }
 
     public void clearMaps()
@@ -502,4 +535,14 @@ public class RestrictGame : MonoBehaviour
             mapList.GetChild(i).gameObject.SetActive(false);
         mapList.gameObject.SetActive(false);
     }
+
+	private void SetPercentages(string fileName)
+	{
+		print(PlayerPrefs.GetInt(fileName + "red"));
+		perc5.text = "% " + PlayerPrefs.GetFloat(fileName + "red").ToString("0.0");
+		perc4.text = "% " + PlayerPrefs.GetFloat(fileName + "blue").ToString("0.0");
+		perc3.text = "% " + PlayerPrefs.GetFloat(fileName + "cyan").ToString("0.0");
+		perc2.text = "% " + PlayerPrefs.GetFloat(fileName + "green").ToString("0.0");
+		perc1.text = "% " + PlayerPrefs.GetFloat(fileName + "yellow").ToString("0.0");
+	}
 }

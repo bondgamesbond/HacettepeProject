@@ -20,6 +20,11 @@ public class RestrictionMap : MonoBehaviour
         float pxX = 800 + 100 * position.x;
         float pxY = 450 + 100 * position.y;
 
+		for (int i = 0; i < mapTextureHeight / pixelRange; i++)
+		{
+			difficultyValues[i] = PlayerPrefsX.GetIntArray(prefName + i);
+		}
+
         if (pxX >= mapTextureHeight)
         {
             pxX = mapTextureHeight - 100;
