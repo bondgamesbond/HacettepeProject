@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public bool valveCanTurn;
     public RectTransform valveOpenSlider;
 
-    public AudioSource leakingSound, explosionSound, fillingSound, countdown;
+    public AudioSource leakingSound, explosionSound, fillingSound, countdown, backgroundMusic;
 
     public Canvas menu;
     public Canvas game;
@@ -253,23 +253,23 @@ public class GameManager : MonoBehaviour
         tutorial = transform.GetChild(0);
         tutorialAnimation = transform.GetChild(1).GetComponent<SkeletonAnimation>();
 
-        for (int i = 1; i < 9; i++)
-        {
-            menu.transform.GetChild(i).GetChild(2).GetComponent<Text>().text = "%" + PlayerPrefs.GetFloat("Level" + i + "Percentage");
-            if (i <= levelsPassed)
-            {
-                menu.transform.GetChild(i + 1).gameObject.SetActive(true);
-            }
-        }
-
-        pipePosition = new Vector2(0.0f, -11.0f);
-
-		restrictionCounts = new int[levelList.Count];
-
-		for (int i = 0; i < restrictionCounts.Length; i++)
+		for (int i = 1; i < 9; i++)
 		{
-			restrictionCounts[i] = getRestrictionStatusCount(levelList[i]);
+			menu.transform.GetChild(i).GetChild(2).GetComponent<Text>().text = "%" + PlayerPrefs.GetFloat("Level" + i + "Percentage");
+			if (i <= levelsPassed)
+			{
+				menu.transform.GetChild(i + 1).gameObject.SetActive(true);
+			}
 		}
+
+		pipePosition = new Vector2(0.0f, -11.0f);
+
+		//restrictionCounts = new int[levelList.Count];
+
+		//for (int i = 0; i < restrictionCounts.Length; i++)
+		//{
+		//	restrictionCounts[i] = getRestrictionStatusCount(levelList[i]);
+		//}
 	}
 
 
@@ -296,6 +296,7 @@ public class GameManager : MonoBehaviour
         if (LevelTime < 0 && State != GameStateBoru.MainMenu)
         {
             endMenu.gameObject.SetActive(true);
+			countdown.Stop();
             endMenu.transform.GetChild(1).GetComponent<Text>().text = "Süreniz Doldu.";
             Time.timeScale = 0;
             State = GameStateBoru.Paused;
@@ -305,6 +306,7 @@ public class GameManager : MonoBehaviour
         {
             if (LevelTime < 3.5f && !countdown.isPlaying && !allPlaced)
             {
+				backgroundMusic.volume = 0.3f;
                 countdown.Play();
             }
 
@@ -341,6 +343,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (State != GameStateBoru.MainMenu)
                     {
+						backgroundMusic.volume = 0.3f;
                         StartWater();
                     }
                 }
@@ -364,16 +367,19 @@ public class GameManager : MonoBehaviour
                         }
                     }
 
-                    State = GameStateBoru.MainMenu;
+					backgroundMusic.volume = 0.5f;
+					timeText.text = "";
+
+					State = GameStateBoru.MainMenu;
                 }
             }
             else
             {
                 // Update time and check all placed.
-                timeText.text = "Kalan Süre: " + Mathf.Ceil(LevelTime);
                 if (Level % 2 == 0)
                 {
-                    timeText.text += " (Süre %10 azaltıldı.)";
+					timeText.text = "Kalan Süre: " + Mathf.Ceil(LevelTime);
+					timeText.text += " (Süre %10 azaltıldı.)";
                 }
 				if (!Grid.countdowning)
 				{
@@ -579,7 +585,9 @@ public class GameManager : MonoBehaviour
 
     public void MainMenu()
     {
-        State = GameStateBoru.MainMenu;
+		backgroundMusic.volume = 0.5f;
+		timeText.text = "";
+		State = GameStateBoru.MainMenu;
 		if (countdown.isPlaying)
 		{
 			countdown.Stop();

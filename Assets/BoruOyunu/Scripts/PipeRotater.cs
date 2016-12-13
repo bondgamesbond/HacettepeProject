@@ -170,15 +170,20 @@ public class PipeRotater : MonoBehaviour
                             // PieceGame.Instance.piecePlaceSound.Play();
                         }
                         onHolPiece.GetComponent<Pipe>().rotating = false;
-                        onHolPiece = null;
+                        
                         if (redGlow != null)
                         {
-                            redGlow.gameObject.SetActive(false);
-                            greenGlow.gameObject.SetActive(false);
-                            redGlow = null;
-                            greenGlow = null;
-                        }
-                    }
+							if (onHolPiece.GetComponent<Pipe>().isOnTrueRotation)
+							{
+								redGlow.gameObject.SetActive(false);
+							}
+							
+							greenGlow.gameObject.SetActive(false);
+							redGlow = null;
+							greenGlow = null;
+						}
+						onHolPiece = null;
+					}
                     onPieceTouchCount = 0;
                     // testText.text = "Cikti";
                 }

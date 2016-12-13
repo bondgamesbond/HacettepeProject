@@ -265,9 +265,11 @@ public class Pipe : MonoBehaviour
 										GameManager.Instance.Place++;
 										isOnTrueRotation = true;
 										canRotate = false;
+										redGlow.SetActive(false);
 									}
 									else
 									{
+										redGlow.SetActive(true);
 										canRotate = true;
 									}
 
@@ -301,9 +303,11 @@ public class Pipe : MonoBehaviour
 									GameManager.Instance.Place++;
 									isOnTrueRotation = true;
 									canRotate = false;
+									redGlow.SetActive(false);
 								}
 								else
 								{
+									redGlow.SetActive(true);
 									canRotate = true;
 								}
 
@@ -402,6 +406,7 @@ public class Pipe : MonoBehaviour
                     }
                     else
                     {
+						print(GameManager.Instance.getPipePosition());
                         transform.position = GameManager.Instance.getPipePosition() + new Vector3(2.5f, 0.0f, 0.0f) * (type);
                         redGlow.SetActive(false);
                     }
@@ -414,7 +419,8 @@ public class Pipe : MonoBehaviour
             holding = false;
         }
 
-        redGlow.SetActive(false);
+		if (GetComponentInParent<PipeRotater>() == null)
+			redGlow.SetActive(false);
         greenGlow.SetActive(false);
     }
 
