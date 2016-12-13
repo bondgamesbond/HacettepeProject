@@ -12,7 +12,7 @@ public class PieceRotater : MonoBehaviour
 
     int touchCount, onPieceTouchCount;
 
-    float rotateSensivity = 10.0f;
+    float rotateSensivity = 15.0f;
 
     Transform onHolPiece, redGlow, greenGlow, whiteGlow;
 
@@ -76,7 +76,7 @@ public class PieceRotater : MonoBehaviour
                             if (redGlow != null)
                             {
                                 redGlow.gameObject.SetActive(false);
-                                greenGlow.gameObject.SetActive(false);
+                                whiteGlow.gameObject.SetActive(false);
                                 redGlow = null;
                                 greenGlow = null;
                             }

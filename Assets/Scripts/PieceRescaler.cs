@@ -84,13 +84,12 @@ public class PieceRescaler : MonoBehaviour
                             if (redGlow != null)
                             {
                                 redGlow.gameObject.SetActive(false);
-                                greenGlow.gameObject.SetActive(false);
+                                whiteGlow.gameObject.SetActive(false);
                                 redGlow = null;
                                 greenGlow = null;
                             }
                         }
                         onPieceTouchCount = 0;
-                        testText.text = "Cikti";
                     }
                 }
             }
@@ -135,7 +134,6 @@ public class PieceRescaler : MonoBehaviour
                 redGlow.gameObject.SetActive(false);
                 greenGlow.gameObject.SetActive(true);
                 whiteGlow.gameObject.SetActive(true);
-                testText.text = "aha burda";
             }
             else
             {

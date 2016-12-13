@@ -25,7 +25,9 @@ public class Piece : MonoBehaviour
 
     bool isOverlap, isStraightLineup, isWhiteAnimAuto, resultFlag = false;
 
-    public int laneId;
+    public int laneId, difficulty;
+
+    int tempDifficulty;
 
     public bool isPlaced, isOnHold, isOnTrueScale, isOnTrueRotation, isMultiplying, isCollided, isWhiteAnimFinished;
 
@@ -141,16 +143,94 @@ public class Piece : MonoBehaviour
                 firstPosition = transform.position;
                 shadowScript.position = targetPosition;
                 shadowScript.rotation = shadowRotation;
-                Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
-                pos.x = ((pos.x - 50) / 550) * 1600;
-                pos.y = ((pos.y - 150) / 190) * 900;
-                if (pos.x > 1600)
-                    pos.x = 1599;
-                if (pos.y > 900)
-                    pos.y = 899;
             }
-            //.Log(transform.name + ",x:" + pos.x  + ",y:" + ((int)(900 - pos.y)) + ",Value:" + PlayerPrefsX.GetIntArray("CurrentDifficultyArea" + ((int)(900 - pos.y) / 4))[(int)(pos.x / 4)]);
         }
+        //if (isOverlap)
+        //    shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+        //else
+        //{
+        //    if (!isStraightLineup)
+        //    {
+        //        tempDifficulty = RestrictionMap.findDifficulty(transform.position);
+        //        if (tempDifficulty >= 4)
+        //        {
+        //            if (PieceGame.Instance.redPieceCount < PieceGame.Instance.redPieceSlot)
+        //            {
+        //                PieceGame.Instance.redPieceCount++;
+        //                gameObject.SetActive(true);
+        //                firstPosition = transform.position;
+        //                shadowScript.position = targetPosition;
+        //                shadowScript.rotation = shadowRotation;
+        //                difficulty = 4;
+        //            }
+        //            else
+        //                shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+        //        }
+        //        else if (tempDifficulty == 3)
+        //        {
+        //            if (PieceGame.Instance.bluePieceCount < PieceGame.Instance.bluePieceSlot)
+        //            {
+        //                PieceGame.Instance.bluePieceCount++;
+        //                gameObject.SetActive(true);
+        //                firstPosition = transform.position;
+        //                shadowScript.position = targetPosition;
+        //                shadowScript.rotation = shadowRotation;
+        //                difficulty = 3;
+        //            }
+        //            else
+        //                shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+        //        }
+        //        else if (tempDifficulty == 2)
+        //        {
+        //            if (PieceGame.Instance.cyanPieceCount < PieceGame.Instance.cyanPieceSlot)
+        //            {
+        //                PieceGame.Instance.cyanPieceCount++;
+        //                gameObject.SetActive(true);
+        //                firstPosition = transform.position;
+        //                shadowScript.position = targetPosition;
+        //                shadowScript.rotation = shadowRotation;
+        //                difficulty = 2;
+        //            }
+        //            else
+        //                shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+        //        }
+        //        else if (tempDifficulty == 1)
+        //        {
+        //            if (PieceGame.Instance.greenPieceCount < PieceGame.Instance.greenPieceSlot)
+        //            {
+        //                PieceGame.Instance.greenPieceCount++;
+        //                gameObject.SetActive(true);
+        //                firstPosition = transform.position;
+        //                shadowScript.position = targetPosition;
+        //                shadowScript.rotation = shadowRotation;
+        //                difficulty = 1;
+        //            }
+        //            else
+        //                shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+        //        }
+        //        else if (tempDifficulty == 0)
+        //        {
+        //            if (PieceGame.Instance.yellowPieceCount < PieceGame.Instance.yellowPieceSlot)
+        //            {
+        //                PieceGame.Instance.yellowPieceCount++;
+        //                gameObject.SetActive(true);
+        //                firstPosition = transform.position;
+        //                shadowScript.position = targetPosition;
+        //                shadowScript.rotation = shadowRotation;
+        //                difficulty = 0;
+        //            }
+        //            else
+        //                shufflePosition(isStraightLineup, isRotationChanging, isScaleChanging, isMathPiece, isAlone);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        gameObject.SetActive(true);
+        //        firstPosition = transform.position;
+        //        shadowScript.position = targetPosition;
+        //        shadowScript.rotation = shadowRotation;
+        //    }
+        //}
     }
 
 

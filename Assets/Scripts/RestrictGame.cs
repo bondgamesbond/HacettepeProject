@@ -49,7 +49,6 @@ public class RestrictGame : MonoBehaviour
         isFirstTouch = true;
         pngSaver = new PNGExporter();
         isTouchesActive = true;
-        Debug.Log(PlayerPrefs.GetFloat("RedAreaRatio"));
     }
 
     void Update()
@@ -321,8 +320,6 @@ public class RestrictGame : MonoBehaviour
         {
             PlayerPrefsX.SetIntArray("CurrentDifficultyArea" + i, difficultyAreaValues[i]);
         }
-        Debug.Log(redAreaCount);
-        Debug.Log((redAreaCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange))) * 100);
         PlayerPrefs.SetFloat("RedAreaRatio", (redAreaCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange))) * 100);
 
         for (int i = 0; i < mapTexture.width; i++)

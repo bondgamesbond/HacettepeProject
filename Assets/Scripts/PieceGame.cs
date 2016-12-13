@@ -27,13 +27,13 @@ public class PieceGame : MonoBehaviour
 
     public Transform numbersList, lettersList, onHoldPiece;
 
-    bool multiTouchActive, isPieceOnHold, isInReverseMode, timeSaveLevel, canHoldAnyPiece, isMathMode, isTimeScore, isFinishing;
+    bool multiTouchActive, isPieceOnHold, isInReverseMode, timeSaveLevel, canHoldAnyPiece, isMathMode, isTimeScore, isFinishing, countdownFlag;
 
     public bool hasReversePlay, isTooMuchRedArea, isMidRangeRedArea, isLittleRedArea;
 
     int touchCount, levelId, currentPieceIndex, timeToBeat;
 
-    public int playablePieceCount;
+    public int playablePieceCount, redPieceCount, redPieceSlot, bluePieceCount, bluePieceSlot, cyanPieceCount, cyanPieceSlot, greenPieceCount, greenPieceSlot, yellowPieceCount, yellowPieceSlot;
 
     Transform redGlow, greenGlow, whiteGlow;
 
@@ -41,7 +41,7 @@ public class PieceGame : MonoBehaviour
 
     Vector2 offset;
 
-    public float timer, levelCompleteScore, redAreaRatio;
+    public float timer, levelCompleteScore;
 
     float finishTimer;
 
@@ -55,9 +55,13 @@ public class PieceGame : MonoBehaviour
 
     List<Transform> activePieces = new List<Transform>();
 
-    public AudioSource piecePlaceSound, pieceReturnSound, pieceRetakeSound, finishSound, gameOverSound;
+    public AudioSource piecePlaceSound, pieceReturnSound, pieceRetakeSound, finishSound, gameOverSound, countDownSound;
 
     public GameState gameState;
+
+    public string mostDifficultyArea;
+
+    public float redRatio, blueRatio, cyanRatio, greenRatio, yellowRatio;
 
     public static PieceGame Instance
     {
@@ -76,31 +80,129 @@ public class PieceGame : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        RestrictionMap.getDifficultyRatios();
+        redRatio = RestrictionMap.redRatio;
+        blueRatio = RestrictionMap.blueRatio;
+        cyanRatio = RestrictionMap.cyanRatio;
+        greenRatio = RestrictionMap.greenRatio;
+        yellowRatio = RestrictionMap.yellowRatio;
+        mostDifficultyArea = RestrictionMap.mostAvailableArea;
+    }
+
     void Start ()
     {
-        PlayerPrefs.SetInt("PieceGameLevelCount", 12);
+        //PlayerPrefs.SetInt("PieceGameLevelCount", 12);
         numbersList = pieceList.FindChild("Numbers");
         lettersList = pieceList.FindChild("Letters");
         activateLevels();
         gameState = GameState.isOnTutorial;
+        //redAreaRatio = 55;
+        playablePieceCount = 20;
+        if (redRatio >= 50)
+            isTooMuchRedArea = true;
+        else if (redRatio > 20 && redRatio < 50)
+        {
+            playablePieceCount = 16 - (int)(((redRatio - 20) / 30) * 6.5f);
+            isMidRangeRedArea = true;
+        }
+        else if (redRatio <= 20)
+            isLittleRedArea = true;
+
+        //if (isLittleRedArea)
+        //{
+        //    redPieceSlot = Mathf.RoundToInt(playablePieceCount * redRatio / 100);
+        //    bluePieceSlot = Mathf.RoundToInt(playablePieceCount * blueRatio / 100);
+        //    cyanPieceSlot = Mathf.RoundToInt(playablePieceCount * cyanRatio / 100);
+        //    greenPieceSlot = Mathf.RoundToInt(playablePieceCount * greenRatio / 100);
+        //    yellowPieceSlot = Mathf.RoundToInt(playablePieceCount * yellowRatio / 100);
+        //    if (redRatio < 5f)
+        //    {
+        //        increaseMostAreaSlot(redPieceSlot);
+        //        redPieceSlot = 0;
+        //    }
+        //    if (blueRatio < 5f)
+        //    {
+        //        increaseMostAreaSlot(bluePieceSlot);
+        //        bluePieceSlot = 0;
+        //    }
+        //    if (cyanRatio < 5f)
+        //    {
+        //        increaseMostAreaSlot(cyanPieceSlot);
+        //        cyanPieceSlot = 0;
+        //    }
+        //    if (greenRatio < 5f)
+        //    {
+        //        increaseMostAreaSlot(greenPieceSlot);
+        //        greenPieceSlot = 0;
+        //    }
+        //    if (yellowRatio < 5f)
+        //    {
+        //        increaseMostAreaSlot(yellowPieceSlot);
+        //        yellowPieceSlot = 0;
+        //    }
+        //}
+        //else if(isMidRangeRedArea)
+        //{
+        //    redPieceSlot = 1;
+        //    bluePieceSlot = (int)((playablePieceCount) * 0.3f);
+        //    cyanPieceSlot = (int)((playablePieceCount) * 0.4f);
+        //    greenPieceSlot = (int)((playablePieceCount) * 0.15f);
+        //    yellowPieceSlot = (int)((playablePieceCount) * 0.1f);
+        //    if (blueRatio < 7.5f)
+        //    {
+        //        increaseMostAreaSlot(bluePieceSlot);
+        //        bluePieceSlot = 0;
+        //    }
+        //    if (cyanRatio < 7.5f)
+        //    {
+        //        increaseMostAreaSlot(cyanPieceSlot);
+        //        cyanPieceSlot = 0;
+        //    }
+        //    if (greenRatio < 7.5f)
+        //    {
+        //        increaseMostAreaSlot(greenPieceSlot);
+        //        greenPieceSlot = 0;
+        //    }
+        //    if (yellowRatio < 7.5f)
+        //    {
+        //        increaseMostAreaSlot(yellowPieceSlot);
+        //        yellowPieceSlot = 0;
+        //    }
+        //    int tempTotal = redPieceSlot + bluePieceSlot + cyanPieceSlot + greenPieceSlot + yellowPieceSlot;
+        //    if (tempTotal < playablePieceCount)
+        //        increaseMostAreaSlot(playablePieceCount - tempTotal);
+        //}
+        //else if(isTooMuchRedArea)
+        //{
+        //    redPieceSlot = playablePieceCount;
+        //    bluePieceSlot = playablePieceCount;
+        //    cyanPieceSlot = playablePieceCount;
+        //    greenPieceSlot = playablePieceCount;
+        //    yellowPieceSlot = playablePieceCount;
+        //}
+        
         if (PlayerPrefs.GetString("RestartLevelId") != "")
         {
             getLevel(PlayerPrefs.GetString("RestartLevelId"));
             menuArea.SetActive(false);
             PlayerPrefs.SetString("RestartLevelId", "");
         }
-        redAreaRatio = PlayerPrefs.GetFloat("RedAreaRatio");
-        //redAreaRatio = 55;
-        playablePieceCount = 20;
-        if (redAreaRatio >= 50)
-            isTooMuchRedArea = true;
-        else if (redAreaRatio > 20 && redAreaRatio < 50)
-        {
-            playablePieceCount = 16 - (int)(((redAreaRatio - 20) / 30) * 6.5f);
-            isMidRangeRedArea = true;
-        }
-        else if (redAreaRatio <= 20)
-            isLittleRedArea = true;
+    }
+
+    void increaseMostAreaSlot(int count)
+    {
+        if (mostDifficultyArea == "Red")
+            redPieceSlot += count;
+        else if (mostDifficultyArea == "Blue")
+            bluePieceSlot += count;
+        else if (mostDifficultyArea == "Cyan")
+            cyanPieceSlot += count;
+        else if (mostDifficultyArea == "Green")
+            greenPieceSlot += count;
+        else if (mostDifficultyArea == "Yellow")
+            yellowPieceSlot += count;
     }
 	
 	void Update ()
@@ -227,6 +329,11 @@ public class PieceGame : MonoBehaviour
                 if (timeText.gameObject.activeSelf)
                 {
                     timeText.text = ((int)(timeToBeat + 1 - timer)).ToString();
+                    if((timeToBeat - timer) <= 3.1f && !countdownFlag)
+                    {
+                        countdownFlag = true;
+                        countDownSound.Play();
+                    }
                     if ((timeToBeat - timer) <= 0)
                     {
                         finishGame(true, timeSaveLevel, true);
