@@ -538,7 +538,6 @@ public class RestrictGame : MonoBehaviour
 
 	private void SetPercentages(string fileName)
 	{
-		print(PlayerPrefs.GetInt(fileName + "red"));
 		perc5.text = "% " + PlayerPrefs.GetFloat(fileName + "red").ToString("0.0");
 		perc4.text = "% " + PlayerPrefs.GetFloat(fileName + "blue").ToString("0.0");
 		perc3.text = "% " + PlayerPrefs.GetFloat(fileName + "cyan").ToString("0.0");

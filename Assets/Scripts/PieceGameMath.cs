@@ -167,6 +167,24 @@ public class PieceGameMath : MonoBehaviour
                                                 if (whiteGlow1 != null && whiteGlow1.gameObject.activeSelf)
                                                     whiteGlow1.gameObject.SetActive(false);
                                                 tempValue = int.Parse(onHoldPiece1.FindChild("pieceText").GetComponent<tk2dTextMesh>().text);
+                                                if (currentOperation != tempOperation && showingSymbols)
+                                                {
+                                                    if (onHoldPiece1 != null)
+                                                        onHoldPiece1.GetComponent<Piece>().refreshPiece();
+                                                    if (onHoldPiece2 != null)
+                                                        onHoldPiece2.GetComponent<Piece>().refreshPiece();
+                                                    if (greenGlow1 != null && greenGlow1.gameObject.activeSelf)
+                                                        greenGlow1.gameObject.SetActive(false);
+                                                    if (greenGlow2 != null && greenGlow2.gameObject.activeSelf)
+                                                        greenGlow2.gameObject.SetActive(false);
+                                                    if (whiteGlow1 != null && whiteGlow1.gameObject.activeSelf)
+                                                        whiteGlow1.gameObject.SetActive(false);
+                                                    if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
+                                                        whiteGlow2.gameObject.SetActive(false);
+                                                    onHoldPiece1 = null;
+                                                    onHoldPiece2 = null;
+                                                    isResulting = false;
+                                                }
                                             }
                                             divideTiming = false;
                                             divideTimer = 0;
@@ -239,14 +257,36 @@ public class PieceGameMath : MonoBehaviour
             {
                 onHoldPiece1.position = Vector2.MoveTowards(onHoldPiece1.position, onHoldPiece2.position, 0.05f);
                 onHoldPiece2.position = Vector2.MoveTowards(onHoldPiece2.position, onHoldPiece1.position, 0.05f);
-                if (onHoldPiece1.position == onHoldPiece2.position)
+                if (currentOperation == tempOperation || !showingSymbols)
+                {
+                    if (onHoldPiece1.position == onHoldPiece2.position)
+                    {
+                        isNumbersAdding = false;
+                        onHoldPiece1.GetComponent<Piece>().endWhiteAnim();
+                        if (currentOperation == tempOperation)
+                            onHoldPiece2.GetComponent<Piece>().resetPiece();
+                        else
+                            onHoldPiece2.gameObject.SetActive(false);
+                    }
+                }
+                else
                 {
                     isNumbersAdding = false;
-                    onHoldPiece1.GetComponent<Piece>().endWhiteAnim();
-                    if (currentOperation == tempOperation)
-                        onHoldPiece2.GetComponent<Piece>().resetPiece();
-                    else
-                        onHoldPiece2.gameObject.SetActive(false);
+                    if (onHoldPiece1 != null)
+                        onHoldPiece1.GetComponent<Piece>().refreshPiece();
+                    if (onHoldPiece2 != null)
+                        onHoldPiece2.GetComponent<Piece>().refreshPiece();
+                    if (greenGlow1 != null && greenGlow1.gameObject.activeSelf)
+                        greenGlow1.gameObject.SetActive(false);
+                    if (greenGlow2 != null && greenGlow2.gameObject.activeSelf)
+                        greenGlow2.gameObject.SetActive(false);
+                    if (whiteGlow1 != null && whiteGlow1.gameObject.activeSelf)
+                        whiteGlow1.gameObject.SetActive(false);
+                    if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
+                        whiteGlow2.gameObject.SetActive(false);
+                    onHoldPiece1 = null;
+                    onHoldPiece2 = null;
+                    isResulting = false;
                 }
             }
 
@@ -254,14 +294,36 @@ public class PieceGameMath : MonoBehaviour
             {
                 onHoldPiece1.position = Vector2.MoveTowards(onHoldPiece1.position, onHoldPiece2.position, 0.05f);
                 onHoldPiece2.position = Vector2.MoveTowards(onHoldPiece2.position, onHoldPiece1.position, 0.05f);
-                if (onHoldPiece1.position == onHoldPiece2.position)
+                if (currentOperation == tempOperation || !showingSymbols)
+                {
+                    if (onHoldPiece1.position == onHoldPiece2.position)
+                    {
+                        isNumbersMultiplying = false;
+                        onHoldPiece1.GetComponent<Piece>().endWhiteAnim();
+                        if (currentOperation == tempOperation)
+                            onHoldPiece2.GetComponent<Piece>().resetPiece();
+                        else
+                            onHoldPiece2.gameObject.SetActive(false);
+                    }
+                }
+                else
                 {
                     isNumbersMultiplying = false;
-                    onHoldPiece1.GetComponent<Piece>().endWhiteAnim();
-                    if (currentOperation == tempOperation)
-                        onHoldPiece2.GetComponent<Piece>().resetPiece();
-                    else
-                        onHoldPiece2.gameObject.SetActive(false);
+                    if (onHoldPiece1 != null)
+                        onHoldPiece1.GetComponent<Piece>().refreshPiece();
+                    if (onHoldPiece2 != null)
+                        onHoldPiece2.GetComponent<Piece>().refreshPiece();
+                    if (greenGlow1 != null && greenGlow1.gameObject.activeSelf)
+                        greenGlow1.gameObject.SetActive(false);
+                    if (greenGlow2 != null && greenGlow2.gameObject.activeSelf)
+                        greenGlow2.gameObject.SetActive(false);
+                    if (whiteGlow1 != null && whiteGlow1.gameObject.activeSelf)
+                        whiteGlow1.gameObject.SetActive(false);
+                    if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
+                        whiteGlow2.gameObject.SetActive(false);
+                    onHoldPiece1 = null;
+                    onHoldPiece2 = null;
+                    isResulting = false;
                 }
             }
 

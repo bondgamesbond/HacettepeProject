@@ -17,7 +17,7 @@ public class PieceGame : MonoBehaviour
 
     public Transform pieceList, board, levels, currentPiece, mathSymbols;
 
-    public GameObject inGameUi, pauseMenu, tutorial, tutorialButton, konfeti, menuArea, notPlayableText;
+    public GameObject inGameUi, pauseMenu, tutorial, tutorialButton, winParticles, menuArea, notPlayableText;
 
     public Text timeText, pauseText;
 
@@ -182,6 +182,9 @@ public class PieceGame : MonoBehaviour
         //    greenPieceSlot = playablePieceCount;
         //    yellowPieceSlot = playablePieceCount;
         //}
+
+        foreach (Renderer child in winParticles.GetComponentsInChildren<Renderer>())
+            child.sortingOrder = 8;
         
         if (PlayerPrefs.GetString("RestartLevelId") != "")
         {
@@ -315,10 +318,36 @@ public class PieceGame : MonoBehaviour
                         }
                         onHoldPiece = null;
                     }
+                    if (!pieceRotater.enabled && !pieceRescaler.enabled)
+                    {
+                        if (greenGlow != null && greenGlow.gameObject.activeSelf)
+                            greenGlow.gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        if (pieceRescaler.enabled)
+                        {
+                            if (greenGlow != null)
+                            {
+                                if (greenGlow.parent.GetComponent<Piece>().isOnTrueScale && !greenGlow.parent.GetComponent<Piece>().isPlaced)
+                                    greenGlow.gameObject.SetActive(true);
+                                else
+                                    greenGlow.gameObject.SetActive(false);
+                            }
+                        }
+                        else if (pieceRotater.enabled)
+                        {
+                            if (greenGlow != null)
+                            {
+                                if (greenGlow.parent.GetComponent<Piece>().isOnTrueRotation && !greenGlow.parent.GetComponent<Piece>().isPlaced)
+                                    greenGlow.gameObject.SetActive(true);
+                                else
+                                    greenGlow.gameObject.SetActive(false);
+                            }
+                        }
+                    }
                     if (redGlow != null && redGlow.gameObject.activeSelf)
                         redGlow.gameObject.SetActive(false);
-                    if (greenGlow != null && greenGlow.gameObject.activeSelf)
-                        greenGlow.gameObject.SetActive(false);
                     if (whiteGlow != null && whiteGlow.gameObject.activeSelf)
                         whiteGlow.gameObject.SetActive(false);
                 }
@@ -563,8 +592,8 @@ public class PieceGame : MonoBehaviour
             if (PlayerPrefs.GetInt("PieceGameLevelCount", 1) == levelId && PlayerPrefs.GetInt("PieceGameLevelCount", 1) < levels.transform.childCount)
                 PlayerPrefs.SetInt("PieceGameLevelCount", PlayerPrefs.GetInt("PieceGameLevelCount", 1) + 1);
             pauseText.text = "Tebrikler\nBölümü Tamamladın !";
-            konfeti.SetActive(false);
-            konfeti.SetActive(true);
+            winParticles.SetActive(false);
+            winParticles.SetActive(true);
             isFinishing = true;
         }
         timer = 0;

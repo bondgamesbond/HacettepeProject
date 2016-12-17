@@ -111,7 +111,7 @@ public class PieceSlider : MonoBehaviour
                 if (activePieces[random] == null)
                 {
                     activePieces[random] = slidingPiecesList[i];
-                    activePieces[random].localPosition = new Vector3(leftScreenLimit + (pieceDistance * random), positionY, 0);
+                    activePieces[random].localPosition = new Vector3(leftScreenLimit + (pieceDistance * random), Random.Range(0.1f, 3.1f), 0);
                     activePieces[random].GetComponent<Piece>().laneId = random;
                     activePiecesPositions[random] = activePieces[random].localPosition;
                     isEmpty = false;

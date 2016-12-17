@@ -12,7 +12,7 @@ public class PieceRotater : MonoBehaviour
 
     int touchCount, onPieceTouchCount;
 
-    float rotateSensivity = 15.0f;
+    float rotateSensivity = 17.5f;
 
     Transform onHolPiece, redGlow, greenGlow, whiteGlow;
 
@@ -82,7 +82,6 @@ public class PieceRotater : MonoBehaviour
                             }
                         }
                         onPieceTouchCount = 0;
-                        testText.text = "Cikti";
                     }
                 }
             }
@@ -103,7 +102,6 @@ public class PieceRotater : MonoBehaviour
                 redGlow.gameObject.SetActive(false);
                 greenGlow.gameObject.SetActive(true);
                 whiteGlow.gameObject.SetActive(true);
-                testText.text = "aha burda";
             }
             else
             {
