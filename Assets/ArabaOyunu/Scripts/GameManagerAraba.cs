@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameManagerAraba : MonoBehaviour
@@ -15,6 +16,9 @@ public class GameManagerAraba : MonoBehaviour
 
     /* Level information of the game */
     public int level;
+
+	/* Feedback text */
+	public Text feedbackText;
 
     void Awake()
     {

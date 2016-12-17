@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class MaskCamera : MonoBehaviour
@@ -31,12 +32,12 @@ public class MaskCamera : MonoBehaviour
                 levelMotion = MotionAraba.Spherical;
                 break;
             default:
-                levelMotion = MotionAraba.Complex;
+                levelMotion = MotionAraba.AllMotions;
                 break;
         }
 
         if (levelMotion == InputManagerAraba.Instance.motion || 
-            levelMotion == MotionAraba.Complex)
+            levelMotion == MotionAraba.AllMotions)
         {
             int difficulty = RestrictionMap.findDifficulty(v);
             print(difficulty);
@@ -57,7 +58,28 @@ public class MaskCamera : MonoBehaviour
                     break;
             }
 
-            Rect textureRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+			Text feedback = GameManagerAraba.Instance.feedbackText;
+
+			switch (GameManagerAraba.Instance.level)
+			{
+				case 0:
+					feedback.text = "Saða ve sola hareketlerle aracý ýslatmaya devam ediniz!";
+					break;
+				case 1:
+					feedback.text = "Yukarý ve aþaðý hareketlerle aracý köpüklemeye devam ediniz!";
+					break;
+				case 2:
+					feedback.text = "Dairesel hareketlerle aracýn kirlerini silmeye devam ediniz!";
+					break;
+				case 3:
+					feedback.text = "Herhangi bir hareketle aracý kurulamaya devam ediniz!";
+					break;
+				default:
+					feedback.text = "Herhangi bir hareketle araca cila atmaya devam ediniz!";
+					break;
+			}
+
+			Rect textureRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
             Rect positionRect = new Rect(
                 (imageLocalPosition.x - 0.5f * EraserMaterial.mainTexture.width) / imageSize.x,
                 (imageLocalPosition.y - 0.5f * EraserMaterial.mainTexture.height) / imageSize.y,
@@ -87,6 +109,31 @@ public class MaskCamera : MonoBehaviour
             }
             GL.PopMatrix();
         }
+		else
+		{
+			Text feedback = GameManagerAraba.Instance.feedbackText;
+
+			switch (GameManagerAraba.Instance.level)
+			{
+				case 0:
+					feedback.text = "Lütfen saða ve sola hareketlerle aracý ýslatýnýz";
+					break;
+				case 1:
+					feedback.text = "Lütfen yukarý ve aþaðý hareketlerle aracý köpükleyiniz!";
+					break;
+				case 2:
+					feedback.text = 
+							"Lütfen dairesel hareketlerle aracýn kirlerini ovalayarak siliniz!";
+					break;
+				case 3:
+					feedback.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
+					break;
+				default:
+					feedback.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
+					break;
+			}
+
+		}
     }
 
     public void Awake()

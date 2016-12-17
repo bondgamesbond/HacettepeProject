@@ -120,5 +120,6 @@ public enum MotionAraba
     Horizontal,
     Vertical,
     Spherical,
-    Complex
+    Complex,
+	AllMotions
 }

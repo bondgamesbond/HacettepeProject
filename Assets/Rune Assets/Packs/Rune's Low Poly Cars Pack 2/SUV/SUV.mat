@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: SUV
+  m_Shader: {fileID: 4800000, guid: 730c627007803b94cb6aca8b8844ee97, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs:
+    - first:
+        name: _Colormap
+      second:
+        m_Texture: {fileID: 2800000, guid: 79c99ad431351594e8f16de22a166f35, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Cubemap
+      second:
+        m_Texture: {fileID: 8900000, guid: 3f00d5cf636653841aca7015b5b719ce, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Diffuse
+      second:
+        m_Texture: {fileID: 2800000, guid: 8f125b528721a794da0eeb608193e914, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _MainTex
+      second:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - first:
+        name: _Specular
+      second:
+        m_Texture: {fileID: 2800000, guid: 0ff7c01320c432d45a87afaeea3ea027, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - first:
+        name: _Cutoff
+      second: 0.5
+    - first:
+        name: _Gloss
+      second: 0.35714287
+    - first:
+        name: _Reflection1Force
+      second: 0.39285713
+    - first:
+        name: _Reflection2Force
+      second: 0.58928573
+    - first:
+        name: _SpecularForce
+      second: 1.1607143
+    m_Colors:
+    - first:
+        name: _CarColor
+      second: {r: 0.13333331, g: 0.20435408, b: 0.92549026, a: 1}
+    - first:
+        name: _Color
+      second: {r: 1, g: 1, b: 1, a: 1}
