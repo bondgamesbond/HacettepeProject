@@ -10,7 +10,7 @@ public class MaskCamera : MonoBehaviour
     private Texture2D tex;
     private bool canRead;
 
-    public GameObject dust;
+    public GameObject objectToErase;
     public Material EraserMaterial;
     private bool firstFrame;
     private Vector2? newHolePosition;
@@ -63,17 +63,18 @@ public class MaskCamera : MonoBehaviour
 			switch (GameManagerAraba.Instance.level)
 			{
 				case 0:
-					feedback.text = "Saða ve sola hareketlerle aracý ýslatmaya devam ediniz!";
+					feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[0];
 					break;
 				case 1:
-					feedback.text = "Yukarý ve aþaðý hareketlerle aracý köpüklemeye devam ediniz!";
+					feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[1];
 					break;
 				case 2:
-					feedback.text = "Dairesel hareketlerle aracýn kirlerini silmeye devam ediniz!";
+					feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[2];
 					break;
 				case 3:
-					feedback.text = "Herhangi bir hareketle aracý kurulamaya devam ediniz!";
-					break;
+                    //feedback.text = "Herhangi bir hareketle aracý kurulamaya devam ediniz!";
+                    feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[3];
+                    break;
 				default:
 					feedback.text = "Herhangi bir hareketle araca cila atmaya devam ediniz!";
 					break;
@@ -116,18 +117,18 @@ public class MaskCamera : MonoBehaviour
 			switch (GameManagerAraba.Instance.level)
 			{
 				case 0:
-					feedback.text = "Lütfen saða ve sola hareketlerle aracý ýslatýnýz";
+					feedback.text = GameManagerAraba.Instance.feedbackTexts[0];
 					break;
 				case 1:
-					feedback.text = "Lütfen yukarý ve aþaðý hareketlerle aracý köpükleyiniz!";
+					feedback.text = GameManagerAraba.Instance.feedbackTexts[1];
 					break;
 				case 2:
-					feedback.text = 
-							"Lütfen dairesel hareketlerle aracýn kirlerini ovalayarak siliniz!";
+					feedback.text = GameManagerAraba.Instance.feedbackTexts[2];
 					break;
 				case 3:
-					feedback.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
-					break;
+                    //feedback.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
+                    feedback.text = GameManagerAraba.Instance.feedbackTexts[3];
+                    break;
 				default:
 					feedback.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
 					break;
@@ -208,8 +209,9 @@ public class MaskCamera : MonoBehaviour
             }
         }
         
-        if (total < 10000)
+        if (total < 400000)
         {
+            print("asd");
             GameManagerAraba.Instance.ChangeToNextMaskCamera();
         }
     }
