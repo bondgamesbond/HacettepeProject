@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class GameManagerAraba : MonoBehaviour
 {
+    public string[] feedbackTexts;
+    public string[] wrongFeedbackTexts;
     /* Different mask cameras for erasing the texture */
     public GameObject[] maskCameras;
 
@@ -36,8 +39,8 @@ public class GameManagerAraba : MonoBehaviour
     void Start()
     {
         /* Initialize the mask camera properties */
-        currentMaskCameraIndex = 0;
-        currentMaskCamera = maskCameras[currentMaskCameraIndex];
+        currentMaskCameraIndex = 1;
+        currentMaskCamera = maskCameras[currentMaskCameraIndex - 1];
     }
 
     void Update()
@@ -62,8 +65,39 @@ public class GameManagerAraba : MonoBehaviour
         /* If there are mask cameras left get the next camera */
         if (currentMaskCameraIndex < maskCameras.Length)
         {
-            currentMaskCamera = maskCameras[currentMaskCameraIndex];
+            currentMaskCamera.GetComponent<MaskCamera>().objectToErase.SetActive(false);
+            currentMaskCamera = maskCameras[currentMaskCameraIndex - 1];
             currentMaskCamera.SetActive(true);
+
+            switch (level)
+            {
+                case 0:
+                    feedbackText.text = feedbackTexts[0];
+                    break;
+                case 1:
+                    feedbackText.text = feedbackTexts[1];
+                    break;
+                case 2:
+                    feedbackText.text = feedbackTexts[2];
+                    break;
+                case 3:
+                    //feedbackText.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
+                    feedbackText.text = feedbackTexts[3];
+                    break;
+                default:
+                    feedbackText.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
+                    break;
+            }
         }
+        else
+        {
+            feedbackText.text = "Tebrikler!";
+        }
+    }
+
+    public void returnToMainMenu()
+    {
+        PlayerPrefs.SetInt("Babuþ", 1);
+        SceneManager.LoadSceneAsync("MainMenu");
     }
 }
