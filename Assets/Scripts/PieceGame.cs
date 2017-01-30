@@ -27,7 +27,7 @@ public class PieceGame : MonoBehaviour
 
     public Transform numbersList, lettersList, onHoldPiece;
 
-    bool multiTouchActive, isPieceOnHold, isInReverseMode, timeSaveLevel, canHoldAnyPiece, isMathMode, isTimeScore, isFinishing, countdownFlag;
+    bool multiTouchActive, isPieceOnHold, isInReverseMode, timeSaveLevel, canHoldAnyPiece, isMathMode, isTimeScore, isFinishing, countdownFlag, countDownFlag2;
 
     public bool hasReversePlay, isTooMuchRedArea, isMidRangeRedArea, isLittleRedArea;
 
@@ -36,6 +36,8 @@ public class PieceGame : MonoBehaviour
     public int playablePieceCount, redPieceCount, redPieceSlot, bluePieceCount, bluePieceSlot, cyanPieceCount, cyanPieceSlot, greenPieceCount, greenPieceSlot, yellowPieceCount, yellowPieceSlot;
 
     Transform redGlow, greenGlow, whiteGlow;
+
+    GameObject moveParticle;
 
     List<int> tutorialIds = new List<int>();
 
@@ -55,13 +57,15 @@ public class PieceGame : MonoBehaviour
 
     List<Transform> activePieces = new List<Transform>();
 
-    public AudioSource piecePlaceSound, pieceReturnSound, pieceRetakeSound, finishSound, gameOverSound, countDownSound;
+    public AudioSource piecePlaceSound, pieceReturnSound, pieceRetakeSound, finishSound, gameOverSound, countDownSound, countDownFinishSound, music;
 
     public GameState gameState;
 
     public string mostDifficultyArea;
 
     public float redRatio, blueRatio, cyanRatio, greenRatio, yellowRatio;
+
+    public TimeBar timeBar;
 
     public static PieceGame Instance
     {
@@ -224,6 +228,8 @@ public class PieceGame : MonoBehaviour
                             redGlow = hit.transform.FindChild("redGlow");
                             greenGlow = hit.transform.FindChild("greenGlow");
                             whiteGlow = hit.transform.FindChild("whiteGlow");
+                            moveParticle = hit.transform.FindChild("moveParticle").gameObject;
+                            moveParticle.SetActive(true);
                             if (hit.transform.name == currentPiece.name)
                             {
                                 isPieceOnHold = true;
@@ -350,6 +356,8 @@ public class PieceGame : MonoBehaviour
                         redGlow.gameObject.SetActive(false);
                     if (whiteGlow != null && whiteGlow.gameObject.activeSelf)
                         whiteGlow.gameObject.SetActive(false);
+                    if (moveParticle != null && moveParticle.activeSelf)
+                        moveParticle.SetActive(false);
                 }
             }
             if (!isMathMode)
@@ -357,13 +365,22 @@ public class PieceGame : MonoBehaviour
                 timer += Time.deltaTime;
                 if (timeText.gameObject.activeSelf)
                 {
+                    if (!timeBar.gameObject.activeSelf)
+                        timeBar.startTimer(timeToBeat);
                     timeText.text = ((int)(timeToBeat + 1 - timer)).ToString();
-                    if((timeToBeat - timer) <= 3.1f && !countdownFlag)
+                    if((timeToBeat - timer) <= 5.05f && !countdownFlag)
                     {
                         countdownFlag = true;
+                        music.volume = music.volume / 2f;
                         countDownSound.Play();
                     }
-                    if ((timeToBeat - timer) <= 0)
+                    if ((timeToBeat - timer) <= 0.1f && !countDownFlag2)
+                    {
+                        countDownFlag2 = true;
+                        countDownSound.Stop();
+                        countDownFinishSound.Play();
+                    }
+                    if ((timeToBeat - timer) <= -1.0f)
                     {
                         finishGame(true, timeSaveLevel, true);
                     }

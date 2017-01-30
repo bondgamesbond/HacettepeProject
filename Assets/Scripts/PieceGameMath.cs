@@ -30,13 +30,15 @@ public class PieceGameMath : MonoBehaviour
 
     Transform greenGlow1, greenGlow2, whiteGlow1, whiteGlow2;
 
+    GameObject moveParticle1, moveParticle2;
+
     public GameObject resultingPiece;
 
     Transform onHoldPiece1, onHoldPiece2;
 
     Vector3 offset1, offset2, startinHitPoint, endingPHitoint;
 
-    public AudioSource addSound, multiplySound, divideSound;
+    public AudioSource addSound, multiplySound, divideSound, errorSound;
 
     public static PieceGameMath Instance
     {
@@ -80,7 +82,9 @@ public class PieceGameMath : MonoBehaviour
                                         onHoldPiece1 = hit.transform;
                                         greenGlow1 = onHoldPiece1.FindChild("greenGlow");
                                         whiteGlow1 = onHoldPiece1.FindChild("whiteGlow");
+                                        moveParticle1 = onHoldPiece1.FindChild("moveParticle").gameObject;
                                         whiteGlow1.gameObject.SetActive(true);
+                                        moveParticle1.SetActive(true);
                                         offset1 = hit.transform.position - Camera.main.ScreenToWorldPoint(new Vector2(touch.position.x, touch.position.y));
                                     }
                                     else if (touch.fingerId == 1)
@@ -88,7 +92,9 @@ public class PieceGameMath : MonoBehaviour
                                         onHoldPiece2 = hit.transform;
                                         greenGlow2 = onHoldPiece2.FindChild("greenGlow");
                                         whiteGlow2 = onHoldPiece2.FindChild("whiteGlow");
+                                        moveParticle2 = onHoldPiece2.FindChild("moveParticle").gameObject;
                                         whiteGlow2.gameObject.SetActive(true);
+                                        moveParticle2.SetActive(true);
                                         offset2 = hit.transform.position - Camera.main.ScreenToWorldPoint(new Vector2(touch.position.x, touch.position.y));
                                     }
                                 }
@@ -111,11 +117,14 @@ public class PieceGameMath : MonoBehaviour
                                 if (onHoldPiece1.GetComponent<Piece>().isCollided && isOnMultiplyPositions() && !isNumbersMultiplying)
                                 {
                                     isNumbersMultiplying = true;
-                                    multiplySound.Play();
+                                    tempOperation = "Multiply";
+                                    if (tempOperation == currentOperation)
+                                        multiplySound.Play();
+                                    else
+                                        errorSound.Play();
                                     isResulting = true;
                                     onHoldPiece1.GetComponent<Piece>().getWhiteAnim(false);
                                     onHoldPiece2.GetComponent<Piece>().getWhiteAnim(false);
-                                    tempOperation = "Multiply";
                                     if (greenGlow1 != null && greenGlow1.gameObject.activeSelf)
                                         greenGlow1.gameObject.SetActive(false);
                                     if (greenGlow2 != null && greenGlow2.gameObject.activeSelf)
@@ -124,6 +133,10 @@ public class PieceGameMath : MonoBehaviour
                                         whiteGlow1.gameObject.SetActive(false);
                                     if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                                         whiteGlow2.gameObject.SetActive(false);
+                                    if (moveParticle1 != null && moveParticle1.activeSelf)
+                                        moveParticle1.SetActive(false);
+                                    if (moveParticle2 != null && moveParticle2.activeSelf)
+                                        moveParticle2.SetActive(false);
                                 }
                                 if (isOnAddPositions())
                                 {
@@ -162,12 +175,17 @@ public class PieceGameMath : MonoBehaviour
                                             {
                                                 onHoldPiece1.GetComponent<Piece>().getWhiteAnim(true);
                                                 isResulting = true;
-                                                divideSound.Play();
                                                 tempOperation = "Divide";
+                                                if (tempOperation == currentOperation)
+                                                    divideSound.Play();
+                                                else
+                                                    errorSound.Play();
                                                 if (whiteGlow1 != null && whiteGlow1.gameObject.activeSelf)
                                                     whiteGlow1.gameObject.SetActive(false);
+                                                if (moveParticle1 != null && moveParticle1.activeSelf)
+                                                    moveParticle1.SetActive(false);
                                                 tempValue = int.Parse(onHoldPiece1.FindChild("pieceText").GetComponent<tk2dTextMesh>().text);
-                                                if (currentOperation != tempOperation && showingSymbols)
+                                                if (currentOperation != tempOperation)
                                                 {
                                                     if (onHoldPiece1 != null)
                                                         onHoldPiece1.GetComponent<Piece>().refreshPiece();
@@ -181,6 +199,10 @@ public class PieceGameMath : MonoBehaviour
                                                         whiteGlow1.gameObject.SetActive(false);
                                                     if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                                                         whiteGlow2.gameObject.SetActive(false);
+                                                    if (moveParticle1 != null && moveParticle1.activeSelf)
+                                                        moveParticle1.SetActive(false);
+                                                    if (moveParticle2 != null && moveParticle2.activeSelf)
+                                                        moveParticle2.SetActive(false);
                                                     onHoldPiece1 = null;
                                                     onHoldPiece2 = null;
                                                     isResulting = false;
@@ -214,6 +236,10 @@ public class PieceGameMath : MonoBehaviour
                                         whiteGlow1.gameObject.SetActive(false);
                                     if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                                         whiteGlow2.gameObject.SetActive(false);
+                                    if (moveParticle1 != null && moveParticle1.activeSelf)
+                                        moveParticle1.SetActive(false);
+                                    if (moveParticle2 != null && moveParticle2.activeSelf)
+                                        moveParticle2.SetActive(false);
                                 }
                             }
                             else
@@ -229,6 +255,9 @@ public class PieceGameMath : MonoBehaviour
                                             greenGlow1.gameObject.SetActive(false);
                                         if (whiteGlow1 != null && whiteGlow1.gameObject.activeSelf)
                                             whiteGlow1.gameObject.SetActive(false);
+                                        if (moveParticle1 != null && moveParticle1.activeSelf)
+                                            moveParticle1.SetActive(false);
+
                                     }
                                 }
                                 if (onHoldPiece2 != null)
@@ -240,6 +269,8 @@ public class PieceGameMath : MonoBehaviour
                                         greenGlow2.gameObject.SetActive(false);
                                     if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                                         whiteGlow2.gameObject.SetActive(false);
+                                    if (moveParticle2 != null && moveParticle2.activeSelf)
+                                        moveParticle2.SetActive(false);
                                 }
                             }
                             startinHitPoint = Vector3.zero;
@@ -257,7 +288,7 @@ public class PieceGameMath : MonoBehaviour
             {
                 onHoldPiece1.position = Vector2.MoveTowards(onHoldPiece1.position, onHoldPiece2.position, 0.05f);
                 onHoldPiece2.position = Vector2.MoveTowards(onHoldPiece2.position, onHoldPiece1.position, 0.05f);
-                if (currentOperation == tempOperation || !showingSymbols)
+                if (currentOperation == tempOperation)
                 {
                     if (onHoldPiece1.position == onHoldPiece2.position)
                     {
@@ -284,6 +315,10 @@ public class PieceGameMath : MonoBehaviour
                         whiteGlow1.gameObject.SetActive(false);
                     if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                         whiteGlow2.gameObject.SetActive(false);
+                    if (moveParticle1 != null && moveParticle1.activeSelf)
+                        moveParticle1.SetActive(false);
+                    if (moveParticle2 != null && moveParticle2.activeSelf)
+                        moveParticle2.SetActive(false);
                     onHoldPiece1 = null;
                     onHoldPiece2 = null;
                     isResulting = false;
@@ -294,7 +329,7 @@ public class PieceGameMath : MonoBehaviour
             {
                 onHoldPiece1.position = Vector2.MoveTowards(onHoldPiece1.position, onHoldPiece2.position, 0.05f);
                 onHoldPiece2.position = Vector2.MoveTowards(onHoldPiece2.position, onHoldPiece1.position, 0.05f);
-                if (currentOperation == tempOperation || !showingSymbols)
+                if (currentOperation == tempOperation)
                 {
                     if (onHoldPiece1.position == onHoldPiece2.position)
                     {
@@ -321,6 +356,10 @@ public class PieceGameMath : MonoBehaviour
                         whiteGlow1.gameObject.SetActive(false);
                     if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                         whiteGlow2.gameObject.SetActive(false);
+                    if (moveParticle1 != null && moveParticle1.activeSelf)
+                        moveParticle1.SetActive(false);
+                    if (moveParticle2 != null && moveParticle2.activeSelf)
+                        moveParticle2.SetActive(false);
                     onHoldPiece1 = null;
                     onHoldPiece2 = null;
                     isResulting = false;
@@ -345,6 +384,10 @@ public class PieceGameMath : MonoBehaviour
                             whiteGlow1.gameObject.SetActive(false);
                         if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                             whiteGlow2.gameObject.SetActive(false);
+                        if (moveParticle1 != null && moveParticle1.activeSelf)
+                            moveParticle1.SetActive(false);
+                        if (moveParticle2 != null && moveParticle2.activeSelf)
+                            moveParticle2.SetActive(false);
                         onHoldPiece1 = null;
                         onHoldPiece2 = null;
                         getNextOperation();
@@ -363,6 +406,10 @@ public class PieceGameMath : MonoBehaviour
                             whiteGlow1.gameObject.SetActive(false);
                         if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                             whiteGlow2.gameObject.SetActive(false);
+                        if (moveParticle1 != null && moveParticle1.activeSelf)
+                            moveParticle1.SetActive(false);
+                        if (moveParticle2 != null && moveParticle2.activeSelf)
+                            moveParticle2.SetActive(false);
                         onHoldPiece1 = null;
                         onHoldPiece2 = null;
                         isResulting = false;
@@ -399,7 +446,11 @@ public class PieceGameMath : MonoBehaviour
             isResulting = true;
             onHoldPiece1.GetComponent<Piece>().getWhiteAnim(false);
             onHoldPiece2.GetComponent<Piece>().getWhiteAnim(false);
-            addSound.Play();
+            tempOperation = "Add";
+            if (tempOperation == currentOperation)
+                addSound.Play();
+            else
+                errorSound.Play();
             if (greenGlow1 != null && greenGlow1.gameObject.activeSelf)
                 greenGlow1.gameObject.SetActive(false);
             if (greenGlow2 != null && greenGlow2.gameObject.activeSelf)
@@ -408,7 +459,10 @@ public class PieceGameMath : MonoBehaviour
                 whiteGlow1.gameObject.SetActive(false);
             if (whiteGlow2 != null && whiteGlow2.gameObject.activeSelf)
                 whiteGlow2.gameObject.SetActive(false);
-            tempOperation = "Add";
+            if (moveParticle1 != null && moveParticle1.activeSelf)
+                moveParticle1.SetActive(false);
+            if (moveParticle2 != null && moveParticle2.activeSelf)
+                moveParticle2.SetActive(false);
             return true;
         }
         else

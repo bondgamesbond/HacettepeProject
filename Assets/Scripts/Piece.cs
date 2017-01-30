@@ -15,7 +15,7 @@ public class Piece : MonoBehaviour
 
     public Transform shadow;
 
-    GameObject numberText;
+    GameObject numberText, moveParticle;
 
     SkeletonAnimation whiteAnimation;
 
@@ -39,6 +39,9 @@ public class Piece : MonoBehaviour
         if (transform.FindChild("whiteAnim") != null)
             whiteAnimation = transform.FindChild("whiteAnim").GetComponent<SkeletonAnimation>();
         numberText = transform.FindChild("pieceText").gameObject;
+        moveParticle = transform.FindChild("moveParticle").gameObject;
+        moveParticle.GetComponent<Renderer>().sortingLayerName = GetComponent<Renderer>().sortingLayerName;
+        moveParticle.GetComponent<Renderer>().sortingOrder = GetComponent<Renderer>().sortingOrder - 2;
     }
 	
 	void Update ()
@@ -238,6 +241,8 @@ public class Piece : MonoBehaviour
     {
         if (Mathf.Abs(transform.position.x - targetPosition.x) <= positionSensivity && Mathf.Abs(transform.position.y - targetPosition.y) <= positionSensivity && isOnTrueScale && isOnTrueRotation)
         {
+            if (moveParticle.activeSelf)
+                moveParticle.SetActive(false);
             isPlaced = true;
             thisCollider.enabled = false;
             transform.position = targetPosition;
@@ -268,12 +273,16 @@ public class Piece : MonoBehaviour
 
     public void returnPiece()
     {
+        if (moveParticle.activeSelf)
+            moveParticle.SetActive(false);
         transform.position = firstPosition;
         isOnHold = false;
     }
 
     public void resetPiece()
     {
+        if (moveParticle.activeSelf)
+            moveParticle.SetActive(false);
         thisRenderer.enabled = true;
         isMultiplying = false;
         isCollided = false;
@@ -298,6 +307,8 @@ public class Piece : MonoBehaviour
 
     public void refreshPiece()
     {
+        if (moveParticle.activeSelf)
+            moveParticle.SetActive(false);
         gameObject.SetActive(true);
         thisRenderer.enabled = true;
         isMultiplying = false;
@@ -319,6 +330,8 @@ public class Piece : MonoBehaviour
 
     public void reverse()
     {
+        if (moveParticle.activeSelf)
+            moveParticle.SetActive(false);
         isPlaced = false;
         isOnHold = false;
         thisCollider.enabled = true;
@@ -348,6 +361,8 @@ public class Piece : MonoBehaviour
 
     public void getWhiteAnim(bool isAuto)
     {
+        if (moveParticle.activeSelf)
+            moveParticle.SetActive(false);
         whiteAnimation.gameObject.SetActive(true);
         whiteAnimation.loop = false;
         whiteAnimation.AnimationName = "turnToWhite";

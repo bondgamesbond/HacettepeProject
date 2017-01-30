@@ -8,15 +8,17 @@ public class GameManager : MonoBehaviour
 {
     public Pipe leakingPipe;
     public bool valveCanTurn;
+    bool countDownFlag;
     public RectTransform valveOpenSlider;
 
-    public AudioSource leakingSound, explosionSound, fillingSound, countdown, backgroundMusic;
+    public AudioSource leakingSound, explosionSound, fillingSound, countdown, countDownFinish, backgroundMusic;
 
     public Canvas menu;
     public Canvas game;
     public Canvas endMenu;
     public Text timeText;
 
+    public GameObject mouse;
     private GameObject valve;
     public Transform levels;
     public Transform board;
@@ -297,6 +299,7 @@ public class GameManager : MonoBehaviour
         {
             endMenu.gameObject.SetActive(true);
 			countdown.Stop();
+            mouse.SetActive(false);
             endMenu.transform.GetChild(1).GetComponent<Text>().text = "Süreniz Doldu.";
             Time.timeScale = 0;
             State = GameStateBoru.Paused;
@@ -304,10 +307,16 @@ public class GameManager : MonoBehaviour
 
         if (currentLevel != null) // Playing a level.
         {
-            if (LevelTime < 3.5f && !countdown.isPlaying && !allPlaced)
+            if (LevelTime <= 5.05f && !countdown.isPlaying && !allPlaced)
             {
-				backgroundMusic.volume = 0.3f;
+				backgroundMusic.volume = 0.2f;
                 countdown.Play();
+            }
+            if(LevelTime <= 0.1f && !countDownFlag)
+            {
+                countDownFlag = true;
+                countdown.Stop();
+                countDownFinish.Play();
             }
 
             if (PlayerPrefs.GetFloat("Level" + Level + "Percentage") < Place * 100 / NumberOfPipes)
@@ -378,7 +387,7 @@ public class GameManager : MonoBehaviour
                 // Update time and check all placed.
                 if (Level % 2 == 0)
                 {
-					timeText.text = "Kalan Süre: " + Mathf.Ceil(LevelTime);
+					timeText.text = "Süre: " + Mathf.Ceil(LevelTime);
 					timeText.text += " (Süre %10 azaltıldı.)";
                 }
 				if (!Grid.countdowning)
@@ -605,6 +614,7 @@ public class GameManager : MonoBehaviour
         allFilled = false;
         levelCompleted = false;
         currentLevel = null;
+        mouse.SetActive(false);
         Time.timeScale = 1;
     }
 
@@ -618,6 +628,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayLevel()
     {
+        mouse.SetActive(true);
         if ((Level == 1 && GameManager.Instance.State == GameStateBoru.FillWater) || (Level == 5 && GameManager.Instance.State == GameStateBoru.Leaking))
         {
             tutorial.gameObject.SetActive(false);
