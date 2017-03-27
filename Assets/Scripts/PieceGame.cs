@@ -368,19 +368,22 @@ public class PieceGame : MonoBehaviour
                     if (!timeBar.gameObject.activeSelf)
                         timeBar.startTimer(timeToBeat);
                     timeText.text = ((int)(timeToBeat + 1 - timer)).ToString();
-                    if((timeToBeat - timer) <= 5.05f && !countdownFlag)
+                    if((timeToBeat - timer) <= 10.01f && !countdownFlag)
                     {
                         countdownFlag = true;
                         music.volume = music.volume / 2f;
                         countDownSound.Play();
                     }
-                    if ((timeToBeat - timer) <= 0.1f && !countDownFlag2)
+                    if ((timeToBeat - timer) <= 0.2f && countDownSound.isPlaying)
+                    {
+                        countDownSound.Stop();
+                    }
+                    if ((timeToBeat - timer) <= 0.01f && !countDownFlag2)
                     {
                         countDownFlag2 = true;
-                        countDownSound.Stop();
                         countDownFinishSound.Play();
                     }
-                    if ((timeToBeat - timer) <= -1.0f)
+                    if ((timeToBeat - timer) <= -0.5f)
                     {
                         finishGame(true, timeSaveLevel, true);
                     }

@@ -1,0 +1,49 @@
+{
+"skeleton": { "hash": "I/TFkTTM+vPrHxk4Gic0Pd6kIbQ", "spine": "3.5.46", "width": 89, "height": 94 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "x": -0.3, "y": 95.57 }
+],
+"slots": [
+	{ "name": "hand1", "bone": "bone", "attachment": "hand1" }
+],
+"skins": {
+	"default": {
+		"hand1": {
+			"hand1": { "width": 89, "height": 94 },
+			"hand2": { "width": 89, "height": 94 }
+		}
+	}
+},
+"animations": {
+	"press": {
+		"slots": {
+			"hand1": {
+				"attachment": [
+					{ "time": 0, "name": "hand1" },
+					{ "time": 0.3333, "name": "hand2" },
+					{ "time": 0.6667, "name": "hand1" }
+				]
+			}
+		},
+		"bones": {
+			"bone": {
+				"translate": [
+					{ "time": 0, "x": 0, "y": 0, "curve": "stepped" },
+					{ "time": 0.3, "x": 0, "y": 0 },
+					{ "time": 0.3333, "x": 0, "y": -10.86, "curve": "stepped" },
+					{ "time": 0.6333, "x": 0, "y": -10.86 },
+					{ "time": 0.6667, "x": 0, "y": 0 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1, "y": 1, "curve": "stepped" },
+					{ "time": 0.3, "x": 1, "y": 1 },
+					{ "time": 0.3333, "x": 0.909, "y": 0.909, "curve": "stepped" },
+					{ "time": 0.6333, "x": 0.909, "y": 0.909 },
+					{ "time": 0.6667, "x": 1, "y": 1 }
+				]
+			}
+		}
+	}
+}
+}

@@ -1,0 +1,53 @@
+{
+"skeleton": { "hash": "UmHraDxSQjNq5BikcA4cT5lA30A", "spine": "3.5.46", "width": 174, "height": 190 },
+"bones": [
+	{ "name": "root" },
+	{ "name": "bone", "parent": "root", "x": 1, "y": 64 }
+],
+"slots": [
+	{ "name": "tutorial4_turning_hand1", "bone": "bone", "attachment": "tutorial4_turning_hand1" }
+],
+"skins": {
+	"default": {
+		"tutorial4_turning_hand1": {
+			"tutorial4_turning_hand1": { "width": 174, "height": 190 },
+			"tutorial4_turning_hand2": { "width": 174, "height": 190 },
+			"tutorial4_turning_hand3": { "width": 174, "height": 190 },
+			"tutorial4_turning_hand4": { "width": 174, "height": 190 }
+		}
+	}
+},
+"animations": {
+	"turn": {
+		"slots": {
+			"tutorial4_turning_hand1": {
+				"attachment": [
+					{ "time": 0, "name": "tutorial4_turning_hand1" },
+					{ "time": 0.3333, "name": "tutorial4_turning_hand1" },
+					{ "time": 0.4333, "name": "tutorial4_turning_hand2" },
+					{ "time": 0.5333, "name": "tutorial4_turning_hand3" },
+					{ "time": 0.6333, "name": "tutorial4_turning_hand4" }
+				]
+			}
+		},
+		"bones": {
+			"bone": {
+				"translate": [
+					{ "time": 0, "x": 0, "y": 0, "curve": "stepped" },
+					{ "time": 0.1667, "x": 0, "y": 0 },
+					{ "time": 0.2, "x": 0, "y": -4.63, "curve": "stepped" },
+					{ "time": 0.8, "x": 0, "y": -4.63 },
+					{ "time": 0.8333, "x": 0, "y": 0 }
+				],
+				"scale": [
+					{ "time": 0, "x": 1, "y": 1, "curve": "stepped" },
+					{ "time": 0.1667, "x": 1, "y": 1 },
+					{ "time": 0.2, "x": 0.883, "y": 0.883, "curve": "stepped" },
+					{ "time": 0.8, "x": 0.883, "y": 0.883 },
+					{ "time": 0.8333, "x": 1, "y": 1 }
+				]
+			}
+		}
+	}
+}
+}

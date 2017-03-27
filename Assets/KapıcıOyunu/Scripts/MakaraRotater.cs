@@ -3,11 +3,15 @@ using System.Collections;
 
 public class MakaraRotater : MonoBehaviour
 {
+    public static MakaraRotater Instance = null;
+
     Touch touch;
 
     Ray screenRay;
 
     RaycastHit hit;
+
+    public BoxCollider thisCollider;
 
     public Transform sepet, rope;
 
@@ -21,55 +25,70 @@ public class MakaraRotater : MonoBehaviour
 
     Vector3 tempPos, tempScale;
 
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
+
     void Start ()
     {
         onHold = false;
+        thisCollider = GetComponent<BoxCollider>();
+        thisCollider.enabled = false;
 	}
 	
 	void Update ()
     {
-        touchCount = Input.touchCount;
-
-        if (touchCount > 0)
+        if (!KapiciManager.Instance.isGameOver)
         {
-            for (int i = 0; i < touchCount; i++)
+            touchCount = Input.touchCount;
+
+            if (touchCount > 0)
             {
-                touch = Input.GetTouch(i);
-                if (touch.phase == TouchPhase.Began)  //On Touch Down
+                for (int i = 0; i < touchCount; i++)
                 {
-                    screenRay = Camera.main.ScreenPointToRay(touch.position);
-                    if (Physics.Raycast(screenRay, out hit))
+                    touch = Input.GetTouch(i);
+                    if (touch.phase == TouchPhase.Began)  //On Touch Down
                     {
-                        if (hit.transform.tag == transform.tag && !onHold)
+                        screenRay = Camera.main.ScreenPointToRay(touch.position);
+                        if (Physics.Raycast(screenRay, out hit))
                         {
-                            if (onPieceTouchCount < 2)
+                            if (hit.transform.tag == transform.tag && !onHold)
                             {
-                                onPieceTouchCount++;
-                                if (onPieceTouchCount == 2)
+                                if (KapiciManager.Instance.isOnTutorial && KapiciManager.Instance.tutorialId == 3)
+                                    KapiciManager.Instance.removeTutorialAnim();
+                                if (onPieceTouchCount < 2)
                                 {
-                                    onHold = true;
-                                    Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
-                                    pos = Input.GetTouch(0).position - pos;
-                                    baseAngle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
-                                    baseAngle -= Mathf.Atan2(transform.right.y, transform.right.x) * Mathf.Rad2Deg;
+                                    onPieceTouchCount++;
+                                    if (onPieceTouchCount == 2)
+                                    {
+                                        onHold = true;
+                                        Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+                                        pos = Input.GetTouch(0).position - pos;
+                                        baseAngle = Mathf.Atan2(pos.y, pos.x) * Mathf.Rad2Deg;
+                                        baseAngle -= Mathf.Atan2(transform.right.y, transform.right.x) * Mathf.Rad2Deg;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                if (touch.phase == TouchPhase.Moved)
-                {
-                    if (onHold)
-                        checkForRotate();
-                }
-                if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
-                {
-                    if (onHold)
+                    if (touch.phase == TouchPhase.Moved)
                     {
-                        //min ve max koşulları
-                        onHold = false;
+                        if (onHold)
+                            checkForRotate();
                     }
-                    onPieceTouchCount = 0;
+                    if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
+                    {
+                        if (onHold)
+                        {
+                            //min ve max koşulları
+                            onHold = false;
+                        }
+                        onPieceTouchCount = 0;
+                    }
                 }
             }
         }
@@ -101,11 +120,13 @@ public class MakaraRotater : MonoBehaviour
                 //Debug.Log("Previous: " + previousAng + " " + "Last: " + transform.eulerAngles.z);
                 if ((previousAng > 0 && previousAng < 100 && transform.eulerAngles.z > 300) || (previousAng > 300 && transform.eulerAngles.z < 0 && transform.eulerAngles.z < 100))
                 {
-                    moveSepet(360 - Mathf.Abs(transform.eulerAngles.z - previousAng));
+                    if ((KapiciManager.Instance.isOnTutorial && !Sepet.Instance.sepetCollider.enabled) || !KapiciManager.Instance.isOnTutorial)
+                        moveSepet(360 - Mathf.Abs(transform.eulerAngles.z - previousAng));
                 }
                 else
                 {
-                    moveSepet(transform.eulerAngles.z - previousAng);
+                    if ((KapiciManager.Instance.isOnTutorial && !Sepet.Instance.sepetCollider.enabled) || !KapiciManager.Instance.isOnTutorial)
+                        moveSepet(transform.eulerAngles.z - previousAng);
                 }
             }
         }
@@ -125,13 +146,37 @@ public class MakaraRotater : MonoBehaviour
         {
             tempPos = sepet.localPosition;
             //Debug.Log(tempPos.y + "," + amount);
-            if (tempPos.y + (amount / moveSpeedDivider) < maxSepetPos && tempPos.y + (amount / moveSpeedDivider) > minSepetPos)
+            if (KapiciManager.Instance.isLeftSided)
             {
-                tempPos.y += (amount / moveSpeedDivider);
-                sepet.localPosition = tempPos;
-                tempScale = rope.localScale;
-                tempScale.y = Mathf.Lerp(minRopeScale, maxRopeScale, Mathf.Abs(maxSepetPos - sepet.localPosition.y) / (maxSepetPos - minSepetPos));
-                rope.localScale = tempScale;
+                if (tempPos.y + (amount / moveSpeedDivider) < maxSepetPos && tempPos.y + (amount / moveSpeedDivider) > minSepetPos)
+                {
+                    tempPos.y += (amount / moveSpeedDivider);
+                    sepet.localPosition = tempPos;
+                    tempScale = rope.localScale;
+                    tempScale.y = Mathf.Lerp(minRopeScale, maxRopeScale, Mathf.Abs(maxSepetPos - sepet.localPosition.y) / (maxSepetPos - minSepetPos));
+                    rope.localScale = tempScale;
+                    if (amount != 0)
+                    {
+                        if (!KapiciManager.Instance.makaraRotateSound.isPlaying)
+                            KapiciManager.Instance.makaraRotateSound.Play();
+                    }
+                }
+            }
+            else
+            {
+                if (tempPos.y - (amount / moveSpeedDivider) < maxSepetPos && tempPos.y - (amount / moveSpeedDivider) > minSepetPos)
+                {
+                    tempPos.y -= (amount / moveSpeedDivider);
+                    sepet.localPosition = tempPos;
+                    tempScale = rope.localScale;
+                    tempScale.y = Mathf.Lerp(minRopeScale, maxRopeScale, Mathf.Abs(maxSepetPos - sepet.localPosition.y) / (maxSepetPos - minSepetPos));
+                    rope.localScale = tempScale;
+                    if (amount != 0)
+                    {
+                        if (!KapiciManager.Instance.makaraRotateSound.isPlaying)
+                            KapiciManager.Instance.makaraRotateSound.Play();
+                    }
+                }
             }
             //Debug.Log(sepet.localPosition.y);
         }

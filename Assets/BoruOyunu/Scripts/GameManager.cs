@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public Pipe leakingPipe;
     public bool valveCanTurn;
-    bool countDownFlag;
+    bool countDownFlag, countDownFlag2;
     public RectTransform valveOpenSlider;
 
     public AudioSource leakingSound, explosionSound, fillingSound, countdown, countDownFinish, backgroundMusic;
@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
     public Canvas menu;
     public Canvas game;
     public Canvas endMenu;
-    public Text timeText;
+    public Text timeText, timeWarnText;
+    public TimeBar timeBar;
 
     public GameObject mouse;
     private GameObject valve;
@@ -307,15 +308,19 @@ public class GameManager : MonoBehaviour
 
         if (currentLevel != null) // Playing a level.
         {
-            if (LevelTime <= 5.05f && !countdown.isPlaying && !allPlaced)
+            if (LevelTime <= 10.01f && !countDownFlag && !allPlaced)
             {
+                countDownFlag = true;
 				backgroundMusic.volume = 0.2f;
                 countdown.Play();
             }
-            if(LevelTime <= 0.1f && !countDownFlag)
+            if(LevelTime <= 0.2f && countdown.isPlaying)
             {
-                countDownFlag = true;
                 countdown.Stop();
+            }
+            if(LevelTime <= 0.01f && !countDownFlag2)
+            {
+                countDownFlag2 = true;
                 countDownFinish.Play();
             }
 
@@ -378,7 +383,7 @@ public class GameManager : MonoBehaviour
 
 					backgroundMusic.volume = 0.5f;
 					timeText.text = "";
-
+                    timeWarnText.text = "";
 					State = GameStateBoru.MainMenu;
                 }
             }
@@ -387,8 +392,10 @@ public class GameManager : MonoBehaviour
                 // Update time and check all placed.
                 if (Level % 2 == 0)
                 {
-					timeText.text = "Süre: " + Mathf.Ceil(LevelTime);
-					timeText.text += " (Süre %10 azaltıldı.)";
+                    timeText.text = Mathf.Ceil(LevelTime).ToString();
+					timeWarnText.text = " (Süre %10 azaltıldı.)";
+                    if (!timeBar.gameObject.activeSelf)
+                        timeBar.startTimer(Mathf.Ceil(LevelTime));
                 }
 				if (!Grid.countdowning)
 				{
@@ -596,6 +603,7 @@ public class GameManager : MonoBehaviour
     {
 		backgroundMusic.volume = 0.5f;
 		timeText.text = "";
+        timeWarnText.text = "";
 		State = GameStateBoru.MainMenu;
 		if (countdown.isPlaying)
 		{
