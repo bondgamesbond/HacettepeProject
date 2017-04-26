@@ -673,7 +673,7 @@ public class RCC_CarControllerV3 : MonoBehaviour {
 		mesh.vertices = vertices;
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
-		mesh.Optimize();
+		;
 		
 	}
 

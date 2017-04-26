@@ -55,7 +55,7 @@ public class RCC_AICarController : MonoBehaviour {
 	public bool ignoreWaypointNow = false;
 	
 	// Unity's Navigator.
-	private NavMeshAgent navigator;
+	private UnityEngine.AI.NavMeshAgent navigator;
 	private GameObject navigatorObject;
 
 	void Awake() {
@@ -68,13 +68,13 @@ public class RCC_AICarController : MonoBehaviour {
 		navigatorObject = new GameObject("Navigator");
 		navigatorObject.transform.parent = transform;
 		navigatorObject.transform.localPosition = Vector3.zero;
-		navigatorObject.AddComponent<NavMeshAgent>();
-		navigatorObject.GetComponent<NavMeshAgent>().radius = 1;
-		navigatorObject.GetComponent<NavMeshAgent>().speed = 1;
-		navigatorObject.GetComponent<NavMeshAgent>().angularSpeed = 1000f;
-		navigatorObject.GetComponent<NavMeshAgent>().height = 1;
-		navigatorObject.GetComponent<NavMeshAgent>().avoidancePriority = 50;
-		navigator = navigatorObject.GetComponent<NavMeshAgent>();
+		navigatorObject.AddComponent<UnityEngine.AI.NavMeshAgent>();
+		navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>().radius = 1;
+		navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>().speed = 1;
+		navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>().angularSpeed = 1000f;
+		navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>().height = 1;
+		navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>().avoidancePriority = 50;
+		navigator = navigatorObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
 	}
 	

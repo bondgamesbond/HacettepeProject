@@ -29,7 +29,7 @@ namespace WaterPlusEditorInternal {
 
 			TextureImporter tImporter = AssetImporter.GetAtPath( assetPath ) as TextureImporter;
 	        if( tImporter != null ) {
-				tImporter.textureType = TextureImporterType.Image;
+				tImporter.textureType = TextureImporterType.Default;
 				tImporter.linearTexture = true;
 	            tImporter.textureFormat = TextureImporterFormat.RGBA32;
 				tImporter.isReadable = true;
@@ -658,7 +658,7 @@ namespace WaterPlusEditorInternal {
 			int lightmapsCount = 0;
 			
 			foreach (int lightmapIndex in lightmapsToBackup) {
-				Texture2D lightmapFar = LightmapSettings.lightmaps[lightmapIndex].lightmapFar;
+				Texture2D lightmapFar = LightmapSettings.lightmaps[lightmapIndex].lightmapDir;
 				
 				if (lightmapFar == null)
 					continue;
@@ -720,15 +720,15 @@ namespace WaterPlusEditorInternal {
 					//AssetDatabase.ImportAsset( lightmapPaths[i], ImportAssetOptions.ForceSynchronousImport );
 					//AssetDatabase.Refresh();
 					
-					lmData.lightmapFar = AssetDatabase.LoadAssetAtPath( WPHelper.FilePathToAssetPath( lightmapPaths[i] ), typeof(Texture2D) ) as Texture2D;
+					lmData.lightmapDir = AssetDatabase.LoadAssetAtPath( WPHelper.FilePathToAssetPath( lightmapPaths[i] ), typeof(Texture2D) ) as Texture2D;
 					
-					if (lmData.lightmapFar == null) {
+					if (lmData.lightmapDir == null) {
 						Debug.LogWarning("lmData.lightmapFar == null for " + WPHelper.FilePathToAssetPath( lightmapPaths[i] ));
-						lmData.lightmapFar = LightmapSettings.lightmaps[i].lightmapFar;
+						lmData.lightmapDir = LightmapSettings.lightmaps[i].lightmapDir;
 					}
 					
 					//if (LightmapSettings.lightmaps[i].lightmapNear != null)
-					lmData.lightmapNear = LightmapSettings.lightmaps[i].lightmapNear;
+					lmData.lightmapDir = LightmapSettings.lightmaps[i].lightmapDir;
 					
 					lightmapsData[i] = lmData;
 				} else {

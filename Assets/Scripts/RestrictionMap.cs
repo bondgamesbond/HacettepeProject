@@ -3,8 +3,8 @@ using System.Collections;
 
 public class RestrictionMap : MonoBehaviour
 {
-    private static float mapTextureHeight = 1600;
-    private static float mapTextureWidth = 900;
+    private static float mapTextureHeight = 900;
+    private static float mapTextureWidth = 1600;
     private static float pixelRange = 4;
     private static int[][] difficultyValues = new int[(int)(mapTextureHeight / pixelRange)][];
     static int redCount, yellowCount, greenCount, blueCount, cyanCount;

@@ -662,7 +662,7 @@ namespace WaterPlusEditorInternal {
 			//Set watermap format to TrueColor
 			TextureImporter tImporter = AssetImporter.GetAtPath(waterMapPath ) as TextureImporter;
 	        if( tImporter != null ) {
-				tImporter.textureType = TextureImporterType.Advanced;
+				tImporter.textureType = TextureImporterType.Default;
 				tImporter.linearTexture = true;
 	            tImporter.textureFormat = TextureImporterFormat.AutomaticTruecolor;
 				tImporter.maxTextureSize = 4096;
@@ -2180,7 +2180,7 @@ namespace WaterPlusEditorInternal {
 			
 			TextureImporter tImporter = AssetImporter.GetAtPath( anisoMapAssetPath ) as TextureImporter;
 	        if( tImporter != null ) {
-				tImporter.textureType = TextureImporterType.Advanced;
+				tImporter.textureType = TextureImporterType.Default;
 				tImporter.linearTexture = true;
 	            tImporter.textureFormat = TextureImporterFormat.Automatic16bit;
 				tImporter.wrapMode = TextureWrapMode.Repeat;
@@ -2361,7 +2361,7 @@ namespace WaterPlusEditorInternal {
 				//tImporter.mipmapEnabled = false;
 				tImporter.isReadable = true;
 				//tImporter.maxTextureSize = 4096;
-				tImporter.textureType = TextureImporterType.Advanced;
+				tImporter.textureType = TextureImporterType.Default;
 	            tImporter.textureFormat = TextureImporterFormat.ARGB32;
 				tImporter.wrapMode = TextureWrapMode.Repeat;
 				
@@ -2449,7 +2449,7 @@ namespace WaterPlusEditorInternal {
 				//tImporter.mipmapEnabled = false;
 				tImporter.isReadable = true;
 				//tImporter.maxTextureSize = 4096;
-				tImporter.textureType = TextureImporterType.Advanced;
+				tImporter.textureType = TextureImporterType.Default;
 	            //tImporter.textureFormat = TextureImporterFormat.AutomaticTruecolor;
 				//tImporter.wrapMode = TextureWrapMode.Repeat;
 				
@@ -2572,7 +2572,7 @@ namespace WaterPlusEditorInternal {
 				//tImporter.mipmapEnabled = false;
 				tImporter.isReadable = true;
 				//tImporter.maxTextureSize = 4096;
-				tImporter.textureType = TextureImporterType.Image;
+				tImporter.textureType = TextureImporterType.Default;
 	            tImporter.textureFormat = TextureImporterFormat.AutomaticCompressed;
 				tImporter.wrapMode = TextureWrapMode.Repeat;
 				

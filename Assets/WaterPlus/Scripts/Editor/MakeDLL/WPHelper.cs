@@ -2345,7 +2345,7 @@ static public class WPHelper {
 		string assetPath = AssetDatabase.GetAssetPath( _texture );
 		TextureImporter tImporter = AssetImporter.GetAtPath( assetPath ) as TextureImporter;
         if( tImporter != null ) {
-			tImporter.textureType = TextureImporterType.Advanced;
+			tImporter.textureType = TextureImporterType.Default;
             tImporter.textureFormat = _format;
 			tImporter.isReadable = _isReadable;
 			
