@@ -10,11 +10,11 @@ public class KapiciManager : MonoBehaviour
 
     public Transform leftWindows, rightWindows, makara, makaraBack, rope, sepet, movingSut, movingEkmek, suBorusu, thanksSounds;
 
-    public RectTransform tutorialBackground, tutorialArrow, zilButtons;
+    public RectTransform tutorialBackground, tutorialArrow, zilButtons, warningPopUp;
 
     public GameObject tutorialDevamButton, tutorialsParent, tutorialAnimsParent, finishScene, winParticle;
 
-    public Text tutorialText;
+    public Text tutorialText, warningText;
 
     public string[] tutorialTexts;
 
@@ -35,6 +35,8 @@ public class KapiciManager : MonoBehaviour
     public bool isLeftSided;
 
     public bool sepetOnHold, ekmekOnHold, sutOnHold, isOnTutorial, isGameOver;
+
+    public Image warningPopUpImage;
 
     Touch touch;
 
@@ -62,10 +64,10 @@ public class KapiciManager : MonoBehaviour
             
 	void Start ()
     {
-        if (RestrictionMap.findDifficulty(makara.transform.position) <= RestrictionMap.findDifficulty(new Vector2(-makara.localPosition.x, makara.localPosition.y)))
+        //if (RestrictionMap.findDifficulty(makara.transform.position) <= RestrictionMap.findDifficulty(new Vector2(-makara.localPosition.x, makara.localPosition.y)))
             isLeftSided = true;
-        else
-            isLeftSided = false;
+        //else
+        //    isLeftSided = false;
         requestingFloorIds = new List<int>();
         leftWindowList = new List<Window>();
         rightWindowList = new List<Window>();
@@ -230,6 +232,8 @@ public class KapiciManager : MonoBehaviour
                                     {
                                         Debug.Log("Not Ready To Take Order");
                                         putMovingObjectToWrongPlaceSound.Play();
+                                        warningPopUp.position = new Vector2(0.45f, hit.transform.position.y);
+                                        StartCoroutine(popUpGetter());
                                         if (ekmekOnHold)
                                             releaseEkmekOrSut(true);
                                         if (sutOnHold)
@@ -280,7 +284,33 @@ public class KapiciManager : MonoBehaviour
                     }
                 }
             }
+            if(popUpActive)
+            {
+                tempColor.a -= Time.deltaTime * 0.7f;
+                tempColorBlack.a -= Time.deltaTime * 0.7f;
+                if (tempColor.a <= 0)
+                {
+                    warningPopUp.gameObject.SetActive(false);
+                    popUpActive = false;
+                }
+                warningPopUpImage.color = tempColor;
+                warningText.color = tempColorBlack;
+            }
         }
+    }
+
+    Color tempColor, tempColorBlack;
+    bool popUpActive;
+
+    IEnumerator popUpGetter()
+    {
+        tempColor = Color.white;
+        tempColorBlack = Color.black;
+        warningPopUpImage.color = tempColor;
+        warningText.color = tempColorBlack;
+        warningPopUp.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        popUpActive = true;
     }
 
     void releaseEkmekOrSut(bool ekmek)
@@ -351,6 +381,8 @@ public class KapiciManager : MonoBehaviour
             finishScene.SetActive(true);
             winParticle.SetActive(true);
             isGameOver = true;
+            if (warningPopUp.gameObject.activeSelf)
+                warningPopUp.gameObject.SetActive(false);
             finishSound.Play();
         }
     }

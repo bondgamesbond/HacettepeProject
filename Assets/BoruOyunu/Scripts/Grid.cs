@@ -130,7 +130,7 @@ public class Grid : MonoBehaviour
 
         if (countdown > 0)
         {
-            GameManager.Instance.game.transform.GetChild(4).GetComponent<Text>().text =
+            GameManager.Instance.game.transform.GetChild(3).GetComponent<Text>().text =
                 "Boru Yolunu İpucu Kapanana Kadar Dikkatli Bir Şekilde İnceleyin. \n Kalan Süre: " + Mathf.Ceil(countdown);
             countdown -= Time.deltaTime;
         }
