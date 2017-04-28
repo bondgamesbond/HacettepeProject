@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class PairGameManager : MonoBehaviour
@@ -9,11 +10,17 @@ public class PairGameManager : MonoBehaviour
 
     public Transform circlePiecesHead, squarePiecesHead;
 
+    public PairGamePiece firtPiece, secondPiece;
+
     Transform onClearPiece;
 
-    public GameObject snowParticle;
+    public GameObject snowParticle, tutorial, popUp, finishMenu, winParticles;
+
+    public SkeletonAnimation thumbsUp1, thumbsUp2;
 
     public SpriteRenderer snowBackgroundSprite;
+
+    public Text popUpText;
 
     public List<Transform> activePiecesList;
 
@@ -25,7 +32,7 @@ public class PairGameManager : MonoBehaviour
 
     int circlePieceCount, squarePieceCount, tempPieceId;
 
-    bool isOverLap, isGameOver, isReadyToPlay;
+    bool isOverLap, isGameOver, isReadyToPlay, isPaused;
 
     RaycastHit2D hit;
 
@@ -111,12 +118,13 @@ public class PairGameManager : MonoBehaviour
         {
             shufflePiece(activePiecesList[i], activePiecesRenderersList[i], activePieceScriptList[i]);
         }
-        startGame();
+        isPaused = true;
+        tutorial.SetActive(true);
     }
 	
 	void Update ()
     {
-        if (!isGameOver)
+        if (!isGameOver && !isPaused)
         {
             if (isReadyToPlay)
             {
@@ -128,8 +136,11 @@ public class PairGameManager : MonoBehaviour
                     {
                         if (hit.transform.tag == "PairGamePiece")
                         {
-                            onClearPiece = hit.transform;
-                            Debug.Log("Ahaha");
+                            if (firtPiece == null || (firtPiece != null && !firtPiece.isClear && firtPiece.name == hit.transform.name)
+                                || (firtPiece != null && firtPiece.isClear && secondPiece == null) || (firtPiece != null && secondPiece != null && !secondPiece.isClear && secondPiece.name == hit.transform.name))
+                            {
+                                onClearPiece = hit.transform;
+                            }
                         }
                     }
                 }
@@ -145,8 +156,7 @@ public class PairGameManager : MonoBehaviour
                     {
                         if (hit.transform.tag == "PairGamePiece")
                         {
-                            Debug.Log("Behehe");
-                            if (onClearPiece.name == hit.transform.name)
+                            if (onClearPiece != null && onClearPiece.name == hit.transform.name)
                             {
                                 activePieceScriptList[activePiecesList.IndexOf(hit.transform)].clearPiece();
                             }
@@ -192,13 +202,40 @@ public class PairGameManager : MonoBehaviour
 
     public void startGame()
     {
-        snowParticle.SetActive(true);
+        isPaused = false;
+        tutorial.SetActive(false);
         StartCoroutine(gameStarter());
+    }
+
+    public void resumeGame()
+    {
+        isPaused = false;
+        popUp.SetActive(false);
+    }
+
+    public void getPopUp(int id)
+    {
+        if (id == 0)
+        {
+            popUpText.text = "";
+        }
+        else if (id == 1)
+        {
+            popUpText.text = "";
+        }
+        else if (id == 2)
+        {
+            popUpText.text = "";
+        }
+        popUp.SetActive(true);
+        isPaused = true;
     }
 
     Color tempColor;
     IEnumerator gameStarter()
     {
+        yield return new WaitForSeconds(2f);
+        snowParticle.SetActive(true);
         yield return new WaitForSeconds(6.0f);
         tempColor = Color.white;
         tempColor.a = 0;
@@ -220,6 +257,45 @@ public class PairGameManager : MonoBehaviour
         for (int i = 0; i < activePieceScriptList.Count; i++)
             activePieceScriptList[i].enableCollider();
         isReadyToPlay = true;
+    }
+
+    public void comparePieces()
+    {
+        if (firtPiece.name.Substring(0, 7) == secondPiece.name.Substring(0, 7))
+        {
+            firtPiece.completePiece();
+            secondPiece.completePiece();
+            thumbsUp1.transform.position = new Vector3(firtPiece.transform.position.x - 0.3f, firtPiece.transform.position.y - 0.5f, 0);
+            thumbsUp2.transform.position = new Vector3(secondPiece.transform.position.x - 0.3f, secondPiece.transform.position.y - 0.5f, 0);
+            thumbsUp1.gameObject.SetActive(true);
+            thumbsUp2.gameObject.SetActive(true);
+            thumbsUp1.state.SetAnimation(0, "animation", false);
+            thumbsUp2.state.SetAnimation(0, "animation", false);
+            activePieceScriptList.Remove(firtPiece);
+            activePieceScriptList.Remove(secondPiece);
+            activePiecesList.Remove(firtPiece.transform);
+            activePiecesList.Remove(secondPiece.transform);
+            if(activePiecesList.Count==0)
+            {
+                isGameOver = true;
+                StartCoroutine(finishMenuGetter());
+            }
+        }
+        else
+        {
+            firtPiece.resetPiece();
+            secondPiece.resetPiece();
+        }
+        firtPiece = null;
+        secondPiece = null;
+    }
+
+    IEnumerator finishMenuGetter()
+    {
+        yield return new WaitForSeconds(0.7f);
+        winParticles.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        finishMenu.SetActive(true);
     }
 
     public void returnToMainMenu()

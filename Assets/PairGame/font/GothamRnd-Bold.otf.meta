@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 796abadb46ec39048814b463c882cc39
+timeCreated: 1493278602
+licenseType: Pro
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Gotham Rounded
+  fontNames:
+  - Gotham Rounded
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 39f1f4012506f314aad5515fd89b5b9a, type: 3}
+  - {fileID: 12800000, guid: 71d5ca95220e8dd4d88dba756f319ba7, type: 3}
+  - {fileID: 12800000, guid: 33cbac182995afa4782501ce66b70b5e, type: 3}
+  - {fileID: 12800000, guid: 5119864fe4c2a854bbf19177a36b6070, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
