@@ -7,7 +7,7 @@ using System.IO;
 
 public class RestrictGame : MonoBehaviour
 {
-    bool isFirstTouch, timeRunning, isLoadingSceneActive, isTouchesActive, isGameOver, loadingFlag;
+    bool isFirstTouch, timeRunning, isLoadingSceneActive, isTouchesActive, isGameOver;
 
     public Transform checkPoints, bestBaloon, mapList;
 
@@ -21,7 +21,7 @@ public class RestrictGame : MonoBehaviour
 
     Vector2 bestBaloonPosition;
 
-    public float[] checkPointTimes;
+    public float[] checkPointTimes, globalCheckPointTimes;
 
     public float time;
 
@@ -33,7 +33,7 @@ public class RestrictGame : MonoBehaviour
 
     Collider2D tempHitCollider;
 
-    Texture2D savingTexture;
+    Texture2D savingTexture, savingTextureGlobal;
 
     public GameObject difficultyMap;
 
@@ -42,6 +42,8 @@ public class RestrictGame : MonoBehaviour
     public AudioSource pop1, pop2, pop3;
 
 	public Text perc5, perc4, perc3, perc2, perc1;
+
+    public Vector3[] checkPointPositions;
 
     void Start()
     {
@@ -57,6 +59,12 @@ public class RestrictGame : MonoBehaviour
 		perc3.color = Color.cyan;
 		perc2.color = Color.green;
 		perc1.color = Color.yellow;
+
+        checkPointPositions = new Vector3[checkPointTimes.Length];
+        for (int i = 0; i < checkPointTimes.Length; i++)
+        {
+            checkPointPositions[i] = new Vector3((Camera.main.WorldToScreenPoint(checkPoints.GetChild(i).position).x - Camera.main.WorldToScreenPoint(checkPoints.GetChild(0).position).x) * 1.04986f, (Camera.main.WorldToScreenPoint(checkPoints.GetChild(i).position).y - Camera.main.WorldToScreenPoint(checkPoints.GetChild(0).position).y) * 1.046511f, 0);
+        }
     }
 
     void Update()
@@ -127,19 +135,11 @@ public class RestrictGame : MonoBehaviour
         if (isLoadingSceneActive)
         {
             loadingTimer += Time.deltaTime;
-            if (loadingTimer >= 1.0f && !loadingFlag)
+            if (loadingTimer >= 1.0f)
             {
-                loadingFlag = true;
-                createDifficultyMap();
-            }
-            if (loadingTimer >= loadingWaitTime)
-            {
-                loadingMenu.SetActive(false);
-                isTouchesActive = true;
-                saveMenu.SetActive(true);
-                questionText.text = "Testi Onaylıyor Musunuz?";
-                questionText.gameObject.SetActive(true);
                 isLoadingSceneActive = false;
+                Debug.Log("Here");
+                StartCoroutine(difficultyMapsCreater());
             }
         }
     }
@@ -208,10 +208,24 @@ public class RestrictGame : MonoBehaviour
         }
     }
 
+    IEnumerator difficultyMapsCreater()
+    {
+        createLocalDifficultyMap();
+        yield return new WaitForSeconds(3f);
+        Debug.Log("Burada");
+        createGlobalDifficultyMap();
+        yield return new WaitForSeconds(2f);
+        loadingMenu.SetActive(false);
+        isTouchesActive = true;
+        saveMenu.SetActive(true);
+        questionText.text = "Testi Onaylıyor Musunuz?";
+        questionText.gameObject.SetActive(true);
+    }
+
 	string date;
 	float redCount, yellowCount, greenCount, blueCount, cyanCount;
 
-	void createDifficultyMap()
+	void createLocalDifficultyMap()
     {
 		redCount = 0; yellowCount = 0; greenCount = 0; blueCount = 0; cyanCount = 0;
 
@@ -222,7 +236,6 @@ public class RestrictGame : MonoBehaviour
         Color[,] colorValues = new Color[mapTexture.width / pixelRange, mapTexture.height / pixelRange];
         float xMulti = 1, xMultiTotal = 0, subTotal = 0, maxTime = 0;
         float[] distances = new float[checkPointTimes.Length];
-        Vector3[] checkPointPositions = new Vector3[checkPointTimes.Length];
 
         for (int i = 0; i < mapTexture.height / pixelRange; i++)
             difficultyAreaValues[i] = new int[mapTexture.width / pixelRange];
@@ -231,8 +244,6 @@ public class RestrictGame : MonoBehaviour
         {
             if (checkPointTimes[i] > maxTime)
                 maxTime = checkPointTimes[i];
-            checkPointPositions[i] = new Vector3((Camera.main.WorldToScreenPoint(checkPoints.GetChild(i).position).x - Camera.main.WorldToScreenPoint(checkPoints.GetChild(0).position).x) * 2.8f, (Camera.main.WorldToScreenPoint(checkPoints.GetChild(i).position).y - Camera.main.WorldToScreenPoint(checkPoints.GetChild(0).position).y) * 2.8f, 0);
-            checkPointPositions[i] = checkPointPositions[i];
         }
 
         for (int i = 0; i < mapTexture.width; i += pixelRange)
@@ -360,6 +371,151 @@ public class RestrictGame : MonoBehaviour
 		PlayerPrefs.SetFloat("DifficultyMap" + date + "yellow", yellowCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
 	}
 
+    void createGlobalDifficultyMap()
+    {
+        redCount = 0; yellowCount = 0; greenCount = 0; blueCount = 0; cyanCount = 0;
+
+        Texture2D mapTexture = new Texture2D(1600, 900);
+        difficultyMap.GetComponent<Renderer>().material.mainTexture = mapTexture;
+        float[,] difficultyValues = new float[mapTexture.width / pixelRange, mapTexture.height / pixelRange];
+        int[][] difficultyAreaValues = new int[mapTexture.height / pixelRange][];
+        Color[,] colorValues = new Color[mapTexture.width / pixelRange, mapTexture.height / pixelRange];
+        float xMulti = 1, xMultiTotal = 0, subTotal = 0, targetCheckPointTime = 0, minDistance = 0;
+        float[] distances = new float[checkPointTimes.Length];
+        for (int i = 0; i < mapTexture.height / pixelRange; i++)
+            difficultyAreaValues[i] = new int[mapTexture.width / pixelRange];
+        
+        for (int i = 0; i < mapTexture.width; i += pixelRange)
+        {
+            for (int j = 0; j < mapTexture.height; j += pixelRange)
+            {
+                for (int k = 0; k < checkPointTimes.Length; k++)
+                {
+                    distances[k] = Mathf.Sqrt((Mathf.Pow(checkPointPositions[k].x - i, 2)) + (Mathf.Pow(checkPointPositions[k].y - j, 2))) / 1000;
+                    if(targetCheckPointTime == 0 || distances[k] < minDistance)
+                    {
+                        minDistance = distances[k];
+                        targetCheckPointTime = globalCheckPointTimes[k];
+                    }
+                }
+                for (int k = 0; k < distances.Length; k++)
+                {
+                    if (distances[k] != 0)
+                        xMulti *= distances[k];
+                }
+                for (int k = 0; k < distances.Length; k++)
+                {
+                    if (distances[k] != 0)
+                        xMultiTotal += (Mathf.Pow((xMulti / distances[k]), formulaPower));
+                }
+                for (int k = 0; k < distances.Length; k++)
+                {
+                    if (distances[k] != 0)
+                        subTotal += (checkPointTimes[k] * Mathf.Pow((xMulti / distances[k]), formulaPower));
+                }
+                difficultyValues[i / pixelRange, j / pixelRange] = (int)((subTotal * 1000 / targetCheckPointTime) / xMultiTotal);
+                xMulti = 1;
+                xMultiTotal = 0;
+                subTotal = 0;
+                targetCheckPointTime = 0;
+                minDistance = 0;
+            }
+        }
+        float difficultyMin = 0, difficultyMax = 0;
+        Vector2 minPos = Vector2.zero, maxPos = Vector2.zero;
+        for (int i = 0; i < mapTexture.width / pixelRange; i++)
+        {
+            for (int j = 0; j < mapTexture.height / pixelRange; j++)
+            {
+                if (difficultyMin == 0)
+                {
+                    difficultyMin = difficultyValues[i, j];
+                    minPos = new Vector2(i * pixelRange, j * pixelRange);
+                }
+                if (difficultyMax == 0)
+                {
+                    difficultyMax = difficultyValues[i, j];
+                    maxPos = new Vector2(i * pixelRange, j * pixelRange);
+                }
+                if (difficultyValues[i, j] < difficultyMin)
+                {
+                    difficultyMin = difficultyValues[i, j];
+                    minPos = new Vector2(i * pixelRange, j * pixelRange);
+                }
+                if (difficultyValues[i, j] > difficultyMax)
+                {
+                    difficultyMax = difficultyValues[i, j];
+                    maxPos = new Vector2(i * pixelRange, j * pixelRange);
+                }
+            }
+        }
+        //Normalize data between 0-1
+        for (int i = 0; i < mapTexture.width / pixelRange; i++)
+        {
+            for (int j = 0; j < mapTexture.height / pixelRange; j++)
+            {
+                difficultyValues[i, j] = (difficultyValues[i, j] - difficultyMin) / (difficultyMax - difficultyMin);
+                if (difficultyValues[i, j] <= 0.2f)
+                {
+                    colorValues[i, j] = Color.Lerp(Color.yellow, Color.green, (difficultyValues[i, j]) / (0.2f));
+                    difficultyAreaValues[j][i] = 0;
+                    yellowCount++;
+                }
+                else if (difficultyValues[i, j] > 0.2f && difficultyValues[i, j] <= 0.4f)
+                {
+                    colorValues[i, j] = Color.Lerp(Color.green, Color.cyan, (difficultyValues[i, j] - 0.2f) / (0.2f));
+                    difficultyAreaValues[j][i] = 1;
+                    greenCount++;
+                }
+                else if (difficultyValues[i, j] > 0.4f && difficultyValues[i, j] <= 0.6f)
+                {
+                    colorValues[i, j] = Color.Lerp(Color.cyan, Color.blue, (difficultyValues[i, j] - 0.4f) / (0.2f));
+                    difficultyAreaValues[j][i] = 2;
+                    cyanCount++;
+                }
+                else if (difficultyValues[i, j] > 0.6f && difficultyValues[i, j] <= 0.8f)
+                {
+                    colorValues[i, j] = Color.Lerp(Color.blue, Color.magenta, (difficultyValues[i, j] - 0.6f) / (0.2f));
+                    difficultyAreaValues[j][i] = 3;
+                    blueCount++;
+                }
+                else if (difficultyValues[i, j] > 0.8f)
+                {
+                    colorValues[i, j] = Color.Lerp(Color.magenta, Color.red, (difficultyValues[i, j] - 0.8f) / (0.2f));
+                    difficultyAreaValues[j][i] = 4;
+                    redCount++;
+                    redAreaCount++;
+                }
+                if (difficultyValues[i, j] > 0.9f)
+                {
+                    difficultyAreaValues[j][i] = 5;
+                }
+                //Debug.Log(difficultyAreaValues[0][0] + " , " + difficultyValues[0, 0] + " , " + colorValues[0, 0]);
+            }
+        }
+
+        PlayerPrefs.SetFloat("RedAreaRatioGlobal", (redAreaCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange))) * 100);
+
+        for (int i = 0; i < mapTexture.width; i++)
+        {
+            for (int j = 0; j < mapTexture.height; j++)
+            {
+                mapTexture.SetPixel(i, j, colorValues[i / pixelRange, j / pixelRange]);
+            }
+        }
+        mapTexture.Apply();
+        difficultyMap.GetComponent<SpriteRenderer>().sprite = Sprite.Create(mapTexture, difficultyMap.GetComponent<SpriteRenderer>().sprite.rect, new Vector2(0.5f, 0.5f));
+        savingTextureGlobal = mapTexture;
+
+        date = System.DateTime.Now.ToString("yyyy,MM,dd-HH,mm,ss");
+
+        PlayerPrefs.SetFloat("DifficultyMapGlobal" + date + "red", redCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+        PlayerPrefs.SetFloat("DifficultyMapGlobal" + date + "blue", blueCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+        PlayerPrefs.SetFloat("DifficultyMapGlobal" + date + "cyan", cyanCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+        PlayerPrefs.SetFloat("DifficultyMapGlobal" + date + "green", greenCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+        PlayerPrefs.SetFloat("DifficultyMapGlobal" + date + "yellow", yellowCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
+    }
+
     void getLoadingMenu(float waitTime, string loadingText)
     {
         loadingMenu.transform.FindChild("Text").GetComponent<Text>().text = loadingText;
@@ -431,6 +587,7 @@ public class RestrictGame : MonoBehaviour
     {
 		//string date = System.DateTime.Now.ToString("dd,MM,yyyy-HH,mm,ss");
 		pngSaver.SaveTexture2Folder(Application.streamingAssetsPath + "/Maps", "DifficultyMap" + date, savingTexture);
+        pngSaver.SaveTexture2Folder(Application.streamingAssetsPath + "/MapsGlobal", "DifficultyMapGlobal" + date, savingTextureGlobal);
 #if UNITY_EDITOR
         UnityEditor.AssetDatabase.Refresh();
 #endif

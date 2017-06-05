@@ -19,43 +19,43 @@ public class DragDetector : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     List<Vector2> points = new List<Vector2>();
 
-    public Text labelResult;
-
-    public Transform referenceRoot;
-
-    Dictionary<GesturePattern, GameObject> references;
-
     [Range(0f, 1f)]
-    public float scoreToAccept = 0.65f;
+    public float scoreToAccept;
+
+    float checkCoolDown, clearLineTimer;
+
+    bool canCheck, isClearing;
+
+    public bool isOnObject;
 
     void Start()
     {
+        canCheck = false;
         UpdateLine();
-
-        references = new Dictionary<GesturePattern, GameObject>();
-        foreach (Image image in referenceRoot.GetComponentsInChildren<Image>())
-        {
-            var line = image.GetComponentInChildren<GesturePatternDraw>();
-            references[line.pattern] = line.gameObject;
-        }
     }
 
-    void ActiveAllDrawings()
+    void Update()
     {
-        foreach (var line in references.Values)
+        if (!canCheck)
         {
-            line.SetActive(true);
+            checkCoolDown += Time.deltaTime;
+            if (checkCoolDown >= 0.4f)
+            {
+                checkCoolDown = 0;
+                canCheck = true;
+            }
+        }
+        if (isClearing)
+        {
+            clearLineTimer += Time.deltaTime;
+            if (clearLineTimer >= 1.25f && canCheck)
+            {
+                clearLineTimer = 0;
+                points.Clear();
+            }
         }
     }
-    IEnumerator Blink(GameObject go)
-    {
-        var seconds = new WaitForSeconds(0.1f);
-        for (int i = 0; i <= 20; i++)
-        {
-            go.SetActive(i % 2 == 0);
-            yield return seconds;
-        }
-    }
+
 
     public void UpdateLine()
     {
@@ -71,33 +71,60 @@ public class DragDetector : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         points.Clear();
         points.Add(eventData.position);
         UpdateLine();
-        labelResult.text = "";
+        isClearing = true;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        points.Add(eventData.position);
-        UpdateLine();
+        if (isOnObject)
+        {
+            points.Add(eventData.position);
+            UpdateLine();
+            if (canCheck)
+            {
+                canCheck = false;
+                Recognizer.RecognitionResult result = recognizer.Recognize(points);
+
+                StopAllCoroutines();
+
+                if (result.score.score >= scoreToAccept)
+                {
+                    clearLineTimer = 0;
+                    points.Clear();
+                    PairGameManager.Instance.clearActivePiece();
+                }
+                else
+                {
+                }
+            }
+        }
+        else
+        {
+            points.Clear();
+            UpdateLine();
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        points.Add(eventData.position);
-        UpdateLine();
-        Recognizer.RecognitionResult result = recognizer.Recognize(points);
+        isClearing = false;
+        clearLineTimer = 0;
+    //    points.Add(eventData.position);
+    //    UpdateLine();
+    //    Recognizer.RecognitionResult result = recognizer.Recognize(points);
 
-        StopAllCoroutines();
-        ActiveAllDrawings();
+    //    StopAllCoroutines();
+    //    ActiveAllDrawings();
 
-        if (result.score.score >= scoreToAccept)
-        {
-            labelResult.text = Mathf.RoundToInt(result.score.score * 100) + "%";
-            StartCoroutine(Blink(references[result.pattern]));
-        }
-        else
-        {
-            labelResult.text = "?";
-        }
+    //    if (result.score.score >= scoreToAccept)
+    //    {
+    //        labelResult.text = Mathf.RoundToInt(result.score.score * 100) + "%";
+    //        StartCoroutine(Blink(references[result.pattern]));
+    //    }
+    //    else
+    //    {
+    //        labelResult.text = "?";
+    //    }
 
     }
 

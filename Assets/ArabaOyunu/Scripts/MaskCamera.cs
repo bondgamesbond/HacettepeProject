@@ -211,7 +211,6 @@ public class MaskCamera : MonoBehaviour
         
         if (total < 400000)
         {
-            print("asd");
             GameManagerAraba.Instance.ChangeToNextMaskCamera();
         }
     }

@@ -14,13 +14,15 @@ public class PairGameManager : MonoBehaviour
 
     Transform onClearPiece;
 
-    public GameObject snowParticle, tutorial, popUp, finishMenu, winParticles;
+    public GameObject snowParticle, tutorial, popUp, finishMenu, winParticles, motionCanvas;
 
     public SkeletonAnimation thumbsUp1, thumbsUp2;
 
     public SpriteRenderer snowBackgroundSprite;
 
     public Text popUpText;
+
+    public AudioSource buttonSound, wrongPairSound, correctPairSound, winSound, clearSnowSound;
 
     public List<Transform> activePiecesList;
 
@@ -32,11 +34,13 @@ public class PairGameManager : MonoBehaviour
 
     int circlePieceCount, squarePieceCount, tempPieceId;
 
-    bool isOverLap, isGameOver, isReadyToPlay, isPaused;
+    bool isOverLap, isGameOver, isReadyToPlay, isPaused, isFirstSquareMoveCompleted;
 
     RaycastHit2D hit;
 
-    Vector2 worldPoint;
+    Vector2 worldPoint, squarePieceFirstPos, squarePieceTempPos;
+
+    public DragDetector motionDetecter;
 
     void Awake()
     {
@@ -48,13 +52,14 @@ public class PairGameManager : MonoBehaviour
         activePiecesRenderersList = new List<Renderer>();
         activePieceScriptList = new List<PairGamePiece>();
         RestrictionMap.getDifficultyRatios();
+        motionCanvas.SetActive(false);
     }
 
     void Start ()
     {
         if (RestrictionMap.redRatio <= 15)
         {
-            while (circlePieceCount < 4)
+            while (circlePieceCount < 3)
             {
                 tempPieceId = Random.Range(0, circlePiecesHead.childCount);
                 if (tempPieceId % 2 == 0 && !activePiecesList.Contains(circlePiecesHead.GetChild(tempPieceId)))
@@ -68,7 +73,7 @@ public class PairGameManager : MonoBehaviour
                     circlePieceCount++;
                 }
             }
-            while (squarePieceCount < 4)
+            while (squarePieceCount < 3)
             {
                 tempPieceId = Random.Range(0, squarePiecesHead.childCount);
                 if (tempPieceId % 2 == 0 && !activePiecesList.Contains(squarePiecesHead.GetChild(tempPieceId)))
@@ -140,13 +145,69 @@ public class PairGameManager : MonoBehaviour
                                 || (firtPiece != null && firtPiece.isClear && secondPiece == null) || (firtPiece != null && secondPiece != null && !secondPiece.isClear && secondPiece.name == hit.transform.name))
                             {
                                 onClearPiece = hit.transform;
+                                if (hit.transform.name.Contains("Circle"))
+                                    motionDetecter.isOnObject = true;
+                                else
+                                {
+                                    squarePieceFirstPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                    isFirstSquareMoveCompleted = false;
+                                }
                             }
                         }
                     }
                 }
                 else if (Input.GetMouseButton(0))
                 {
-
+                    worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+                    if (hit.collider != null)
+                    {
+                        if (firtPiece == null || (firtPiece != null && !firtPiece.isClear && firtPiece.name == hit.transform.name)
+                                   || (firtPiece != null && firtPiece.isClear && secondPiece == null) || (firtPiece != null && secondPiece != null && !secondPiece.isClear && secondPiece.name == hit.transform.name))
+                        {
+                            if (onClearPiece != hit.transform)
+                                onClearPiece = hit.transform;
+                            if (hit.transform.name.Contains("Circle"))
+                                motionDetecter.isOnObject = true;
+                            else
+                            {
+                                squarePieceTempPos= Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                if (squarePieceFirstPos == Vector2.zero)
+                                    squarePieceFirstPos = squarePieceTempPos;
+                                if (Mathf.Abs(squarePieceFirstPos.x - squarePieceTempPos.x) >= 1.5f && Mathf.Abs(squarePieceFirstPos.y - squarePieceTempPos.y) <= 0.4f)
+                                {
+                                    if(!isFirstSquareMoveCompleted)
+                                    {
+                                        isFirstSquareMoveCompleted = true;
+                                        squarePieceFirstPos = squarePieceTempPos;
+                                    }
+                                    else
+                                    {
+                                        squarePieceFirstPos = squarePieceTempPos;
+                                        isFirstSquareMoveCompleted = false;
+                                        clearActivePiece();
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            onClearPiece = null;
+                            motionDetecter.isOnObject = false;
+                            squarePieceTempPos = Vector2.zero;
+                            squarePieceFirstPos = Vector2.zero;
+                        }
+                    }
+                    else
+                    {
+                        if (onClearPiece != null)
+                        {
+                            onClearPiece = null;
+                            motionDetecter.isOnObject = false;
+                            squarePieceTempPos = Vector2.zero;
+                            squarePieceFirstPos = Vector2.zero;
+                        }
+                    }
                 }
                 else if (Input.GetMouseButtonUp(0))
                 {
@@ -156,17 +217,25 @@ public class PairGameManager : MonoBehaviour
                     {
                         if (hit.transform.tag == "PairGamePiece")
                         {
-                            if (onClearPiece != null && onClearPiece.name == hit.transform.name)
-                            {
-                                activePieceScriptList[activePiecesList.IndexOf(hit.transform)].clearPiece();
-                            }
                             onClearPiece = null;
+                            motionDetecter.isOnObject = false;
+                            squarePieceTempPos = Vector2.zero;
+                            squarePieceFirstPos = Vector2.zero;
                         }
                     }
                 }
             }
         }
 	}
+
+    public void clearActivePiece()
+    {
+        if (onClearPiece != null && !onClearPiece.GetComponent<PairGamePiece>().isClear)
+        {
+            activePieceScriptList[activePiecesList.IndexOf(onClearPiece)].clearPiece();
+            clearSnowSound.Play();
+        }
+    }
 
     int tempDifficulty;
     void shufflePiece(Transform piece, Renderer pieceRanderer, PairGamePiece pieceScript)
@@ -205,12 +274,19 @@ public class PairGameManager : MonoBehaviour
         isPaused = false;
         tutorial.SetActive(false);
         StartCoroutine(gameStarter());
+        buttonSound.Play();
     }
 
     public void resumeGame()
     {
         isPaused = false;
         popUp.SetActive(false);
+        buttonSound.Play();
+    }
+
+    public void buttonSoundPlayer()
+    {
+        buttonSound.Play();
     }
 
     public void getPopUp(int id)
@@ -257,6 +333,7 @@ public class PairGameManager : MonoBehaviour
         for (int i = 0; i < activePieceScriptList.Count; i++)
             activePieceScriptList[i].enableCollider();
         isReadyToPlay = true;
+        motionCanvas.SetActive(true);
     }
 
     public void comparePieces()
@@ -275,7 +352,8 @@ public class PairGameManager : MonoBehaviour
             activePieceScriptList.Remove(secondPiece);
             activePiecesList.Remove(firtPiece.transform);
             activePiecesList.Remove(secondPiece.transform);
-            if(activePiecesList.Count==0)
+            correctPairSound.Play();
+            if (activePiecesList.Count==0)
             {
                 isGameOver = true;
                 StartCoroutine(finishMenuGetter());
@@ -283,6 +361,7 @@ public class PairGameManager : MonoBehaviour
         }
         else
         {
+            wrongPairSound.Play();
             firtPiece.resetPiece();
             secondPiece.resetPiece();
         }
@@ -295,17 +374,20 @@ public class PairGameManager : MonoBehaviour
         yield return new WaitForSeconds(0.7f);
         winParticles.SetActive(true);
         yield return new WaitForSeconds(1.5f);
+        winSound.Play();
         finishMenu.SetActive(true);
     }
 
     public void returnToMainMenu()
     {
+        buttonSound.Play();
         PlayerPrefs.SetInt("Babuş", 1);
         SceneManager.LoadSceneAsync("MainMenu");
     }
 
     public void restart()
     {
+        buttonSound.Play();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
