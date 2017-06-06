@@ -58,7 +58,7 @@ public class MakaraRotater : MonoBehaviour
                         {
                             if (hit.transform.tag == transform.tag && !onHold)
                             {
-                                if (KapiciManager.Instance.isOnTutorial && KapiciManager.Instance.tutorialId == 3)
+                                if (KapiciManager.Instance.isOnTutorial && KapiciManager.Instance.tutorialId == 4)
                                     KapiciManager.Instance.removeTutorialAnim();
                                 if (onPieceTouchCount < 2)
                                 {

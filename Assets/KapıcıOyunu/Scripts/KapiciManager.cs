@@ -8,11 +8,11 @@ public class KapiciManager : MonoBehaviour
 {
     public static KapiciManager Instance;
 
-    public Transform leftWindows, rightWindows, makara, makaraBack, rope, sepet, movingSut, movingEkmek, suBorusu, thanksSounds;
+    public Transform leftWindows, rightWindows, makara, makaraBack, rope, sepet, movingSut, movingEkmek, connectorMakara, suBorusu, thanksSounds, makaraObjectsParent;
 
     public RectTransform tutorialBackground, tutorialArrow, zilButtons, warningPopUp;
 
-    public GameObject tutorialDevamButton, tutorialsParent, tutorialAnimsParent, finishScene, winParticle;
+    public GameObject tutorialDevamButton, tutorialsParent, tutorialAnimsParent, finishScene, winParticle, borders, homeButton;
 
     public Text tutorialText, warningText;
 
@@ -48,7 +48,7 @@ public class KapiciManager : MonoBehaviour
 
     public int tutorialId = 0;
 
-    int touchCount, onSepetTouchId, onMovingObjectTouchId, leftEkmekCount = 6, leftSutCount = 6, zilWaitTime = 3, tutorialAnimId;
+    int touchCount, onSepetTouchId, onMovingObjectTouchId, leftEkmekCount = 6, leftSutCount = 6, zilWaitTime = 3, tutorialAnimId, makaraHighLevel;
 
     Vector3 initialMovingEkmekPos, initialMovingSutPos, tempMovingObjectPos;
 
@@ -64,10 +64,6 @@ public class KapiciManager : MonoBehaviour
             
 	void Start ()
     {
-        //if (RestrictionMap.findDifficulty(makara.transform.position) <= RestrictionMap.findDifficulty(new Vector2(-makara.localPosition.x, makara.localPosition.y)))
-            isLeftSided = true;
-        //else
-        //    isLeftSided = false;
         requestingFloorIds = new List<int>();
         leftWindowList = new List<Window>();
         rightWindowList = new List<Window>();
@@ -88,24 +84,7 @@ public class KapiciManager : MonoBehaviour
             ekmekRequests[i] = true;
             sutRequests[i] = true;
         }
-        if (isLeftSided)
-        {
-            activeWindows = leftWindowList;
-        }
-        else
-        {
-            activeWindows = rightWindowList;
-            zilButtons.localPosition = new Vector3(-zilButtons.localPosition.x, zilButtons.localPosition.y, 0);
-            makara.localEulerAngles = new Vector3(0, 180, 0);
-            makara.localPosition = new Vector3(-makara.localPosition.x, makara.localPosition.y, 0);
-            makaraBack.localEulerAngles = new Vector3(0, 180, 0);
-            makaraBack.localPosition = new Vector3(-makaraBack.localPosition.x, makaraBack.localPosition.y, 0);
-            suBorusu.localEulerAngles = new Vector3(0, 180, 0);
-            suBorusu.localPosition = new Vector3(-suBorusu.localPosition.x, suBorusu.localPosition.y, 0);
-            sepet.localEulerAngles = new Vector3(0, 180, 0);
-            sepet.localPosition = new Vector3(-sepet.localPosition.x, sepet.localPosition.y, 0);
-            rope.localPosition = new Vector3(-rope.localPosition.x, rope.localPosition.y, 0);
-        }
+       
         initialMovingEkmekPos = movingEkmek.localPosition;
         initialMovingSutPos = movingSut.localPosition;
         onMovingObjectTouchId = -1;
@@ -148,7 +127,7 @@ public class KapiciManager : MonoBehaviour
                                         onHoldMovingObject = movingSut;
                                         takeFromSepetSound.Play();
                                     }
-                                    if (isOnTutorial && tutorialId == 4)
+                                    if (isOnTutorial && tutorialId == 5)
                                         removeTutorialAnim();
                                 }
                                 else
@@ -339,11 +318,11 @@ public class KapiciManager : MonoBehaviour
             if (floorNeededZilCounts[zilId] == 0)
             {
                 activeWindows[zilId].setReadyToTakeOrder();
-                if (isOnTutorial && tutorialId == 1)
+                if (isOnTutorial && tutorialId == 2)
                     getNextTutorial();
                 openLightSound.Play();
             }
-            if (isOnTutorial && tutorialId == 1)
+            if (isOnTutorial && tutorialId == 2)
                 removeTutorialAnim();
         }
     }
@@ -377,7 +356,6 @@ public class KapiciManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Game Is Over");
             finishScene.SetActive(true);
             winParticle.SetActive(true);
             isGameOver = true;
@@ -410,6 +388,13 @@ public class KapiciManager : MonoBehaviour
             tutorialText.text = tutorialTexts[tutorialId];
         if (tutorialId == 0)
         {
+            borders.SetActive(true);
+            homeButton.SetActive(false);
+            tutorialDevamButton.SetActive(false);
+        }
+        else if (tutorialId == 1)
+        {
+            tutorialDevamButton.SetActive(true);
             if (isLeftSided)
                 tutorialBackground.localPosition = new Vector3(179f, 229f, 0);
             else
@@ -417,7 +402,7 @@ public class KapiciManager : MonoBehaviour
             tutorialArrow.gameObject.SetActive(true);
             getSpecificOrder(4, true);
         }
-        else if (tutorialId == 1)
+        else if (tutorialId == 2)
         {
             if (isLeftSided)
             {
@@ -436,10 +421,12 @@ public class KapiciManager : MonoBehaviour
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).gameObject.SetActive(true);
             tutorialDevamButton.SetActive(false);
         }
-        else if (tutorialId == 2)
+        else if (tutorialId == 3)
         {
             if (isLeftSided)
+            {
                 tutorialBackground.localPosition = new Vector3(-420f, 214f, 0);
+            }
             else
             {
                 tutorialBackground.localPosition = new Vector3(-118f, 214f, 0);
@@ -449,28 +436,52 @@ public class KapiciManager : MonoBehaviour
             tutorialBackground.gameObject.SetActive(true);
             tutorialDevamButton.SetActive(true);
         }
-        else if (tutorialId == 3)
+        else if (tutorialId == 4)
         {
             tutorialBackground.gameObject.SetActive(true);
             tutorialAnimId++;
             if (isLeftSided)
             {
-                tutorialBackground.localPosition = new Vector3(-726f, 386f, 0);
+                if (makaraHighLevel == 1)
+                    tutorialBackground.localPosition = new Vector3(-726f, 386f, 0);
+                else if (makaraHighLevel == 2)
+                {
+                    tutorialBackground.localPosition = new Vector3(-726f, 91.2f, 0);
+                    tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.localPosition = new Vector3(-4.8f, 0, 0);
+                }
+                else if (makaraHighLevel == 3)
+                {
+                    tutorialBackground.localPosition = new Vector3(-726f, -200f, 0);
+                    tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.localPosition = new Vector3(-4.8f, -2.96f, 0);
+                }
             }
             else
             {
-                tutorialBackground.localPosition = new Vector3(144f, 386f, 0);
+                tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.eulerAngles = new Vector3(0, 180f, 0);
+                if (makaraHighLevel == 4)
+                {
+                    tutorialBackground.localPosition = new Vector3(144f, 386f, 0);
+                    tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.localPosition = new Vector3(4.8f, 2.96f, 0);
+                }
+                else if (makaraHighLevel == 5)
+                {
+                    tutorialBackground.localPosition = new Vector3(144f, 91.2f, 0);
+                    tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.localPosition = new Vector3(4.8f, 0, 0);
+                }
+                else if (makaraHighLevel == 6)
+                {
+                    tutorialBackground.localPosition = new Vector3(144f, -200f, 0);
+                    tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.localPosition = new Vector3(4.8f,-2.96f, 0);
+                }
                 tutorialArrow.eulerAngles = new Vector3(0, 180, 0);
                 tutorialArrow.localPosition = new Vector3(210.6f, 23.2f, 0);
-                tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.eulerAngles = new Vector3(0, 180f, 0);
-                tutorialAnimsParent.transform.GetChild(tutorialAnimId).transform.localPosition = new Vector3(4.8f, 2.96f, 0);
             }
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).GetComponent<SkeletonAnimation>().enabled = true;
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).gameObject.SetActive(true);
             tutorialDevamButton.SetActive(false);
             MakaraRotater.Instance.thisCollider.enabled = true;
         }
-        else if (tutorialId == 4)
+        else if (tutorialId == 5)
         {
             tutorialAnimId++;
             if (isLeftSided)
@@ -489,7 +500,7 @@ public class KapiciManager : MonoBehaviour
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).GetComponent<SkeletonAnimation>().enabled = true;
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).gameObject.SetActive(true);
         }
-        else if (tutorialId == 5)
+        else if (tutorialId == 6)
         {
             tutorialBackground.localPosition = new Vector3(0, 100f, 0);
             tutorialBackground.gameObject.SetActive(true);
@@ -504,6 +515,42 @@ public class KapiciManager : MonoBehaviour
             MakaraRotater.Instance.thisCollider.enabled = true;
             getNextOrder();
         }
+    }
+
+    public void chooseMakaraLevel(int id)
+    {
+        if (id > 3)
+        {
+            isLeftSided = false;
+            activeWindows = rightWindowList;
+            zilButtons.localPosition = new Vector3(-zilButtons.localPosition.x, zilButtons.localPosition.y, 0);
+            suBorusu.localScale = new Vector3(-1, 1, 1);
+            suBorusu.localPosition = new Vector3(-suBorusu.localPosition.x, suBorusu.localPosition.y, 0);
+            sepet.localScale = new Vector3(-sepet.localScale.x, sepet.localScale.y, 1);
+            sepet.localPosition = new Vector3(-sepet.localPosition.x, sepet.localPosition.y, 0);
+            rope.localPosition = new Vector3(-rope.localPosition.x, rope.localPosition.y, 0);
+            connectorMakara.localScale = new Vector3(-1, 1, 1);
+            connectorMakara.localPosition = new Vector3(-connectorMakara.localPosition.x, connectorMakara.localPosition.y, 0);
+        }
+        else
+        {
+            isLeftSided = true;
+            activeWindows = leftWindowList;
+        }
+        for (int i = 0; i < makaraObjectsParent.childCount; i++)
+            makaraObjectsParent.GetChild(i).gameObject.SetActive(false);
+        if (id != 1 && id != 4)
+            connectorMakara.gameObject.SetActive(true);
+        else
+            connectorMakara.gameObject.SetActive(false);
+        borders.SetActive(false);
+        makaraObjectsParent.GetChild(id - 1).gameObject.SetActive(true);
+        rope.gameObject.SetActive(true);
+        sepet.gameObject.SetActive(true);
+        zilButtons.gameObject.SetActive(true);
+        homeButton.SetActive(true);
+        makaraHighLevel = id;
+        getNextTutorial();
     }
 
     public void playButtonSound()

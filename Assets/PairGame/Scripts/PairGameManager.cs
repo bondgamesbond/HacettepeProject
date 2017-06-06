@@ -14,13 +14,15 @@ public class PairGameManager : MonoBehaviour
 
     Transform onClearPiece;
 
+    public RectTransform warningPopUp;
+
     public GameObject snowParticle, tutorial, popUp, finishMenu, winParticles, motionCanvas;
 
     public SkeletonAnimation thumbsUp1, thumbsUp2;
 
     public SpriteRenderer snowBackgroundSprite;
 
-    public Text popUpText;
+    public Text popUpText, warningText;
 
     public AudioSource buttonSound, wrongPairSound, correctPairSound, winSound, clearSnowSound;
 
@@ -41,6 +43,8 @@ public class PairGameManager : MonoBehaviour
     Vector2 worldPoint, squarePieceFirstPos, squarePieceTempPos;
 
     public DragDetector motionDetecter;
+
+    public Image warningPopUpImage;
 
     void Awake()
     {
@@ -225,6 +229,19 @@ public class PairGameManager : MonoBehaviour
                     }
                 }
             }
+
+            if (warningPopUpActive)
+            {
+                tempWarningColor.a -= Time.deltaTime * 1.0f;
+                tempColorBlack.a -= Time.deltaTime * 1.0f;
+                if (tempWarningColor.a <= 0)
+                {
+                    warningPopUp.gameObject.SetActive(false);
+                    warningPopUpActive = false;
+                }
+                warningPopUpImage.color = tempWarningColor;
+                warningText.color = tempColorBlack;
+            }
         }
 	}
 
@@ -362,11 +379,26 @@ public class PairGameManager : MonoBehaviour
         else
         {
             wrongPairSound.Play();
+            StartCoroutine(warningPopUpGetter());
             firtPiece.resetPiece();
             secondPiece.resetPiece();
         }
         firtPiece = null;
         secondPiece = null;
+    }
+
+    Color tempWarningColor, tempColorBlack;
+    bool warningPopUpActive;
+
+    IEnumerator warningPopUpGetter()
+    {
+        tempWarningColor = Color.white;
+        tempColorBlack = Color.black;
+        warningPopUpImage.color = tempWarningColor;
+        warningText.color = tempColorBlack;
+        warningPopUp.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        warningPopUpActive = true;
     }
 
     IEnumerator finishMenuGetter()
