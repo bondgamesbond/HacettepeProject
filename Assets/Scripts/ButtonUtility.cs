@@ -13,15 +13,16 @@ public class ButtonUtility : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
-	    if (PlayerPrefs.GetInt("Babuş") == 1)
+    void Start ()
+    {
+        if (PlayerPrefs.GetInt("ReturningFromGame") == 1)
         {
             gameList.SetActive(true);
             signInMenu.SetActive(false);
             signInMenu_back.SetActive(false);
         }
 
-        PlayerPrefs.SetInt("Babuş", 0);
+        PlayerPrefs.SetInt("ReturningFromGame", 0);
 	}
 
     public void signIn()

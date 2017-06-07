@@ -89,27 +89,36 @@ public class InputManagerAraba : MonoBehaviour
         Vector2 difference = touchPosition - firstTouchPosition;
         float difX = Mathf.Abs(difference.x);
         float difY = Mathf.Abs(difference.y);
-
         /* According to the difX / difY motion is... */
-        if (difX / difY >= 4.0f)
+
+        if (difY == 0 || (difX == 0 && difY == 0))
         {
-            /* ...horizontal */
-            motion = MotionAraba.Horizontal;
-        }
-        else if (difX / difY <= 0.25f)
-        {
-            /* ...vertical */
-            motion = MotionAraba.Vertical;
-        }
-        else if (difX / difY <= 2.0f && difX / difY >= 0.5f)
-        {
-            /* ...spherical */
-            motion = MotionAraba.Spherical;
+            motion = MotionAraba.Complex;
         }
         else
         {
-            /* ...complex */
-            motion = MotionAraba.Complex;
+            if (difX / difY >= 8.0f)
+            {
+                /* ...horizontal */
+                motion = MotionAraba.Horizontal;
+
+                Debug.Log(difX / difY);
+            }
+            else if (difX / difY <= 0.25f)
+            {
+                /* ...vertical */
+                motion = MotionAraba.Vertical;
+            }
+            else if (difX / difY <= 2.0f && difX / difY >= 0.5f)
+            {
+                /* ...spherical */
+                motion = MotionAraba.Spherical;
+            }
+            else
+            {
+                /* ...complex */
+                motion = MotionAraba.Complex;
+            }
         }
     }
 }

@@ -97,7 +97,7 @@ public class GameManagerAraba : MonoBehaviour
 
     public void returnToMainMenu()
     {
-        PlayerPrefs.SetInt("Babuþ", 1);
+        PlayerPrefs.SetInt("ReturningFromGame", 1);
         SceneManager.LoadSceneAsync("MainMenu");
     }
 }

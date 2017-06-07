@@ -407,13 +407,14 @@ public class PairGameManager : MonoBehaviour
         winParticles.SetActive(true);
         yield return new WaitForSeconds(1.5f);
         winSound.Play();
+        motionCanvas.SetActive(false);
         finishMenu.SetActive(true);
     }
 
     public void returnToMainMenu()
     {
         buttonSound.Play();
-        PlayerPrefs.SetInt("Babuş", 1);
+        PlayerPrefs.SetInt("ReturningFromGame", 1);
         SceneManager.LoadSceneAsync("MainMenu");
     }
 

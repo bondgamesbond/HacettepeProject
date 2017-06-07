@@ -646,7 +646,7 @@ public class PieceGame : MonoBehaviour
 
     public void returnToMainMenu()
     {
-        PlayerPrefs.SetInt("Babuş", 1);
+        PlayerPrefs.SetInt("ReturningFromGame", 1);
         SceneManager.LoadSceneAsync("MainMenu");
     }
 

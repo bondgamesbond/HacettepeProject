@@ -43,7 +43,10 @@ public class RestrictionMap : MonoBehaviour
             pxY = 100;
         }
 
-        return difficultyValues[(int)(pxY / pixelRange)][(int)(pxX / pixelRange)];
+        if ((int)(pxY / pixelRange) < (int)(mapTextureHeight / pixelRange) && (int)(pxX / pixelRange) < (int)(mapTextureHeight / pixelRange))
+            return difficultyValues[(int)(pxY / pixelRange)][(int)(pxX / pixelRange)];
+        else
+            return 0;
     }
 
     public static void getDifficultyRatios()

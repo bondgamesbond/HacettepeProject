@@ -40,7 +40,6 @@ public class MaskCamera : MonoBehaviour
             levelMotion == MotionAraba.AllMotions)
         {
             int difficulty = RestrictionMap.findDifficulty(v);
-            print(difficulty);
         
             switch (difficulty)
             {
@@ -58,25 +57,23 @@ public class MaskCamera : MonoBehaviour
                     break;
             }
 
-			Text feedback = GameManagerAraba.Instance.feedbackText;
-
 			switch (GameManagerAraba.Instance.level)
 			{
 				case 0:
-					feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[0];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[0];
 					break;
 				case 1:
-					feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[1];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[1];
 					break;
 				case 2:
-					feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[2];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[2];
 					break;
 				case 3:
                     //feedback.text = "Herhangi bir hareketle aracý kurulamaya devam ediniz!";
-                    feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[3];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[3];
                     break;
 				default:
-					feedback.text = "Herhangi bir hareketle araca cila atmaya devam ediniz!";
+                    GameManagerAraba.Instance.feedbackText.text = "Herhangi bir hareketle araca cila atmaya devam ediniz!";
 					break;
 			}
 
@@ -112,25 +109,23 @@ public class MaskCamera : MonoBehaviour
         }
 		else
 		{
-			Text feedback = GameManagerAraba.Instance.feedbackText;
-
 			switch (GameManagerAraba.Instance.level)
 			{
 				case 0:
-					feedback.text = GameManagerAraba.Instance.feedbackTexts[0];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[0];
 					break;
 				case 1:
-					feedback.text = GameManagerAraba.Instance.feedbackTexts[1];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[1];
 					break;
 				case 2:
-					feedback.text = GameManagerAraba.Instance.feedbackTexts[2];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[2];
 					break;
 				case 3:
                     //feedback.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
-                    feedback.text = GameManagerAraba.Instance.feedbackTexts[3];
+                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[3];
                     break;
 				default:
-					feedback.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
+                    GameManagerAraba.Instance.feedbackText.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
 					break;
 			}
 
@@ -209,7 +204,7 @@ public class MaskCamera : MonoBehaviour
             }
         }
         
-        if (total < 400000)
+        if (total < 500000)
         {
             GameManagerAraba.Instance.ChangeToNextMaskCamera();
         }

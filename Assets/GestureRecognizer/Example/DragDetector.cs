@@ -48,7 +48,7 @@ public class DragDetector : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         if (isClearing)
         {
             clearLineTimer += Time.deltaTime;
-            if (clearLineTimer >= 1.25f && canCheck)
+            if (clearLineTimer >= 1f && canCheck)
             {
                 clearLineTimer = 0;
                 points.Clear();
