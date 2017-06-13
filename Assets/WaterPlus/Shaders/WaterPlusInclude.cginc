@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 // Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
@@ -140,7 +142,7 @@
 #endif
 	{
 	    v2f o;
-	    o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+	    o.pos = UnityObjectToClipPos (v.vertex);
 	    o.uv_MainTex = TRANSFORM_TEX (v.texcoord, _MainTex);
 	    
 		o.uv_WaterMap = v.texcoord;// TRANSFORM_TEX(v.texcoord, _WaterMap);
