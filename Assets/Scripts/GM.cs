@@ -6,8 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class GM : MonoBehaviour {
 
-    public GameObject drums, levels;
-    public List<AudioSource> sounds; 
+    public GameObject drums, levels, endMenu;
+    public List<AudioSource> sounds;
+    public List<GameObject> LevelList; 
     public Text timeText;
     public int level, partNo = 0, partNo2 = 0;
     public bool levelStarted = false ,notePlayed = true, firstTap = true;
@@ -22,13 +23,13 @@ public class GM : MonoBehaviour {
     public List<GameObject> drumParts, glowParts;
 	// Use this for initialization
 	void Start () {
-		
+        OpenLevels();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (levelStarted && remainingTime > 0)
+        if (levelStarted )
         {
             timeText.text = "" + (int)remainingTime + "sn";
             levelTime += Time.deltaTime;
@@ -97,11 +98,34 @@ public class GM : MonoBehaviour {
                     break;
             }
         }
-        else
+        if(remainingTime <= 0)
         {
+            LevelDone(level);
             FinishLevel();
+            if (level != 9)
+            {
+                endMenu.SetActive(true);
+            }
         }
         
+    }
+    public void OpenLevels()
+    {
+        for (int i = 1; i < LevelList.Count; i++)
+        {
+            if (PlayerPrefs.GetInt("Level" + i + "Opened") == 1)
+            {
+                LevelList[i].SetActive(true);
+            }
+        }
+    }
+    public void LevelDone(int flevel)
+    {
+        if (level != 9)
+        {
+            PlayerPrefs.SetInt("Level" + (flevel + 1) + "Opened", 1);
+            LevelList[flevel + 1].SetActive(true);
+        }
     }
     public IEnumerator PlayNote1()
     {
@@ -479,6 +503,36 @@ public class GM : MonoBehaviour {
         drums.SetActive(true);
         level = levelNumber;
         levelStarted = true;
+        if (level == 0)
+        {
+            levelDuration = 60f;
+            remainingTime = 60f;
+        }
+        else
+        {
+            levelDuration = 120f;
+            remainingTime = 120f;
+        }
+    }
+
+    public void StartNextLevel()
+    {
+        level6count = 0;
+        level3count = 0;
+        levels.SetActive(false);
+        drums.SetActive(true);
+        levelStarted = true;
+        level++;
+        if (level == 0)
+        {
+            levelDuration = 60f;
+            remainingTime = 60f;
+        }
+        else
+        {
+            levelDuration = 120f;
+            remainingTime = 120f;
+        }
     }
 
     public void FinishLevel()
@@ -489,5 +543,6 @@ public class GM : MonoBehaviour {
         drums.SetActive(false);
         levels.SetActive(true);
         levelStarted = false;
+        TurnPartOff(partNo2);
     }
 }
