@@ -11,7 +11,7 @@ public class GM : MonoBehaviour {
     public Text timeText;
     public int level, partNo = 0, partNo2 = 0;
     public bool levelStarted = false ,notePlayed = true, firstTap = true;
-    public float levelTime = 0f, levelDuration = 120, remainingTime = 120;
+    public float levelTime = 0f, levelDuration = 120f, remainingTime = 120f;
     public int[] level3Notes = {6, 6, 0, 6, 0, 6, 0};
     public int[] level6notes = {1, 2, 3, 4, 9, 10, 5};
     public int level3count = 0, level6count = 0;
@@ -28,9 +28,9 @@ public class GM : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (levelStarted)
+        if (levelStarted && remainingTime > 0)
         {
-            timeText.text = "Kalan Zaman : " + (int)remainingTime + " s";
+            timeText.text = "" + (int)remainingTime + "sn";
             levelTime += Time.deltaTime;
             remainingTime = levelDuration - levelTime;
             switch (level)
@@ -96,6 +96,10 @@ public class GM : MonoBehaviour {
                 default:
                     break;
             }
+        }
+        else
+        {
+            FinishLevel();
         }
         
     }
@@ -480,8 +484,8 @@ public class GM : MonoBehaviour {
     public void FinishLevel()
     {
         levelTime = 0f;
-        levelDuration = 200f;
-        remainingTime = 200f;
+        levelDuration = 120f;
+        remainingTime = 120f;
         drums.SetActive(false);
         levels.SetActive(true);
         levelStarted = false;
