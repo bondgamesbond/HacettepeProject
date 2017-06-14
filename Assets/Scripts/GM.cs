@@ -100,12 +100,17 @@ public class GM : MonoBehaviour {
         }
         if(remainingTime <= 0)
         {
-            LevelDone(level);
-            FinishLevel();
-            if (level != 9)
+            
+            FinishLevel2();
+            if (level != 9 && PlayerPrefs.GetInt("Level" + (level+1) + "Opened") == 0)
             {
                 endMenu.SetActive(true);
             }
+            else
+            {
+                FinishLevel();
+            }
+            LevelDone(level);
         }
         
     }
@@ -510,8 +515,8 @@ public class GM : MonoBehaviour {
         }
         else
         {
-            levelDuration = 120f;
-            remainingTime = 120f;
+            levelDuration = 90f;
+            remainingTime = 90f;
         }
     }
 
@@ -530,18 +535,27 @@ public class GM : MonoBehaviour {
         }
         else
         {
-            levelDuration = 120f;
-            remainingTime = 120f;
+            levelDuration = 90f;
+            remainingTime = 90f;
         }
     }
 
     public void FinishLevel()
     {
         levelTime = 0f;
-        levelDuration = 120f;
-        remainingTime = 120f;
+        levelDuration = 90f;
+        remainingTime = 90f;
         drums.SetActive(false);
         levels.SetActive(true);
+        levelStarted = false;
+        TurnPartOff(partNo2);
+    }
+
+    public void FinishLevel2()
+    {
+        levelTime = 0f;
+        levelDuration = 90f;
+        remainingTime = 90f;
         levelStarted = false;
         TurnPartOff(partNo2);
     }
