@@ -12,7 +12,7 @@ public class GM : MonoBehaviour {
     public int level, partNo = 0, partNo2 = 0;
     public bool levelStarted = false ,notePlayed = true, firstTap = true;
     public float levelTime = 0f, levelDuration = 120f, remainingTime = 120f;
-    public int[] level3Notes = {6, 6, 0, 6, 0, 6, 0};
+    public int[] level3Notes = {0, 0, 6, 4, 4, 5, 7};
     public int[] level6notes = {1, 2, 3, 4, 9, 10, 5};
     public int level3count = 0, level6count = 0;
     
