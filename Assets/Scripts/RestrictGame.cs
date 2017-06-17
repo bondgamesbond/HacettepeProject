@@ -232,7 +232,7 @@ public class RestrictGame : MonoBehaviour
         float[,] difficultyValues = new float[mapTexture.width / pixelRange, mapTexture.height / pixelRange];
         int[][] difficultyAreaValues = new int[mapTexture.height / pixelRange][];
         Color[,] colorValues = new Color[mapTexture.width / pixelRange, mapTexture.height / pixelRange];
-        float xMulti = 1, xMultiTotal = 0, subTotal = 0, maxTime = 0;
+        float xMulti = 1, xMultiTotal = 0, subTotal = 0, maxTime = 0, minTime = 100;
         float[] distances = new float[checkPointTimes.Length];
 
         for (int i = 0; i < mapTexture.height / pixelRange; i++)
@@ -242,6 +242,8 @@ public class RestrictGame : MonoBehaviour
         {
             if (checkPointTimes[i] > maxTime)
                 maxTime = checkPointTimes[i];
+            if (checkPointTimes[i] < minTime)
+                minTime = checkPointTimes[i];
         }
 
         for (int i = 0; i < mapTexture.width; i += pixelRange)
@@ -367,7 +369,10 @@ public class RestrictGame : MonoBehaviour
 		PlayerPrefs.SetFloat("DifficultyMap" + date + "cyan", cyanCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
 		PlayerPrefs.SetFloat("DifficultyMap" + date + "green", greenCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
 		PlayerPrefs.SetFloat("DifficultyMap" + date + "yellow", yellowCount / ((mapTexture.width / pixelRange) * (mapTexture.height / pixelRange)) * 100);
-	}
+
+        PlayerPrefs.SetFloat("CurrentMaxTime", maxTime);
+        PlayerPrefs.SetFloat("CurrentMinTime", minTime);
+    }
 
     void createGlobalDifficultyMap()
     {
@@ -474,7 +479,6 @@ public class RestrictGame : MonoBehaviour
                 {
                     difficultyAreaValues[j][i] = 5;
                 }
-                //Debug.Log(difficultyAreaValues[0][0] + " , " + difficultyValues[0, 0] + " , " + colorValues[0, 0]);
             }
         }
 

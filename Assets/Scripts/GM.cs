@@ -22,7 +22,8 @@ public class GM : MonoBehaviour {
 
     public List<GameObject> drumParts, glowParts;
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         OpenLevels();
 	}
 	
