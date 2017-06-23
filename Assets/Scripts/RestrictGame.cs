@@ -307,42 +307,52 @@ public class RestrictGame : MonoBehaviour
             for (int j = 0; j < mapTexture.height / pixelRange; j++)
             {
                 difficultyValues[i, j] = (difficultyValues[i, j] - difficultyMin) / (difficultyMax - difficultyMin);
-                if (difficultyValues[i, j] <= 0.2f)
+                if (difficultyValues[i, j] <= 0.3f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.yellow, Color.green, (difficultyValues[i, j]) / (0.2f));
+                    colorValues[i, j] = Color.Lerp(Color.yellow, Color.green, (difficultyValues[i, j]) / (0.3f));
                     difficultyAreaValues[j][i] = 0;
-					yellowCount++;
+                    if (difficultyValues[i, j] < 0.12f)
+                        yellowCount++;
+                    else
+                        greenCount++;
                 }
-                else if (difficultyValues[i, j] > 0.2f && difficultyValues[i, j] <= 0.4f)
+                else if (difficultyValues[i, j] > 0.3f && difficultyValues[i, j] <= 0.5f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.green, Color.cyan, (difficultyValues[i, j] - 0.2f) / (0.2f));
+                    colorValues[i, j] = Color.Lerp(Color.green, Color.cyan, (difficultyValues[i, j] - 0.3f) / (0.2f));
                     difficultyAreaValues[j][i] = 1;
-					greenCount++;
+                    if (difficultyValues[i, j] < 0.45f)
+                        greenCount++;
+                    else
+                        cyanCount++;
                 }
-                else if (difficultyValues[i, j] > 0.4f && difficultyValues[i, j] <= 0.6f)
+                else if (difficultyValues[i, j] > 0.5f && difficultyValues[i, j] <= 0.7f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.cyan, Color.blue, (difficultyValues[i, j] - 0.4f) / (0.2f));
+                    colorValues[i, j] = Color.Lerp(Color.cyan, Color.blue, (difficultyValues[i, j] - 0.5f) / (0.2f));
                     difficultyAreaValues[j][i] = 2;
-					cyanCount++;
+                    if (difficultyValues[i, j] < 0.55f)
+                        cyanCount++;
+                    else
+                        blueCount++;
                 }
-                else if (difficultyValues[i, j] > 0.6f && difficultyValues[i, j] <= 0.8f)
+                else if (difficultyValues[i, j] > 0.7f && difficultyValues[i, j] <= 0.9f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.blue, Color.magenta, (difficultyValues[i, j] - 0.6f) / (0.2f));
-                    difficultyAreaValues[j][i] = 3;
-					blueCount++;
+                    colorValues[i, j] = Color.Lerp(Color.blue, Color.red, (difficultyValues[i, j] - 0.7f) / (0.2f));
+                    if (difficultyValues[i, j] < 0.8f)
+                        difficultyAreaValues[j][i] = 3;
+                    else
+                        difficultyAreaValues[j][i] = 4;
+                    if (difficultyValues[i, j] < 0.75f)
+                        blueCount++;
+                    else
+                        redCount++;
                 }
-                else if (difficultyValues[i, j] > 0.8f)
+                else if (difficultyValues[i, j] > 0.9f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.magenta, Color.red, (difficultyValues[i, j] - 0.8f) / (0.2f));
-                    difficultyAreaValues[j][i] = 4;
+                    colorValues[i, j] = Color.red;
 					redCount++;
                     redAreaCount++;
+                    difficultyAreaValues[j][i] = 5;
                 }
-				if (difficultyValues[i, j] > 0.9f)
-				{
-					difficultyAreaValues[j][i] = 5;
-				}
-                //Debug.Log(difficultyAreaValues[0][0] + " , " + difficultyValues[0, 0] + " , " + colorValues[0, 0]);
             }
         }
         for (int i = 0; i < mapTexture.height / pixelRange; i++)
@@ -438,46 +448,51 @@ public class RestrictGame : MonoBehaviour
                 difficultyValues[i, j] = (difficultyValues[i, j] / difficultyValuesMax[i, j]);
                 if (difficultyValues[i, j] > 1)
                     difficultyValues[i, j] = 1;
-                if (difficultyValues[i, j] <= 0.2f)
+                if (difficultyValues[i, j] <= 0.3f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.yellow, Color.green, (difficultyValues[i, j]) / (0.2f));
+                    colorValues[i, j] = Color.Lerp(Color.yellow, Color.green, (difficultyValues[i, j]) / (0.3f));
                     difficultyAreaValues[j][i] = 0;
-                    if (difficultyValues[i, j] <= 0.1f)
+                    if (difficultyValues[i, j] < 0.12f)
                         yellowCount++;
                     else
                         greenCount++;
                 }
-                else if (difficultyValues[i, j] > 0.2f && difficultyValues[i, j] <= 0.4f)
+                else if (difficultyValues[i, j] > 0.3f && difficultyValues[i, j] <= 0.5f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.green, Color.cyan, (difficultyValues[i, j] - 0.2f) / (0.2f));
+                    colorValues[i, j] = Color.Lerp(Color.green, Color.cyan, (difficultyValues[i, j] - 0.3f) / (0.2f));
                     difficultyAreaValues[j][i] = 1;
-                    greenCount++;
+                    if (difficultyValues[i, j] < 0.45f)
+                        greenCount++;
+                    else
+                        cyanCount++;
                 }
-                else if (difficultyValues[i, j] > 0.4f && difficultyValues[i, j] <= 0.6f)
+                else if (difficultyValues[i, j] > 0.5f && difficultyValues[i, j] <= 0.7f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.cyan, Color.blue, (difficultyValues[i, j] - 0.4f) / (0.2f));
+                    colorValues[i, j] = Color.Lerp(Color.cyan, Color.blue, (difficultyValues[i, j] - 0.5f) / (0.2f));
                     difficultyAreaValues[j][i] = 2;
-                    cyanCount++;
-                }
-                else if (difficultyValues[i, j] > 0.6f && difficultyValues[i, j] <= 0.8f)
-                {
-                    colorValues[i, j] = Color.Lerp(Color.blue, Color.magenta, (difficultyValues[i, j] - 0.6f) / (0.2f));
-                    difficultyAreaValues[j][i] = 3;
-                    if (difficultyValues[i, j] <= 0.7f)
+                    if (difficultyValues[i, j] < 0.55f)
                         cyanCount++;
                     else
                         blueCount++;
                 }
-                else if (difficultyValues[i, j] > 0.8f)
+                else if (difficultyValues[i, j] > 0.7f && difficultyValues[i, j] <= 0.9f)
                 {
-                    colorValues[i, j] = Color.Lerp(Color.magenta, Color.red, (difficultyValues[i, j] - 0.8f) / (0.2f));
-                    difficultyAreaValues[j][i] = 4;
+                    colorValues[i, j] = Color.Lerp(Color.blue, Color.red, (difficultyValues[i, j] - 0.7f) / (0.2f));
+                    difficultyAreaValues[j][i] = 3;
+                    if (difficultyValues[i, j] < 0.75f)
+                        blueCount++;
+                    else
+                        redCount++;
+                }
+                else if (difficultyValues[i, j] > 0.9f)
+                {
+                    colorValues[i, j] = Color.red;
                     redCount++;
                     redAreaCount++;
-                }
-                if (difficultyValues[i, j] > 0.9f)
-                {
-                    difficultyAreaValues[j][i] = 5;
+                    if (difficultyValues[i, j] > 0.9f)
+                        difficultyAreaValues[j][i] = 4;
+                    else
+                        difficultyAreaValues[j][i] = 5;
                 }
             }
         }

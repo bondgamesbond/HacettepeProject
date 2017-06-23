@@ -54,6 +54,10 @@ public class KapiciManager : MonoBehaviour
 
     public AudioSource dingDongSound, takeFromSepetSound, putMovingObjectSound, putMovingObjectToWrongPlaceSound, finishSound, buttonSound, openLightSound, makaraRotateSound;
 
+    public List<Button> zilButtonList = new List<Button>();
+
+    List<GameObject> zilEkmekIconList = new List<GameObject>(), zilSutIconList = new List<GameObject>();
+
     void Awake()
     {
         if (Instance == null)
@@ -91,6 +95,16 @@ public class KapiciManager : MonoBehaviour
         isOnTutorial = true;
         tutorialId = -1;
         tutorialsParent.SetActive(true);
+        foreach (Button child in zilButtons.GetComponentsInChildren<Button>())
+        {
+            zilButtonList.Add(child);
+            child.enabled = false;
+        }
+        for (int i = 0; i < zilButtons.childCount; i++)
+        {
+            zilEkmekIconList.Add(zilButtons.GetChild(i).FindChild("ekmek").gameObject);
+            zilSutIconList.Add(zilButtons.GetChild(i).FindChild("sut").gameObject);
+        }
     }
 	
 	void Update ()
@@ -134,6 +148,7 @@ public class KapiciManager : MonoBehaviour
                                 {
                                     sepetOnHold = true;
                                     onSepetTouchId = i;
+                                    Sepet.Instance.sepetGlowSprite.enabled = true;
                                 }
                             }
                         }
@@ -157,6 +172,8 @@ public class KapiciManager : MonoBehaviour
                         if (i == onSepetTouchId)
                         {
                             sepetOnHold = false;
+                            if (Sepet.Instance != null)
+                                Sepet.Instance.sepetGlowSprite.enabled = false;
                             if (ekmekOnHold)
                                 releaseEkmekOrSut(true);
                             if (sutOnHold)
@@ -166,12 +183,11 @@ public class KapiciManager : MonoBehaviour
                         {
                             screenRay = Camera.main.ScreenPointToRay(touch.position);
                             if (Physics.Raycast(screenRay, out hit))
-                            {
+                            { 
                                 if (hit.transform.tag == "Balloon")
                                 {
                                     if (activeWindows[tempRequestId].isReadyToGetOrder)
                                     {
-                                        Debug.Log("Order Taken");
                                         if (ekmekOnHold)
                                         {
                                             releaseEkmekOrSut(true);
@@ -186,6 +202,7 @@ public class KapiciManager : MonoBehaviour
                                                 }
                                             }
                                             activeWindows[tempRequestId].completeOrder();
+                                            zilEkmekIconList[tempRequestId].SetActive(true);
                                             thanksSounds.GetChild(Random.Range(0, thanksSounds.childCount)).GetComponent<AudioSource>().Play();
                                             requestingFloorIds.Remove(tempRequestId);
                                             if (!isOnTutorial)
@@ -200,6 +217,7 @@ public class KapiciManager : MonoBehaviour
                                             releaseEkmekOrSut(false);
                                             leftSutCount--;
                                             activeWindows[tempRequestId].completeOrder();
+                                            zilSutIconList[tempRequestId].gameObject.SetActive(true);
                                             thanksSounds.GetChild(Random.Range(0, thanksSounds.childCount)).GetComponent<AudioSource>().Play();
                                             requestingFloorIds.Remove(tempRequestId);
                                             getNextOrder();
@@ -209,7 +227,6 @@ public class KapiciManager : MonoBehaviour
                                     }
                                     else
                                     {
-                                        Debug.Log("Not Ready To Take Order");
                                         putMovingObjectToWrongPlaceSound.Play();
                                         warningPopUp.position = new Vector2(0.45f, hit.transform.position.y);
                                         StartCoroutine(popUpGetter());
@@ -221,7 +238,6 @@ public class KapiciManager : MonoBehaviour
                                 }
                                 else
                                 {
-                                    Debug.Log("Order Put To Wrong Area");
                                     putMovingObjectToWrongPlaceSound.Play();
                                     if (ekmekOnHold)
                                         releaseEkmekOrSut(true);
@@ -249,6 +265,8 @@ public class KapiciManager : MonoBehaviour
                 if (sutOnHold)
                     sutOnHold = false;
                 onSepetTouchId = 0;
+                if (Sepet.Instance != null)
+                    Sepet.Instance.sepetGlowSprite.enabled = false;
             }
 
             for (int i = 0; i < requestingFloorIds.Count; i++)
@@ -420,6 +438,8 @@ public class KapiciManager : MonoBehaviour
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).GetComponent<SkeletonAnimation>().enabled = true;
             tutorialAnimsParent.transform.GetChild(tutorialAnimId).gameObject.SetActive(true);
             tutorialDevamButton.SetActive(false);
+            for (int i = 0; i < zilButtonList.Count; i++)
+                zilButtonList[i].enabled = true;
         }
         else if (tutorialId == 3)
         {
@@ -524,6 +544,11 @@ public class KapiciManager : MonoBehaviour
             isLeftSided = false;
             activeWindows = rightWindowList;
             zilButtons.localPosition = new Vector3(-zilButtons.localPosition.x, zilButtons.localPosition.y, 0);
+            for (int i = 0; i < zilButtons.childCount; i++)
+            {
+                zilEkmekIconList[i].transform.localPosition = new Vector3(-zilEkmekIconList[i].transform.localPosition.x, zilEkmekIconList[i].transform.localPosition.y, 0);
+                zilSutIconList[i].transform.localPosition = new Vector3(-zilSutIconList[i].transform.localPosition.x, zilSutIconList[i].transform.localPosition.y, 0);
+            }
             suBorusu.localScale = new Vector3(-1, 1, 1);
             suBorusu.localPosition = new Vector3(-suBorusu.localPosition.x, suBorusu.localPosition.y, 0);
             sepet.localScale = new Vector3(-sepet.localScale.x, sepet.localScale.y, 1);

@@ -48,7 +48,6 @@ public class Sepet : MonoBehaviour
                 {
                     arrowSprite.color = Color.green;
                     sepetCollider.enabled = true;
-                    sepetGlowSprite.enabled = true;
                     if (KapiciManager.Instance.isOnTutorial && MakaraRotater.Instance.thisCollider.enabled)
                     {
                         MakaraRotater.Instance.thisCollider.enabled = false;
@@ -59,13 +58,11 @@ public class Sepet : MonoBehaviour
                 { 
                     arrowSprite.color = Color.red;
                     sepetCollider.enabled = false;
-                    sepetGlowSprite.enabled = false;
                 }
             }
             else
             {
                 arrowSprite.color = Color.red;
-                sepetGlowSprite.enabled = false;
                 closestTargetFloor = null;
                 sepetCollider.enabled = false;
             }
@@ -73,7 +70,6 @@ public class Sepet : MonoBehaviour
         else
         {
             arrowSprite.color = Color.red;
-            sepetGlowSprite.enabled = false;
             closestTargetFloor = null;
         }
 	}
