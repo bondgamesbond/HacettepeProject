@@ -9,13 +9,15 @@ public class GM : MonoBehaviour {
     public GameObject drums, levels, endMenu;
     public List<AudioSource> sounds;
     public List<GameObject> LevelList; 
-    public Text timeText;
+    public Text timeText, LevelText;
     public int level, partNo = 0, partNo2 = 0;
     public bool levelStarted = false ,notePlayed = true, firstTap = true;
     public float levelTime = 0f, levelDuration = 120f, remainingTime = 120f;
     public int[] level3Notes = {0, 0, 6, 4, 4, 5, 7};
     public int[] level6notes = {1, 2, 3, 4, 9, 10, 5};
     public int level3count = 0, level6count = 0;
+	public float maxResponseTime, minResponseTime;
+	public List<AudioSource> veryFastOnes, fastOnes, slowOnes, verySlowOnes;
     
 
 
@@ -24,7 +26,22 @@ public class GM : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
+		PlayerPrefs.DeleteAll ();
         OpenLevels();
+
+		// Değerlendirme testi kontrolü
+
+		if (PlayerPrefs.GetFloat ("CurrentMaxTime") == 0) {
+			PlayerPrefs.SetFloat ("CurrentMaxTime", 5);
+		}
+		if (PlayerPrefs.GetFloat ("CurrentMinTime") == 0) {
+			PlayerPrefs.SetFloat ("CurrentMinTime", 2);
+		}
+
+		maxResponseTime = PlayerPrefs.GetFloat ("CurrentMaxTime");
+		minResponseTime = PlayerPrefs.GetFloat ("CurrentMinTime");
+
+		//end
 	}
 	
 	// Update is called once per frame
@@ -146,7 +163,7 @@ public class GM : MonoBehaviour {
         }
         
         TurnPartOn(partNo);
-        yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(maxResponseTime * 1.1f);
         TurnPartOff(partNo);
         notePlayed = true;
     }
@@ -155,7 +172,7 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = Random.Range(0, 8);
         TurnPartOn(partNo);
-        yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(maxResponseTime);
         TurnPartOff(partNo);
         notePlayed = true;
     }
@@ -165,7 +182,7 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = level3Notes[level3count];
         TurnPartOn(partNo);
-        yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(maxResponseTime * 0.9f);
         TurnPartOff(partNo);
         notePlayed = true;
         if (level3count == 6)
@@ -183,7 +200,7 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = Random.Range(0,14);
         glowParts[partNo].SetActive(true);
-        yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(maxResponseTime * 0.8f);
         glowParts[partNo].SetActive(false);
         notePlayed = true;
     }
@@ -192,7 +209,7 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = level3Notes[level3count];
         TurnPartOn(partNo);
-        yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(minResponseTime * 1.2f);
         TurnPartOff(partNo);
         notePlayed = true;
         if (level3count == 6)
@@ -210,7 +227,7 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = level6notes[level6count];
         glowParts[partNo].SetActive(true);
-        yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(minResponseTime * 1.1f);
         glowParts[partNo].SetActive(false);
         notePlayed = true;
         if (level6count == 6)
@@ -230,7 +247,7 @@ public class GM : MonoBehaviour {
         partNo2 = Random.Range(0,8);
         TurnPartOn(partNo);
         TurnPartOn(partNo2);
-        yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(minResponseTime);
         TurnPartOff(partNo);
         TurnPartOff(partNo2);
         notePlayed = true;
@@ -242,7 +259,7 @@ public class GM : MonoBehaviour {
         partNo2 = Random.Range(0, 8);
         TurnPartOn(partNo);
         TurnPartOn(partNo2);
-        yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(minResponseTime * 0.9f);
         TurnPartOff(partNo);
         TurnPartOff(partNo2);
         notePlayed = true;
@@ -254,7 +271,7 @@ public class GM : MonoBehaviour {
         partNo2 = Random.Range(0, 8);
         TurnPartOn(partNo);
         TurnPartOn(partNo2);
-        yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(minResponseTime * 0.8f);
         TurnPartOff(partNo);
         TurnPartOff(partNo2);
         notePlayed = true;
@@ -519,6 +536,9 @@ public class GM : MonoBehaviour {
             levelDuration = 90f;
             remainingTime = 90f;
         }
+		LevelText.text = "Seviye: " + level;
+		startRhythms ();
+
     }
 
     public void StartNextLevel()
@@ -529,6 +549,8 @@ public class GM : MonoBehaviour {
         drums.SetActive(true);
         levelStarted = true;
         level++;
+
+		LevelText.text = "Seviye: " + level;
         if (level == 0)
         {
             levelDuration = 60f;
@@ -539,6 +561,7 @@ public class GM : MonoBehaviour {
             levelDuration = 90f;
             remainingTime = 90f;
         }
+		startRhythms ();
     }
 
     public void FinishLevel()
@@ -550,6 +573,7 @@ public class GM : MonoBehaviour {
         levels.SetActive(true);
         levelStarted = false;
         TurnPartOff(partNo2);
+		stopRhythms ();
     }
 
     public void FinishLevel2()
@@ -559,5 +583,180 @@ public class GM : MonoBehaviour {
         remainingTime = 90f;
         levelStarted = false;
         TurnPartOff(partNo2);
+		stopRhythms ();
     }
+
+	public void stopRhythms(){
+		for (int i = 0; i < 4; i++) {
+			veryFastOnes [i].Stop ();
+		}
+
+		for (int i = 0; i < 4; i++) {
+			fastOnes [i].Stop ();
+		}
+
+		for (int i = 0; i < 4; i++) {
+			slowOnes [i].Stop ();
+		}
+
+		for (int i = 0; i < 4; i++) {
+			verySlowOnes [i].Stop ();
+		}
+	}
+	public void startRhythms(){
+		switch (level) {
+		case 1:
+			if (maxResponseTime * 1.1f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime * 1.1f >= 3 && maxResponseTime * 1.1f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime * 1.1f >= 4 && maxResponseTime * 1.1f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 2:
+			if (maxResponseTime  < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime  >= 3 && maxResponseTime < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime >= 4 && maxResponseTime < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 3:
+			if (maxResponseTime * 0.9f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime * 0.9f >= 3 && maxResponseTime * 0.9f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime * 0.9f >= 4 && maxResponseTime * 0.9f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 4:
+			if (maxResponseTime * 0.8f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime * 0.8f >= 3 && maxResponseTime * 0.8f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (maxResponseTime * 0.8f >= 4 && maxResponseTime * 0.8f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 5:
+			if (minResponseTime * 1.2f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			} else if (minResponseTime * 1.2f >= 3 && minResponseTime * 1.2f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			} else if (minResponseTime * 1.2f >= 4 && minResponseTime * 1.2f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+			break;
+		case 6:
+			if (minResponseTime * 1.1f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (minResponseTime * 1.1f >= 3 && minResponseTime * 1.1f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (minResponseTime * 1.1f >= 4 && minResponseTime * 1.1f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 7:
+			if (minResponseTime  < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (minResponseTime  >= 3 && minResponseTime  < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (minResponseTime  >= 4 && minResponseTime  < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 8:
+			if (minResponseTime * 0.9f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (minResponseTime * 0.9f >= 3 && minResponseTime * 0.9f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (minResponseTime * 0.9f >= 4 && minResponseTime * 0.9f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		case 9:
+			if (minResponseTime * 0.8f < 3) {
+				veryFastOnes [Random.Range (0, veryFastOnes.Count)].Play ();
+			}
+			else if (minResponseTime * 0.8f >= 3 && minResponseTime * 0.8f < 4) {
+
+				fastOnes [Random.Range (0, fastOnes.Count)].Play ();
+			}
+			else if (minResponseTime * 0.8f >= 4 && minResponseTime * 0.8f < 5) {
+
+				slowOnes [Random.Range (0, slowOnes.Count)].Play ();
+			} 
+			else {
+				verySlowOnes [Random.Range (0, verySlowOnes.Count)].Play ();
+			}
+
+			break;
+		default:
+			break;
+		}
+	}
+
 }
