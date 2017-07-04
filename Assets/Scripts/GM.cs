@@ -26,7 +26,7 @@ public class GM : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-		PlayerPrefs.DeleteAll ();
+		//PlayerPrefs.DeleteAll ();
         OpenLevels();
 
 		// Değerlendirme testi kontrolü
@@ -245,6 +245,11 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = Random.Range(0, 8);
         partNo2 = Random.Range(0,8);
+		while(partNo2 == partNo)
+		{
+			partNo2 = Random.Range(0,8);
+		}
+
         TurnPartOn(partNo);
         TurnPartOn(partNo2);
 		yield return new WaitForSeconds(minResponseTime);
@@ -257,6 +262,11 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = Random.Range(0, 8);
         partNo2 = Random.Range(0, 8);
+
+		while(partNo2 == partNo)
+		{
+			partNo2 = Random.Range(0,8);
+		}
         TurnPartOn(partNo);
         TurnPartOn(partNo2);
 		yield return new WaitForSeconds(minResponseTime * 0.9f);
@@ -269,6 +279,11 @@ public class GM : MonoBehaviour {
         notePlayed = false;
         partNo = Random.Range(0, 8);
         partNo2 = Random.Range(0, 8);
+
+		while(partNo2 == partNo)
+		{
+			partNo2 = Random.Range(0,8);
+		}
         TurnPartOn(partNo);
         TurnPartOn(partNo2);
 		yield return new WaitForSeconds(minResponseTime * 0.8f);
