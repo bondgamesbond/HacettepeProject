@@ -98,8 +98,8 @@ public class PieceGame : MonoBehaviour
     void Start ()
     {
         //PlayerPrefs.SetInt("PieceGameLevelCount", 12);
-        numbersList = pieceList.FindChild("Numbers");
-        lettersList = pieceList.FindChild("Letters");
+        numbersList = pieceList.Find("Numbers");
+        lettersList = pieceList.Find("Letters");
         activateLevels();
         gameState = GameState.isOnTutorial;
         //redAreaRatio = 55;
@@ -225,10 +225,10 @@ public class PieceGame : MonoBehaviour
                     {
                         if (hit.transform.tag == "piece")
                         {
-                            redGlow = hit.transform.FindChild("redGlow");
-                            greenGlow = hit.transform.FindChild("greenGlow");
-                            whiteGlow = hit.transform.FindChild("whiteGlow");
-                            moveParticle = hit.transform.FindChild("moveParticle").gameObject;
+                            redGlow = hit.transform.Find("redGlow");
+                            greenGlow = hit.transform.Find("greenGlow");
+                            whiteGlow = hit.transform.Find("whiteGlow");
+                            moveParticle = hit.transform.Find("moveParticle").gameObject;
                             moveParticle.SetActive(true);
                             if (hit.transform.name == currentPiece.name)
                             {
@@ -657,12 +657,12 @@ public class PieceGame : MonoBehaviour
         {
             gameState = GameState.isOnPause;
             pauseText.text = "Oyun Durduruldu !";
-            pauseMenu.transform.FindChild("Resume").gameObject.SetActive(true);
+            pauseMenu.transform.Find("Resume").gameObject.SetActive(true);
         }
         else
         {
             gameState = GameState.isFinished;
-            pauseMenu.transform.FindChild("Resume").gameObject.SetActive(false);
+            pauseMenu.transform.Find("Resume").gameObject.SetActive(false);
         }
     }
 
@@ -678,10 +678,10 @@ public class PieceGame : MonoBehaviour
         {
             levels.transform.GetChild(i).GetComponent<Button>().enabled = true;
             levels.transform.GetChild(i).GetComponent<Image>().enabled = true;
-            levels.transform.GetChild(i).FindChild("LevelNumber").gameObject.SetActive(true);
-            levels.transform.GetChild(i).FindChild("Score").gameObject.SetActive(true);
-            levels.transform.GetChild(i).FindChild("Score").GetComponent<Text>().text = "%" + PlayerPrefs.GetFloat("Level" + (i + 1) + "Score", 0) + "\ntamamlandı";
-            levels.transform.GetChild(i).FindChild("Locked").gameObject.SetActive(false);
+            levels.transform.GetChild(i).Find("LevelNumber").gameObject.SetActive(true);
+            levels.transform.GetChild(i).Find("Score").gameObject.SetActive(true);
+            levels.transform.GetChild(i).Find("Score").GetComponent<Text>().text = "%" + PlayerPrefs.GetFloat("Level" + (i + 1) + "Score", 0) + "\ntamamlandı";
+            levels.transform.GetChild(i).Find("Locked").gameObject.SetActive(false);
         }
     }
 
@@ -695,7 +695,7 @@ public class PieceGame : MonoBehaviour
         tutorialText.text = tutorialTexts[tutorialId];
         tutorialButton.SetActive(true);
         if (timeTextActive)
-            tutorial.transform.FindChild("timeText").gameObject.SetActive(true);
+            tutorial.transform.Find("timeText").gameObject.SetActive(true);
         if (isMathMode)
             mathSymbols.gameObject.SetActive(false);
     }
@@ -722,20 +722,20 @@ public class PieceGame : MonoBehaviour
 
     public void getMathOperation(string type, Transform piece1, Transform piece2, bool isShowingSymbol)
     {
-        mathSymbols.FindChild("Add").gameObject.SetActive(false);
-        mathSymbols.FindChild("Divide").gameObject.SetActive(false);
-        mathSymbols.FindChild("Multiply").gameObject.SetActive(false);
-        mathSymbols.FindChild("Result").gameObject.SetActive(false);
+        mathSymbols.Find("Add").gameObject.SetActive(false);
+        mathSymbols.Find("Divide").gameObject.SetActive(false);
+        mathSymbols.Find("Multiply").gameObject.SetActive(false);
+        mathSymbols.Find("Result").gameObject.SetActive(false);
         int value1 = 0, value2 = 0;
 
         piece1.GetComponent<Piece>().shufflePosition(false, false, false, true, true);
-        value1 = int.Parse(piece1.FindChild("pieceText").GetComponent<tk2dTextMesh>().text);
+        value1 = int.Parse(piece1.Find("pieceText").GetComponent<tk2dTextMesh>().text);
         PieceGameMath.Instance.value1 = value1;
         if (piece2 != null)
         {
             while (piece1 == piece2)
                 piece2 = numbersList.GetChild(Random.Range(0, 10));
-            value2 = int.Parse(piece2.FindChild("pieceText").GetComponent<tk2dTextMesh>().text);
+            value2 = int.Parse(piece2.Find("pieceText").GetComponent<tk2dTextMesh>().text);
             piece2.GetComponent<Piece>().shufflePosition(false, false, false, true, false);
             PieceGameMath.Instance.value2 = value2;
         }
@@ -756,11 +756,11 @@ public class PieceGame : MonoBehaviour
 
             pieceGameMath.currentOperation = type;
             if (isShowingSymbol)
-                mathSymbols.FindChild(type).gameObject.SetActive(true);
+                mathSymbols.Find(type).gameObject.SetActive(true);
             else
             {
-                mathSymbols.FindChild("Result").GetComponent<Text>().text = pieceGameMath.targetResult.ToString();
-                mathSymbols.FindChild("Result").gameObject.SetActive(true);
+                mathSymbols.Find("Result").GetComponent<Text>().text = pieceGameMath.targetResult.ToString();
+                mathSymbols.Find("Result").gameObject.SetActive(true);
             }
         }
         else
@@ -797,17 +797,17 @@ public class PieceGame : MonoBehaviour
                     piece2.GetComponent<Piece>().resetPiece();
                     piece1 = numbersList.GetChild(random);
                     piece1.GetComponent<Piece>().shufflePosition(false, false, false, true, true);
-                    value1 = int.Parse(piece1.FindChild("pieceText").GetComponent<tk2dTextMesh>().text);
+                    value1 = int.Parse(piece1.Find("pieceText").GetComponent<tk2dTextMesh>().text);
                     pieceGameMath.targetResult = value1 / 2;
                 }
                 pieceGameMath.currentOperation = "Divide";
             }
             if (isShowingSymbol)
-                mathSymbols.FindChild(pieceGameMath.currentOperation).gameObject.SetActive(true);
+                mathSymbols.Find(pieceGameMath.currentOperation).gameObject.SetActive(true);
             else
             {
-                mathSymbols.FindChild("Result").GetComponent<Text>().text = pieceGameMath.targetResult.ToString();
-                mathSymbols.FindChild("Result").gameObject.SetActive(true);
+                mathSymbols.Find("Result").GetComponent<Text>().text = pieceGameMath.targetResult.ToString();
+                mathSymbols.Find("Result").gameObject.SetActive(true);
             }
         }
     }

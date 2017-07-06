@@ -102,8 +102,8 @@ public class KapiciManager : MonoBehaviour
         }
         for (int i = 0; i < zilButtons.childCount; i++)
         {
-            zilEkmekIconList.Add(zilButtons.GetChild(i).FindChild("ekmek").gameObject);
-            zilSutIconList.Add(zilButtons.GetChild(i).FindChild("sut").gameObject);
+            zilEkmekIconList.Add(zilButtons.GetChild(i).Find("ekmek").gameObject);
+            zilSutIconList.Add(zilButtons.GetChild(i).Find("sut").gameObject);
         }
     }
 	

@@ -38,8 +38,8 @@ public class GM : MonoBehaviour {
 			PlayerPrefs.SetFloat ("CurrentMinTime", 2);
 		}
 
-		maxResponseTime = PlayerPrefs.GetFloat ("CurrentMaxTime");
-		minResponseTime = PlayerPrefs.GetFloat ("CurrentMinTime");
+		maxResponseTime = PlayerPrefs.GetFloat ("CurrentMaxTime") * 1.5f;
+		minResponseTime = PlayerPrefs.GetFloat ("CurrentMinTime") * 1.5f;
 
 		//end
 	}

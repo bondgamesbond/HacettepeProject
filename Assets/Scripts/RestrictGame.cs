@@ -519,7 +519,7 @@ public class RestrictGame : MonoBehaviour
 
     void getLoadingMenu(float waitTime, string loadingText)
     {
-        loadingMenu.transform.FindChild("Text").GetComponent<Text>().text = loadingText;
+        loadingMenu.transform.Find("Text").GetComponent<Text>().text = loadingText;
         loadingWaitTime = waitTime;
         isLoadingSceneActive = true;
         loadingMenu.SetActive(true);
@@ -648,7 +648,7 @@ public class RestrictGame : MonoBehaviour
         }
         if (textures.Count == 0)
         {
-            mapMenu.transform.FindChild("NextButton").gameObject.SetActive(false);
+            mapMenu.transform.Find("NextButton").gameObject.SetActive(false);
             questionText.text = "Herhangi Bir Harita Bulunamadı!!!";
             questionText.gameObject.SetActive(true);
         }
@@ -656,7 +656,7 @@ public class RestrictGame : MonoBehaviour
         {
             mapList.GetChild(mapIndex).gameObject.SetActive(true);
             if (mapList.childCount == 1)
-                mapMenu.transform.FindChild("NextButton").gameObject.SetActive(false);
+                mapMenu.transform.Find("NextButton").gameObject.SetActive(false);
             mapTimeText.text = mapList.GetChild(mapIndex).name.Remove(0, 13);
         }
 
@@ -722,14 +722,14 @@ public class RestrictGame : MonoBehaviour
     public void getNextMap()
     {
         if (mapList.childCount <= mapIndex + 2)
-            mapMenu.transform.FindChild("NextButton").gameObject.SetActive(false);
+            mapMenu.transform.Find("NextButton").gameObject.SetActive(false);
         mapList.GetChild(mapIndex).gameObject.SetActive(false);
         mapList.GetChild(mapIndex + 1).gameObject.SetActive(true);
         mapListGlobal.GetChild(mapIndex).gameObject.SetActive(false);
         mapListGlobal.GetChild(mapIndex + 1).gameObject.SetActive(true);
         mapIndex++;
-        if (!mapMenu.transform.FindChild("PreviousButton").gameObject.activeSelf)
-            mapMenu.transform.FindChild("PreviousButton").gameObject.SetActive(true);
+        if (!mapMenu.transform.Find("PreviousButton").gameObject.activeSelf)
+            mapMenu.transform.Find("PreviousButton").gameObject.SetActive(true);
         mapTimeText.text = mapList.GetChild(mapIndex).name.Remove(0, 13);
 		SetPercentages(mapList.GetChild(mapIndex).name);
         SetPercentagesGlobal(mapListGlobal.GetChild(mapIndex).name);
@@ -737,14 +737,14 @@ public class RestrictGame : MonoBehaviour
     public void getPreviousMap()
     {
         if (mapIndex - 1 == 0)
-            mapMenu.transform.FindChild("PreviousButton").gameObject.SetActive(false);
+            mapMenu.transform.Find("PreviousButton").gameObject.SetActive(false);
         mapList.GetChild(mapIndex).gameObject.SetActive(false);
         mapList.GetChild(mapIndex - 1).gameObject.SetActive(true);
         mapListGlobal.GetChild(mapIndex).gameObject.SetActive(false);
         mapListGlobal.GetChild(mapIndex - 1).gameObject.SetActive(true);
         mapIndex--;
-        if (!mapMenu.transform.FindChild("NextButton").gameObject.activeSelf)
-            mapMenu.transform.FindChild("NextButton").gameObject.SetActive(true);
+        if (!mapMenu.transform.Find("NextButton").gameObject.activeSelf)
+            mapMenu.transform.Find("NextButton").gameObject.SetActive(true);
         mapTimeText.text = mapList.GetChild(mapIndex).name.Remove(0, 13);
 		SetPercentages(mapList.GetChild(mapIndex).name);
         SetPercentagesGlobal(mapListGlobal.GetChild(mapIndex).name);

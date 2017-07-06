@@ -9,11 +9,11 @@ public class Window : MonoBehaviour
 
     void Awake()
     {
-        light = transform.FindChild("light").gameObject;
-        Bars = transform.FindChild("bars").gameObject;
-        sutBalloon = transform.FindChild("sutBalloon").gameObject;
-        ekmekBalloon = transform.FindChild("ekmekBalloon").gameObject;
-        tentesParent = transform.FindChild("Tents");
+        light = transform.Find("light").gameObject;
+        Bars = transform.Find("bars").gameObject;
+        sutBalloon = transform.Find("sutBalloon").gameObject;
+        ekmekBalloon = transform.Find("ekmekBalloon").gameObject;
+        tentesParent = transform.Find("Tents");
         StartCoroutine(getRandomSkin((float)(Random.Range(0, 10)) / 10));
         isReadyToGetOrder = false;
     }

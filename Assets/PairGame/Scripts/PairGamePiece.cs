@@ -26,9 +26,9 @@ public class PairGamePiece : MonoBehaviour
 
 	void Awake ()
     {
-        snowPoofParticle = transform.FindChild("snowPoof").gameObject;
-        snowsParent = transform.FindChild("Snows");
-        glow = transform.FindChild("glow").GetComponent<SpriteRenderer>();
+        snowPoofParticle = transform.Find("snowPoof").gameObject;
+        snowsParent = transform.Find("Snows");
+        glow = transform.Find("glow").GetComponent<SpriteRenderer>();
         thisBoxCollider = GetComponent<BoxCollider2D>();
         if (thisBoxCollider != null)
             thisBoxCollider.enabled = false;

@@ -4,8 +4,15 @@ using System.Collections;
 
 public class MaskCamera : MonoBehaviour
 {
+    public DragDetectorAraba dragDetector { get; set; }
+
+    public Recognizer recognizer;
+
     // RenderTexture to read.
     public RenderTexture renderTexture;
+
+    [HideInInspector]
+    public bool firstTextureApplyPassed;
 
     private Texture2D tex;
     private bool canRead;
@@ -16,30 +23,35 @@ public class MaskCamera : MonoBehaviour
     private Vector2? newHolePosition;
     private Vector2 v;
     private float restrictRatio;
-    private MotionAraba levelMotion;
+    private DragDetectorAraba.DragTypeAraba levelDragType;
+
+    private bool infoHasFeedbackText;
 
     private void CutHole(Vector2 imageSize, Vector2 imageLocalPosition, Vector2 mousePosition)
     {
         switch (GameManagerAraba.Instance.level)
         {
             case 0:
-                levelMotion = MotionAraba.Horizontal;
+                levelDragType = DragDetectorAraba.DragTypeAraba.Horizontal;
                 break;
             case 1:
-                levelMotion = MotionAraba.Vertical;
+                levelDragType = DragDetectorAraba.DragTypeAraba.Vertical;
                 break;
             case 2:
-                levelMotion = MotionAraba.Spherical;
+                levelDragType = DragDetectorAraba.DragTypeAraba.Circular;
+                break;
+            case 3:
+                levelDragType = DragDetectorAraba.DragTypeAraba.AllMotions;
                 break;
             default:
-                levelMotion = MotionAraba.AllMotions;
+                levelDragType = DragDetectorAraba.DragTypeAraba.None;
                 break;
         }
 
-        if (levelMotion == InputManagerAraba.Instance.motion || 
-            levelMotion == MotionAraba.AllMotions)
+        if (levelDragType == dragDetector.currentDragType)
         {
             int difficulty = RestrictionMap.findDifficulty(v);
+            //print(difficulty);
         
             switch (difficulty)
             {
@@ -57,27 +69,35 @@ public class MaskCamera : MonoBehaviour
                     break;
             }
 
-			switch (GameManagerAraba.Instance.level)
-			{
-				case 0:
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[0];
-					break;
-				case 1:
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[1];
-					break;
-				case 2:
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[2];
-					break;
-				case 3:
-                    //feedback.text = "Herhangi bir hareketle aracý kurulamaya devam ediniz!";
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.wrongFeedbackTexts[3];
-                    break;
-				default:
-                    GameManagerAraba.Instance.feedbackText.text = "Herhangi bir hareketle araca cila atmaya devam ediniz!";
-					break;
-			}
+            if (infoHasFeedbackText)
+            {
+                Text feedback = GameManagerAraba.Instance.feedbackText;
 
-			Rect textureRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
+                switch (GameManagerAraba.Instance.level)
+                {
+                    case 0:
+                        feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[0];
+                        break;
+                    case 1:
+                        feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[1];
+                        break;
+                    case 2:
+                        feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[2];
+                        break;
+                    case 3:
+                        //feedback.text = "Herhangi bir hareketle aracý kurulamaya devam ediniz!";
+                        feedback.text = GameManagerAraba.Instance.wrongFeedbackTexts[3];
+                        break;
+                    default:
+                        feedback.text = "Herhangi bir hareketle araca cila atmaya devam ediniz!";
+                        break;
+                }
+                infoHasFeedbackText = false;
+            }
+
+            dragDetector.lastRightDragTypeTime = Time.time;
+
+            Rect textureRect = new Rect(0.0f, 0.0f, 1.0f, 1.0f);
             Rect positionRect = new Rect(
                 (imageLocalPosition.x - 0.5f * EraserMaterial.mainTexture.width) / imageSize.x,
                 (imageLocalPosition.y - 0.5f * EraserMaterial.mainTexture.height) / imageSize.y,
@@ -107,29 +127,31 @@ public class MaskCamera : MonoBehaviour
             }
             GL.PopMatrix();
         }
-		else
-		{
-			switch (GameManagerAraba.Instance.level)
-			{
-				case 0:
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[0];
-					break;
-				case 1:
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[1];
-					break;
-				case 2:
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[2];
-					break;
-				case 3:
-                    //feedback.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
-                    GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[3];
-                    break;
-				default:
-                    GameManagerAraba.Instance.feedbackText.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
-					break;
-			}
+		//else
+		//{
+		//	Text feedback = GameManagerAraba.Instance.feedbackText;
 
-		}
+		//	switch (GameManagerAraba.Instance.level)
+		//	{
+		//		case 0:
+		//			feedback.text = GameManagerAraba.Instance.feedbackTexts[0];
+		//			break;
+		//		case 1:
+		//			feedback.text = GameManagerAraba.Instance.feedbackTexts[1];
+		//			break;
+		//		case 2:
+		//			feedback.text = GameManagerAraba.Instance.feedbackTexts[2];
+		//			break;
+		//		case 3:
+  //                  //feedback.text = "Lütfen istediðiniz bir hareketle aracý kurulayýnýz!";
+  //                  feedback.text = GameManagerAraba.Instance.feedbackTexts[3];
+  //                  break;
+		//		default:
+		//			feedback.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
+		//			break;
+		//	}
+
+		//}
     }
 
     public void Awake()
@@ -140,6 +162,8 @@ public class MaskCamera : MonoBehaviour
     public void Start()
     {
         firstFrame = true;
+
+        infoHasFeedbackText = true;
 
         // Create Texture2D with the screen width and height.
         tex = new Texture2D(1920, 1080);
@@ -154,16 +178,46 @@ public class MaskCamera : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Rect worldRect = new Rect(-9.0f, -5.0f, 18.0f, 10.0f);
+            //Rect worldRect = new Rect(-9.0f, -5.0f, 18.0f, 10.0f);
+            Rect worldRect = new Rect(-9.6f, -5.4f, 19.2f, 10.8f);
             if (worldRect.Contains(v))
-                newHolePosition = 
+            {
+                newHolePosition =
                     new Vector2(1920 * (v.x - worldRect.xMin) / worldRect.width,
                                 1080 * (v.y - worldRect.yMin) / worldRect.height);
+                dragDetector.isOnCar = true;
+            }
         }
         // Player stops touching to screen.
-        if (Input.GetMouseButtonUp(0))
+        //if (Input.GetMouseButtonUp(0))
+        //{
+        //    CheckPixels();
+        //}
+
+        if (!infoHasFeedbackText && dragDetector.lastRightDragTypeTime + GameManagerAraba.Instance.textCheckInterval < Time.time)
         {
-            CheckPixels();
+            if (levelDragType != dragDetector.currentDragType)
+            {
+                switch (GameManagerAraba.Instance.level)
+                {
+                    case 0:
+                        GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[0];
+                        break;
+                    case 1:
+                        GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[1];
+                        break;
+                    case 2:
+                        GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[2];
+                        break;
+                    case 3:
+                        GameManagerAraba.Instance.feedbackText.text = GameManagerAraba.Instance.feedbackTexts[3];
+                        break;
+                    default:
+                        GameManagerAraba.Instance.feedbackText.text = "Lütfen istediðiniz bir hareketle araca cila atýnýz!";
+                        break;
+                }
+            }
+            infoHasFeedbackText = true;
         }
     }
 
@@ -182,6 +236,7 @@ public class MaskCamera : MonoBehaviour
             // Read the pixels from the render texture
             tex.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             tex.Apply();
+            firstTextureApplyPassed = true;
             canRead = false;
         }
     }
@@ -191,9 +246,15 @@ public class MaskCamera : MonoBehaviour
         canRead = true;
     }
 
-    void CheckPixels()
+    public void StartCalculatingTotalAlpha()
     {
-        float total = 1920 * 1080;
+        StartCoroutine("CalculateTotalAlpha");
+    }
+
+    float total;
+    IEnumerator CalculateTotalAlpha()
+    {
+        total = 1920 * 1080;
 
         // Control pixels
         for (int x = 0; x < 1920; x++)
@@ -202,11 +263,20 @@ public class MaskCamera : MonoBehaviour
             {
                 total -= tex.GetPixel(x, y).a;
             }
+
+            if (x % 100 == 0)
+            {
+                yield return new WaitForSeconds(0.01f);
+            }
         }
-        
-        if (total < 500000)
-        {
-            GameManagerAraba.Instance.ChangeToNextMaskCamera();
-        }
+
+        GameManagerAraba.Instance.currentTotalAlpha = total;
+        GameManagerAraba.Instance.calculating = false;
+        GameManagerAraba.Instance.totalAlphaCalculated = true;
+    }
+
+    public void StopCalculatingTotalAlpha()
+    {
+        StopAllCoroutines();
     }
 }

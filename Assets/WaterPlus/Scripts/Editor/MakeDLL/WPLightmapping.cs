@@ -658,7 +658,7 @@ namespace WaterPlusEditorInternal {
 			int lightmapsCount = 0;
 			
 			foreach (int lightmapIndex in lightmapsToBackup) {
-				Texture2D lightmapFar = LightmapSettings.lightmaps[lightmapIndex].lightmapDir;
+				Texture2D lightmapFar = LightmapSettings.lightmaps[lightmapIndex].lightmapColor;
 				
 				if (lightmapFar == null)
 					continue;
@@ -720,11 +720,11 @@ namespace WaterPlusEditorInternal {
 					//AssetDatabase.ImportAsset( lightmapPaths[i], ImportAssetOptions.ForceSynchronousImport );
 					//AssetDatabase.Refresh();
 					
-					lmData.lightmapDir = AssetDatabase.LoadAssetAtPath( WPHelper.FilePathToAssetPath( lightmapPaths[i] ), typeof(Texture2D) ) as Texture2D;
+					lmData.lightmapColor = AssetDatabase.LoadAssetAtPath( WPHelper.FilePathToAssetPath( lightmapPaths[i] ), typeof(Texture2D) ) as Texture2D;
 					
-					if (lmData.lightmapDir == null) {
+					if (lmData.lightmapColor == null) {
 						Debug.LogWarning("lmData.lightmapFar == null for " + WPHelper.FilePathToAssetPath( lightmapPaths[i] ));
-						lmData.lightmapDir = LightmapSettings.lightmaps[i].lightmapDir;
+						lmData.lightmapColor = LightmapSettings.lightmaps[i].lightmapColor;
 					}
 					
 					//if (LightmapSettings.lightmaps[i].lightmapNear != null)

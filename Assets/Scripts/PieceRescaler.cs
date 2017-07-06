@@ -56,9 +56,9 @@ public class PieceRescaler : MonoBehaviour
                                     if (onPieceTouchCount == 2)
                                     {
                                         onHolPiece = hit.transform;
-                                        redGlow = onHolPiece.FindChild("redGlow");
-                                        greenGlow = onHolPiece.FindChild("greenGlow");
-                                        whiteGlow = onHolPiece.FindChild("whiteGlow");
+                                        redGlow = onHolPiece.Find("redGlow");
+                                        greenGlow = onHolPiece.Find("greenGlow");
+                                        whiteGlow = onHolPiece.Find("whiteGlow");
                                         redGlow.gameObject.SetActive(true);
                                     }
                                 }

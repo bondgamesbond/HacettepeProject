@@ -34,12 +34,12 @@ public class Piece : MonoBehaviour
     void Awake ()
     {
         thisCollider = GetComponent<Collider>();
-        shadow = transform.FindChild("shadow");
+        shadow = transform.Find("shadow");
         shadowScript = shadow.GetComponent<Shadow>();
-        if (transform.FindChild("whiteAnim") != null)
-            whiteAnimation = transform.FindChild("whiteAnim").GetComponent<SkeletonAnimation>();
-        numberText = transform.FindChild("pieceText").gameObject;
-        moveParticle = transform.FindChild("moveParticle").gameObject;
+        if (transform.Find("whiteAnim") != null)
+            whiteAnimation = transform.Find("whiteAnim").GetComponent<SkeletonAnimation>();
+        numberText = transform.Find("pieceText").gameObject;
+        moveParticle = transform.Find("moveParticle").gameObject;
         moveParticle.GetComponent<Renderer>().sortingLayerName = GetComponent<Renderer>().sortingLayerName;
         moveParticle.GetComponent<Renderer>().sortingOrder = GetComponent<Renderer>().sortingOrder - 2;
     }
@@ -299,8 +299,8 @@ public class Piece : MonoBehaviour
             whiteAnimation.AnimationName = "";
             whiteAnimation.gameObject.SetActive(false);
         }
-        if (transform.FindChild("underline") != null)
-            transform.FindChild("underline").gameObject.SetActive(true);
+        if (transform.Find("underline") != null)
+            transform.Find("underline").gameObject.SetActive(true);
         numberText.SetActive(true);
         resultFlag = false;
     }
@@ -323,8 +323,8 @@ public class Piece : MonoBehaviour
         }
         numberText.SetActive(true);
         resultFlag = false;
-        if (transform.FindChild("underline") != null)
-            transform.FindChild("underline").gameObject.SetActive(true);
+        if (transform.Find("underline") != null)
+            transform.Find("underline").gameObject.SetActive(true);
         returnPiece();
     }
 
@@ -368,8 +368,8 @@ public class Piece : MonoBehaviour
         whiteAnimation.AnimationName = "turnToWhite";
         isWhiteAnimAuto = isAuto;
         thisRenderer.enabled = false;
-        if (transform.FindChild("underline") != null)
-            transform.FindChild("underline").gameObject.SetActive(false);
+        if (transform.Find("underline") != null)
+            transform.Find("underline").gameObject.SetActive(false);
     }
 
     public void endWhiteAnim()

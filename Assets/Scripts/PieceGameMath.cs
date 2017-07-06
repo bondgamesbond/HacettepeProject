@@ -80,9 +80,9 @@ public class PieceGameMath : MonoBehaviour
                                     if (touch.fingerId == 0)
                                     {
                                         onHoldPiece1 = hit.transform;
-                                        greenGlow1 = onHoldPiece1.FindChild("greenGlow");
-                                        whiteGlow1 = onHoldPiece1.FindChild("whiteGlow");
-                                        moveParticle1 = onHoldPiece1.FindChild("moveParticle").gameObject;
+                                        greenGlow1 = onHoldPiece1.Find("greenGlow");
+                                        whiteGlow1 = onHoldPiece1.Find("whiteGlow");
+                                        moveParticle1 = onHoldPiece1.Find("moveParticle").gameObject;
                                         whiteGlow1.gameObject.SetActive(true);
                                         moveParticle1.SetActive(true);
                                         offset1 = hit.transform.position - Camera.main.ScreenToWorldPoint(new Vector2(touch.position.x, touch.position.y));
@@ -90,9 +90,9 @@ public class PieceGameMath : MonoBehaviour
                                     else if (touch.fingerId == 1)
                                     {
                                         onHoldPiece2 = hit.transform;
-                                        greenGlow2 = onHoldPiece2.FindChild("greenGlow");
-                                        whiteGlow2 = onHoldPiece2.FindChild("whiteGlow");
-                                        moveParticle2 = onHoldPiece2.FindChild("moveParticle").gameObject;
+                                        greenGlow2 = onHoldPiece2.Find("greenGlow");
+                                        whiteGlow2 = onHoldPiece2.Find("whiteGlow");
+                                        moveParticle2 = onHoldPiece2.Find("moveParticle").gameObject;
                                         whiteGlow2.gameObject.SetActive(true);
                                         moveParticle2.SetActive(true);
                                         offset2 = hit.transform.position - Camera.main.ScreenToWorldPoint(new Vector2(touch.position.x, touch.position.y));
@@ -184,7 +184,7 @@ public class PieceGameMath : MonoBehaviour
                                                     whiteGlow1.gameObject.SetActive(false);
                                                 if (moveParticle1 != null && moveParticle1.activeSelf)
                                                     moveParticle1.SetActive(false);
-                                                tempValue = int.Parse(onHoldPiece1.FindChild("pieceText").GetComponent<tk2dTextMesh>().text);
+                                                tempValue = int.Parse(onHoldPiece1.Find("pieceText").GetComponent<tk2dTextMesh>().text);
                                                 if (currentOperation != tempOperation)
                                                 {
                                                     if (onHoldPiece1 != null)
